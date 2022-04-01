@@ -20,30 +20,35 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="为了我和小田的美好生活而努力">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BLKNjyty的博客">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="定义：Stream（流）是一个来自数据源的元素队列并支持聚合操作  元素是特定类型的对象，形成一个队列。 Java中的Stream并不会存储元素，而是按需计算。 数据源 流的来源。 可以是集合，数组，I&#x2F;O channel， 产生器generator 等—不可以是map！！ 聚合操作 类似SQL语句一样的操作， 比如filter, map, reduce, find, match, sorted等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stream">
+<meta property="og:url" content="http://example.com/2022/04/01/stream/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
-<meta property="og:description" content="为了我和小田的美好生活而努力">
+<meta property="og:description" content="定义：Stream（流）是一个来自数据源的元素队列并支持聚合操作  元素是特定类型的对象，形成一个队列。 Java中的Stream并不会存储元素，而是按需计算。 数据源 流的来源。 可以是集合，数组，I&#x2F;O channel， 产生器generator 等—不可以是map！！ 聚合操作 类似SQL语句一样的操作， 比如filter, map, reduce, find, match, sorted等">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/04/01/stream/stream%5C1623152105(1).jpg">
+<meta property="article:published_time" content="2022-04-01T08:46:00.000Z">
+<meta property="article:modified_time" content="2022-04-01T08:52:15.569Z">
 <meta property="article:author" content="jy">
+<meta property="article:tag" content="java基础">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/04/01/stream/stream%5C1623152105(1).jpg">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/04/01/stream/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>BLKNjyty的博客</title>
+  <title>stream | BLKNjyty的博客</title>
   
 
 
@@ -156,9 +161,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -174,10 +180,9 @@
       <meta itemprop="name" content="BLKNjyty的博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/01/stream/" class="post-title-link" itemprop="url">stream</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          stream
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -209,7 +214,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>Stream（流）是一个来自数据源的元素队列并支持聚合操作</p>
+        <h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>Stream（流）是一个来自数据源的元素队列并支持聚合操作</p>
 <ul>
 <li>元素是特定类型的对象，形成一个队列。 Java中的Stream并不会存储元素，而是按需计算。</li>
 <li><strong>数据源</strong> 流的来源。 可以是集合，数组，I/O channel， 产生器generator 等—不可以是map！！</li>
@@ -375,21 +380,26 @@
 
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag"># java基础</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -442,6 +452,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">定义：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB%E5%9B%BE%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">接口继承关系图：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%92%8Ccollections%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">3.</span> <span class="nav-text">和collections的比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81api%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">常见api：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forEach"><span class="nav-number">4.1.</span> <span class="nav-text">forEach</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#filter"><span class="nav-number">4.2.</span> <span class="nav-text">filter</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#distinct"><span class="nav-number">4.3.</span> <span class="nav-text">distinct</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#sorted"><span class="nav-number">4.4.</span> <span class="nav-text">sorted</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#map"><span class="nav-number">4.5.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#peek"><span class="nav-number">4.6.</span> <span class="nav-text">peek</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#flatmap"><span class="nav-number">4.7.</span> <span class="nav-text">flatmap</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E7%BA%A6%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">规约操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#reduce"><span class="nav-number">5.1.</span> <span class="nav-text">reduce</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#collect%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81"><span class="nav-number">5.2.</span> <span class="nav-text">collect！！！！！！</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B6%E9%9B%86%E5%99%A8"><span class="nav-number">6.</span> <span class="nav-text">收集器</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
