@@ -35,8 +35,22 @@
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011113290971.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111143610186.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111143610186.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111163501631.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111163501631.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111203759964.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111203759964.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011117261340-1657085291453.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011117261340-1657085291453.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111172704176.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111172704176.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111200610224.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111200610224.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011120562767.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011120562767.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011121501187.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011121501187.png">
 <meta property="article:published_time" content="2022-07-05T06:39:19.000Z">
-<meta property="article:modified_time" content="2022-07-06T02:50:05.346Z">
+<meta property="article:modified_time" content="2022-07-06T05:48:26.638Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
@@ -306,28 +320,80 @@
 <li><p>创建Deployment的YAML描述文件，根据yaml文件创建服务和集群</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line"> name: string # POD名称</span><br><span class="line"> namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line"> containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">     image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line">name: string # POD名称</span><br><span class="line">namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line">containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
 <img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
 
 <ul>
-<li>```<br>![20210111143610186](C:\Users\blkn\Desktop\20210111143610186.png#创建Deployment对象<br>kubectl apply -f deploy.yaml <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">创建了Deployment对象再查看pod</span><br><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
+<li><p>创建Deployment对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml </span><br></pre></td></tr></table></figure></li>
+<li><p>创建了Deployment对象再查看pod</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
-<img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图">
-
-<p>x修改 spec.replicas为3之后再查看，就有三个pod。</p>
+<p>​      <img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图"></p>
+<p>​         x修改 spec.replicas为3之后再查看，就有三个pod。</p>
 <ul>
-<li><pre><code>#查看pod启动日志
-kubectl logs +pod的name
-</code></pre>
-</li>
+<li><p>查看pod启动日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs +pod的name</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>此时集群内部已经可以访问项目了。··············</p>
+<ul>
+<li><p>使集群对外部提供服务，创建service关联，对外暴露ip提供服务</p>
+<blockquote>
+<p>运行pod ip是docker网桥的IP地址段进行分配的，通常是一个虚拟的二层网络，外部网络并没有办法访问，并且，pod ip是随时会变的，不是固定的，k8s引入了Service的概念，通过Service管理这些pod，Service创建后的Service IP是固定的。但是Service IP(Cluster IP)是一个虚拟的IP,由Kubernetes管理和分配P地址，外部网络无法访问。k8s有三种方式暴露Service给外部网络访问。</p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111163501631.png" alt="20210111163501631"></p>
+<img src="/2022/07/05/k8s/20210111163501631.png" class title="pod的ip"></blockquote>
+</li>
+</ul>
 </blockquote>
+<h3 id="3-Serivce暴露ip方式"><a href="#3-Serivce暴露ip方式" class="headerlink" title="3.Serivce暴露ip方式"></a>3.Serivce暴露ip方式</h3><h4 id="3-1-NodePort"><a href="#3-1-NodePort" class="headerlink" title="3.1 NodePort"></a>3.1 NodePort</h4><blockquote>
+<p> 在k8s上可以给Service设置成NodePort类型，这样的话可以让Kubernetes在其所有节点上开放一个端口给外部访问（所有节点上都使用相同的端口号）， 并将传入的连接转发给作为Service服务对象的pod。这样我们的pod就可以被外部请求访问到 </p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111203759964.png" alt="20210111203759964"></p>
+<img src="/2022/07/05/k8s/20210111203759964.png" class title="NodePort方式">
+
+<ul>
+<li><p>创建serivice的yaml文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl expose deployment countgame --port=8082 --target-port=8082 --type=NodePort -o yaml --dry-run &gt; svc.yaml</span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<p>1.countgame 为指定的service对象名称<br>2.- -port 是指service暴露在cluster ip上的端口，通过<cluster ip>:port 访问集群内部service的入口<br>3.- -target-port指 对应pod容器里面监听的端口<br>4.- -type=NodePort ， <nodeIP>:nodePort 是提供给集群外部客户访问service的入口<br>5.–dry-run表示测试不在k8s运行（不会具体执行该命令）<br>6.-o yaml 生成yaml格式<br>7.最后面的 “&gt; deploy.yaml” 表示将生成yaml内容输出到deploy.yaml文件</nodeIP></cluster></p>
+<p><strong>配置文件内容基本如下：</strong></p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011117261340-1657085291453.png" alt="2021011117261340"></p>
+<img src="/2022/07/05/k8s/2021011117261340-1657085291453.png" class title="service配置文件内容"></li>
+<li><p>创建Service对象</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#创建service</span><br><span class="line">kubectl apply -f svc.yaml</span><br><span class="line">#查看service</span><br><span class="line">kubectl get svc</span><br><span class="line">#查看service关联的pod</span><br><span class="line">kubectl describe svc coutgame</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111172704176.png" alt="20210111172704176"></p>
+<img src="/2022/07/05/k8s/20210111172704176.png" class title="创建并查看">
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111200610224.png" alt="20210111200610224"></p>
+<img src="/2022/07/05/k8s/20210111200610224.png" class title="查看"></li>
+<li><p> 可以看到service名称为countgame的service的对外端口为11413，会把通过这个端口访问的请求转发到service对象关联的pod对象的8082端口上 。访问192.168.137.110：11413/countgame/user/toGame可以访问项目</p>
+</li>
+<li><p><strong>缺点： 服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护，所以生产环境不建议这么使用</strong> </p>
+</li>
+</ul>
+<h4 id="3-2-LoadBalane"><a href="#3-2-LoadBalane" class="headerlink" title="3.2 LoadBalane"></a>3.2 LoadBalane</h4><blockquote>
+<p>LoadBalane是上面通过NodePort暴露外部访问的一个优化，增加了一个负载均衡器，上面的NodePort是所有节点都开放一个端口，直接给外部访问，并没有Node节点的负载均衡。LoadBalane则是在上面的基础上增加了一层，只提供一个公网ip给外部访问，外部访问这个ip再负载均衡分发给Node节点的Pod</p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011120562767.png" alt="2021011120562767"></p>
+<img src="/2022/07/05/k8s/2021011120562767.png" class title="LoadBalane">
+
+<p>部署起来和上述NodePort界面差不多。kind参数变为LoadBalane</p>
+<ul>
+<li>缺点： 每一个用 LoadBalancer 暴露的服务都会有它自己的 IP 地址和端口，不能做到一个ip地址就可以访问所有服务。 </li>
+</ul>
+<h4 id="3-3-Ingress"><a href="#3-3-Ingress" class="headerlink" title="3.3 Ingress"></a>3.3 Ingress</h4><blockquote>
+<p>采用 NodePort 方式暴露服务面临问题是，服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护；如果采用LoadBalane，每个服务都得开放一个公网IP，也会很庞大。这时候Ingress暴露服务就是一种很合适的方案。可以通过一个Ingress暴露多个服务。</p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
+<img src="/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
+
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
 <p><a target="_blank" rel="noopener" href="http://www.imooc.com/article/285913?block_id=tuijian_wz">博文3</a></p>
@@ -411,7 +477,7 @@ kubectl logs +pod的name
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1.概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-Kubernetes"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是 Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Kubernetes-%E5%9C%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2  Kubernetes 在哪些地方使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-master"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-node"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Etcd"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 Etcd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-1-Pod"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">1.6.1 Pod</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-2-Service"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">1.6.2 Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-3-Volume"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">1.6.3 Volume</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-4-Namespace"><span class="nav-number">1.1.6.4.</span> <span class="nav-text">1.6.4 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-5-Deployment"><span class="nav-number">1.1.6.5.</span> <span class="nav-text">1.6.5 Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-6-ReplicaSet"><span class="nav-number">1.1.6.6.</span> <span class="nav-text">1.6.6 ReplicaSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.2.</span> <span class="nav-text">2.项目部署</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1.概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-Kubernetes"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是 Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Kubernetes-%E5%9C%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2  Kubernetes 在哪些地方使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-master"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-node"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Etcd"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 Etcd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-1-Pod"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">1.6.1 Pod</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-2-Service"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">1.6.2 Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-3-Volume"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">1.6.3 Volume</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-4-Namespace"><span class="nav-number">1.1.6.4.</span> <span class="nav-text">1.6.4 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-5-Deployment"><span class="nav-number">1.1.6.5.</span> <span class="nav-text">1.6.5 Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-6-ReplicaSet"><span class="nav-number">1.1.6.6.</span> <span class="nav-text">1.6.6 ReplicaSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.2.</span> <span class="nav-text">2.项目部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Serivce%E6%9A%B4%E9%9C%B2ip%E6%96%B9%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">3.Serivce暴露ip方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-NodePort"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 NodePort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-LoadBalane"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 LoadBalane</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Ingress"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 Ingress</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
