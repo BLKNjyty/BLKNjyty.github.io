@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Kubernetes1.概念1.1 什么是 Kubernetes 我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。    除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服">
+  <meta name="description" content="Kubernetes1.概念1.1 什么是 Kubernetes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s">
 <meta property="og:url" content="http://example.com/2022/07/05/k8s/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
-<meta property="og:description" content="Kubernetes1.概念1.1 什么是 Kubernetes 我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。    除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服">
+<meta property="og:description" content="Kubernetes1.概念1.1 什么是 Kubernetes">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1657022314159.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/1657022314159.png">
@@ -33,8 +33,10 @@
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111140539700.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011113290971.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011113290971.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111143610186.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111143610186.png">
 <meta property="article:published_time" content="2022-07-05T06:39:19.000Z">
-<meta property="article:modified_time" content="2022-07-05T12:48:26.299Z">
+<meta property="article:modified_time" content="2022-07-06T02:50:05.346Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
@@ -219,7 +221,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4><blockquote>
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
+
+<blockquote>
 <p>我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。</p>
 <p>   除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服务，服务器故障不用停机，从开发环境到测试环境到生产环境的迁移极其方便，一个配置文件搞定，一次生成image，到处运行 </p>
 </blockquote>
@@ -300,19 +304,29 @@
 <li><p>服务器上有Docker和相关镜像的前提下</p>
 </li>
 <li><p>创建Deployment的YAML描述文件，根据yaml文件创建服务和集群</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line">  name: string # POD名称</span><br><span class="line">  namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line">  containers: # 容器列表</span><br><span class="line">    - name: string # 容器名称</span><br><span class="line">      image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
-<img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件"></li>
-<li><p>```<br>![20210111143610186](C:\Users\blkn\Desktop\20210111143610186.png#创建Deployment对象<br>kubectl apply -f deploy.yaml </p>
-<p>创建了Deployment对象再查看pod<br>kubectl get pods</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  ![20210111143610186](D:\gitee\Blog\source\_posts\k8s\20210111143610186.png)</span><br><span class="line"></span><br><span class="line">  &#123;% asset_img 20210111143610186.png 一个pod图%&#125;</span><br><span class="line"></span><br><span class="line">  x修改 spec.replicas为3之后再查看，就有三个pod。</span><br><span class="line"></span><br><span class="line">- ```</span><br><span class="line">  #查看pod启动日志</span><br><span class="line">  kubectl logs +pod的name</span><br></pre></td></tr></table></figure>
-
-<p>此时集群内部已经可以访问项目了。··············</p>
 </li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line"> name: string # POD名称</span><br><span class="line"> namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line"> containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">     image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
+<img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
+
+<ul>
+<li>```<br>![20210111143610186](C:\Users\blkn\Desktop\20210111143610186.png#创建Deployment对象<br>kubectl apply -f deploy.yaml <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">创建了Deployment对象再查看pod</span><br><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
+<img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图">
+
+<p>x修改 spec.replicas为3之后再查看，就有三个pod。</p>
+<ul>
+<li><pre><code>#查看pod启动日志
+kubectl logs +pod的name
+</code></pre>
+</li>
+</ul>
+<p>此时集群内部已经可以访问项目了。··············</p>
 </blockquote>
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
