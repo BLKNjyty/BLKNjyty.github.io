@@ -20,30 +20,40 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="为了我和小田的美好生活而努力">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BLKNjyty的博客">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Kubernetes1.概念1.1 什么是 Kubernetes 我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。    除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s">
+<meta property="og:url" content="http://example.com/2022/07/05/k8s/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
-<meta property="og:description" content="为了我和小田的美好生活而努力">
+<meta property="og:description" content="Kubernetes1.概念1.1 什么是 Kubernetes 我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。    除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1657022314159.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/1657022314159.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111140539700.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111140539700.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011113290971.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011113290971.png">
+<meta property="article:published_time" content="2022-07-05T06:39:19.000Z">
+<meta property="article:modified_time" content="2022-07-05T12:48:26.299Z">
 <meta property="article:author" content="jy">
+<meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1657022314159.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/07/05/k8s/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>BLKNjyty的博客</title>
+  <title>k8s | BLKNjyty的博客</title>
   
 
 
@@ -156,9 +166,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -174,10 +185,9 @@
       <meta itemprop="name" content="BLKNjyty的博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/05/k8s/" class="post-title-link" itemprop="url">k8s</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          k8s
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -209,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4><blockquote>
+        <h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4><blockquote>
 <p>我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。</p>
 <p>   除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服务，服务器故障不用停机，从开发环境到测试环境到生产环境的迁移极其方便，一个配置文件搞定，一次生成image，到处运行 </p>
 </blockquote>
@@ -308,254 +318,33 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
 <p><a target="_blank" rel="noopener" href="http://www.imooc.com/article/285913?block_id=tuijian_wz">博文3</a></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/k8s/" rel="tag"># k8s</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/01/Docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="jy">
-      <meta itemprop="description" content="为了我和小田的美好生活而努力">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BLKNjyty的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/07/01/Docker/" class="post-title-link" itemprop="url">Docker</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-07-01 19:55:41" itemprop="dateCreated datePublished" datetime="2022-07-01T19:55:41+08:00">2022-07-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是Docker"><a href="#1-1-什么是Docker" class="headerlink" title="1.1 什么是Docker"></a>1.1 什么是Docker</h4><blockquote>
-<p>Docker是开源的应用容器引擎，或者说是一种容器标准。<strong>开发者可以使用其将自身的应用、依赖包、开发环境等打包到一个轻量级、可移植的容器中。</strong> 打包之后可以发布到Linux等系统上，具有开销小、启动快等优点。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/07/01/Docker/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="jy">
-      <meta itemprop="description" content="为了我和小田的美好生活而努力">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BLKNjyty的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">个人博客创建教程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-15 10:07:03" itemprop="dateCreated datePublished" datetime="2022-04-15T10:07:03+08:00">2022-04-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">教程</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102592286">参考文章链接</a></p>
-<h3 id="1-新建github-安装Git并且绑定账号"><a href="#1-新建github-安装Git并且绑定账号" class="headerlink" title="1.新建github,安装Git并且绑定账号"></a>1.新建github,安装Git并且绑定账号</h3><h3 id="2-安装nodejs"><a href="#2-安装nodejs" class="headerlink" title="2.安装nodejs"></a>2.安装nodejs</h3><ul>
-<li><p>安装完成后，用 node -v 和 npm -v 命令检查</p>
-</li>
-<li><p>设置nodejs全局变量的安装路径和环境变量</p></li></ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/01/Docker/" rel="prev" title="Docker">
+      <i class="fa fa-chevron-left"></i> Docker
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/01/stream/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="jy">
-      <meta itemprop="description" content="为了我和小田的美好生活而努力">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BLKNjyty的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/01/stream/" class="post-title-link" itemprop="url">stream</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-01 16:46:00" itemprop="dateCreated datePublished" datetime="2022-04-01T16:46:00+08:00">2022-04-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>Stream（流）是一个来自数据源的元素队列并支持聚合操作</p>
-<ul>
-<li>元素是特定类型的对象，形成一个队列。 Java中的Stream并不会存储元素，而是按需计算。</li>
-<li><strong>数据源</strong> 流的来源。 可以是集合，数组，I/O channel， 产生器generator 等—不可以是map！！</li>
-<li><strong>聚合操作</strong> 类似SQL语句一样的操作， 比如filter, map, reduce, find, match, sorted等。l</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/04/01/stream/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -608,6 +397,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1.概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-Kubernetes"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是 Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Kubernetes-%E5%9C%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2  Kubernetes 在哪些地方使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-master"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-node"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Etcd"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 Etcd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-1-Pod"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">1.6.1 Pod</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-2-Service"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">1.6.2 Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-3-Volume"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">1.6.3 Volume</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-4-Namespace"><span class="nav-number">1.1.6.4.</span> <span class="nav-text">1.6.4 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-5-Deployment"><span class="nav-number">1.1.6.5.</span> <span class="nav-text">1.6.5 Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-6-ReplicaSet"><span class="nav-number">1.1.6.6.</span> <span class="nav-text">1.6.6 ReplicaSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">1.2.</span> <span class="nav-text">2.项目部署</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
