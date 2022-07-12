@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景本文档记录how2j的tmall项目在本地虚拟机上使用docker生成镜像并推送到仓库的过程 Linux:centos7，docker为20.10…版本。注意有个坑，linux内核版本过低(比如内核版本3…和docker20…就不行)、docker版本过高，部署完也无法访问，解决办法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker部署how2j项目实操">
+<meta property="og:url" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/index.html">
+<meta property="og:site_name" content="BLKNjyty的博客">
+<meta property="og:description" content="背景本文档记录how2j的tmall项目在本地虚拟机上使用docker生成镜像并推送到仓库的过程 Linux:centos7，docker为20.10…版本。注意有个坑，linux内核版本过低(比如内核版本3…和docker20…就不行)、docker版本过高，部署完也无法访问，解决办法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee/Blog/source_posts/docker部署how2j项目实操/1657596789808.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657596789808.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee/Blog/source_posts/docker部署how2j项目实操/1657597958254.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657597958254.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee/Blog/source_posts/docker部署how2j项目实操/1657598168031.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598168031.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee/Blog/source_posts/docker部署how2j项目实操/1657598367247.png">
+<meta property="og:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598367247.png">
+<meta property="article:published_time" content="2022-07-12T05:51:27.000Z">
+<meta property="article:modified_time" content="2022-07-12T05:58:12.610Z">
+<meta property="article:author" content="jy">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee/Blog/source_posts/docker部署how2j项目实操/1657596789808.png">
+
+<link rel="canonical" href="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>docker部署how2j项目实操 | BLKNjyty的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BLKNjyty的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="jy">
+      <meta itemprop="description" content="为了我和小田的美好生活而努力">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BLKNjyty的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          docker部署how2j项目实操
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-12 13:51:27" itemprop="dateCreated datePublished" datetime="2022-07-12T13:51:27+08:00">2022-07-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>本文档记录<a target="_blank" rel="noopener" href="https://how2j.cn/k/deploy2linux/deploy2linux-autostart/1996.html">how2j的tmall项目</a>在本地虚拟机上使用docker生成镜像并推送到仓库的过程</p>
+<p>Linux:centos7，docker为20.10…版本。<strong>注意有个坑，linux内核版本过低(比如内核版本3…和docker20…就不行)、docker版本过高，部署完也无法访问，<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43604021/article/details/125722883">解决办法</a></strong></p>
+<span id="more"></span>
+
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><h4 id="拉取一个Linux镜像"><a href="#拉取一个Linux镜像" class="headerlink" title="拉取一个Linux镜像"></a>拉取一个Linux镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//在自身虚拟机上的操作系统中拉取一个镜像</span><br><span class="line">docker pull centos:7.6.1810 </span><br></pre></td></tr></table></figure>
+
+<h4 id="安装ftp服务"><a href="#安装ftp服务" class="headerlink" title="安装ftp服务"></a>安装ftp服务</h4><blockquote>
+<p>为了后续从本地上传java应用、tomcat等到虚拟机中的操作系统方便，安装vsftpd</p>
+</blockquote>
+<h5 id="vsftpd介绍"><a href="#vsftpd介绍" class="headerlink" title="vsftpd介绍"></a>vsftpd介绍</h5><blockquote>
+<p> vsftpd 全称是：very secure FTP daemon 非常安全的ftp后台程序，及ftp 服务端 </p>
+</blockquote>
+<h5 id="安装和启停"><a href="#安装和启停" class="headerlink" title="安装和启停"></a>安装和启停</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum install vsftpd -y</span><br><span class="line">systemctl start vsftpd.service</span><br><span class="line">systemctl status vsftpd.service</span><br><span class="line">systemctl stop vsftpd.service</span><br><span class="line">//ftp服务启动的是21端口，使用如下命令应该观察到21端口正在处于监听状态，这也从侧面反应了ftp服务器启动成功了</span><br><span class="line">netstat -anp|grep 21</span><br></pre></td></tr></table></figure>
+
+<h5 id="增加用户"><a href="#增加用户" class="headerlink" title="增加用户"></a>增加用户</h5><blockquote>
+<p>为了连接上vsftpd，我们创建专门的用户</p>
+<ul>
+<li>创建一个目录专属于此用户拥有</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/wwwroot/ftptest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>创建用户， 创建用户ftptest,并且指定其目录为用户目录中创建的/home/wwwroot/ftptest </p>
+<ul>
+<li><em>-g ftp 表示该用户属于ftp分组 (ftp分组是内置的，本来就存在，不需要自己创建)</em><br><em>-s /sbin/nologin 表示这个用户不能用来登录secureCRT这样的客户端。 这种不能登陆的用户又叫做虚拟用户</em><br> <em>创建过程给出的警告信息是正常的，不用理会</em></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd -d /home/wwwroot/ftptest -g ftp -s /sbin/nologin ftptest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置目录权限 ， 把目录/home/wwwroot/ftptest的拥有者设置为ftptest<br> 使ftptest用户拥有这个目录的读写权限 </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown -R ftptest /home/wwwroot/ftptest</span><br><span class="line">chmod -R 775 /home/wwwroot/ftptest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 设置密码 </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//输入 paw123###</span><br><span class="line">passwd ftptest</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h5 id="配置用户"><a href="#配置用户" class="headerlink" title="配置用户"></a>配置用户</h5><blockquote>
+<ul>
+<li>为了安全起见，去掉vsftpd的匿名登录</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br><span class="line"></span><br><span class="line">//进入后把原来的anonymous_enable=YES改为</span><br><span class="line">anonymous_enable=NO</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>限制用户访问， 创建的ftptest用户所拥有的目录是 /home/wwwroot/ftptest,如果不做限制，那么使用ftptest登陆之后可以切换到其他敏感目录去，比如切换到/usr目录去，这样就存在巨大的安全隐患 </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br><span class="line"></span><br><span class="line">//进入后找到</span><br><span class="line">#chroot_list_enable=YES</span><br><span class="line"># (default follows)</span><br><span class="line">#chroot_list_file=/etc/vsftpd/chroot_list</span><br><span class="line"></span><br><span class="line">//将这三行改为，即去掉注释</span><br><span class="line">chroot_list_enable=YES</span><br><span class="line"># (default follows)</span><br><span class="line">chroot_list_file=/etc/vsftpd/chroot_list</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加用户名单</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/chroot_list</span><br><span class="line"></span><br><span class="line">//进入后增加一行</span><br><span class="line">ftptest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打开写权限， vsftpd服务器是这样的，一旦某个用户被限制访问了，那么默认情况下，该用户的写权限也被剥夺了。 这就导致ftp客户端连接上服务器之后无法上传文件。 </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br><span class="line">//最后面加上</span><br><span class="line">allow_writeable_chroot=YES</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h5 id="配置端口"><a href="#配置端口" class="headerlink" title="配置端口"></a>配置端口</h5><blockquote>
+<p> vsftpd有两种端口，一个是21端口，用来监听客户端连接请求的。 这个一般说来是固定的，就一直使用21端口。<br> 另一种是，一旦获取到请求之后，再专门用户服务端和客户端传输数据的端口。<br> 本知识点就是用于指定第二种端口的获取范围 </p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/vsftpd/vsftpd.conf</span><br><span class="line"></span><br><span class="line">//进入后，在最后添加，这表示使用被动模式，用于传输数据的端口分配从30000-30010之间。</span><br><span class="line">pasv_enable=YES</span><br><span class="line">pasv_min_port=30000</span><br><span class="line">pasv_max_port=30010</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h5 id="鉴权配置"><a href="#鉴权配置" class="headerlink" title="鉴权配置"></a>鉴权配置</h5><blockquote>
+<p>不懂为啥、、、跟着配置把</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/pam.d/vsftpd</span><br><span class="line">//注释掉/etc/pam.d/vsftpd文件里这一行：</span><br><span class="line">#auth required pam_shells.so</span><br><span class="line">//这样不去鉴权，从而允许 ftptest 这种 nologin用户登录 ftp 服务器.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h5 id="重启服务"><a href="#重启服务" class="headerlink" title="重启服务"></a>重启服务</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart vsftpd.service</span><br><span class="line">systemctl status vsftpd.service</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h5><blockquote>
+<p>有防火墙且开启的，需要开放端口，才能访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=21/tcp --permanent </span><br><span class="line">firewall-cmd --zone=public --add-port=30000-30010/tcp --permanent </span><br><span class="line">//开放完之后一定要刷新</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">//查看一下</span><br><span class="line">firewall-cmd --zone=public --list-ports</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>本地下载个ftp客户端待后续使用，xftp、ftprush等等都行</p>
+<h4 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h4><blockquote>
+<p>这里的安装是在虚拟机中的docker容器里centos7安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//运行容器</span><br><span class="line">docker run -dit --privileged --name centos7 centos:7.6.1810  /usr/sbin/init</span><br><span class="line">//进入容器，补充：退出容器exit</span><br><span class="line">docker exec -it centos7 /bin/bash</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后再执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum -y install java-1.8.0-openjdk.x86_64</span><br><span class="line">//验证</span><br><span class="line">java -version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h4><blockquote>
+<p>这里的安装是在虚拟机中的docker容器里centos7安装，进入容器同上</p>
+<p>yum上mysql的资源有问题，所以不能仅仅之用yum。在使用yum之前还需要用其他命令获取mysql社区版 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd /tmp</span><br><span class="line">wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm  </span><br><span class="line">rpm -ivh mysql-community-release-el7-5.noarch.rpm  </span><br><span class="line">//接着就可以通过yum安装了：</span><br><span class="line">yum install mysql mysql-server mysql-devel -y</span><br><span class="line"></span><br><span class="line">//启动</span><br><span class="line">systemctl start mysql.service</span><br><span class="line">//验证</span><br><span class="line">netstat -anp|grep 3306</span><br><span class="line"></span><br><span class="line">//设置mysql密码</span><br><span class="line">//通过Yum安装的mysql的管理员账户是没有密码的，这里通过命令设置其密码为 admin ，尽量使用这个密码哦，后续部署j2ee应用的时候会用到这个密码哦。</span><br><span class="line">mysqladmin -u root password admin</span><br><span class="line"></span><br><span class="line">//登录</span><br><span class="line">mysql -uroot -padmin</span><br><span class="line"></span><br><span class="line">//进入了终端，试试sql语句</span><br><span class="line">show databases;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h4><blockquote>
+<p>yum上没有tomcat的源,可以用其他方式，如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /tmp</span><br><span class="line">wget http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-7/v7.0.92/bin/apache-tomcat-7.0.92.tar.gz</span><br><span class="line">tar xzf apache-tomcat-7.0.92.tar.gz</span><br><span class="line">mv apache-tomcat-7.0.92 /usr/local/tomcat7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>但是本教程用的tomcat8，直接在这右上角<a target="_blank" rel="noopener" href="https://how2j.cn/k/deploy2linux/deploy2linux-start/1611.html">下载</a></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//下载到本地，通过ftp客户端上传到虚拟机的操作系统，然后再通过docker的cp命令复制到容器centos7中</span><br><span class="line">//将宿主机目录线下/home/wwwroot/ftptest/apache-tomcat-8.5.23.tar.gz复制到名为centos7的容器的/tmp目录下面</span><br><span class="line">docker cp /home/wwwroot/ftptest/apache-tomcat-8.5.23.tar.gz centos7:/tmp</span><br><span class="line">//进入容器，同上</span><br><span class="line">...</span><br><span class="line">//解压、移动</span><br><span class="line">tar xzf apache-tomcat-8.5.23.tar.gz</span><br><span class="line">mv apache-tomcat-8.5.23 /usr/local/tomcat8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657596789808.png" alt="1657596789808"></p>
+<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657596789808.png" class title="ftp客户端">
+
+<ul>
+<li>验证一下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//启动tomcat</span><br><span class="line">/usr/local/tomcat8/bin/startup.sh</span><br><span class="line">//查看端口</span><br><span class="line">netstat -anp|grep 8080</span><br><span class="line">//查看启动日志</span><br><span class="line">tail -300f /usr/local/tomcat8/logs/catalina.out</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开放端口</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent </span><br><span class="line">//开放完之后一定要刷新</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">//查看一下</span><br><span class="line">firewall-cmd --zone=public --list-ports</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="部署java应用和sql语句"><a href="#部署java应用和sql语句" class="headerlink" title="部署java应用和sql语句"></a>部署java应用和sql语句</h4><p><a target="_blank" rel="noopener" href="https://how2j.cn/k/deploy2linux/deploy2linux-upload/1614.html">rar包下载</a></p>
+<blockquote>
+<p> 下载tmall.rar，<strong>解压后上传</strong>到虚拟机的操作系统中，才通过docker的cp转移到容器中。</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//步骤基本同上</span><br><span class="line">docker cp /home/wwwroot/ftptest/tmall centos7:/home/wwwroot/ftptest</span><br><span class="line">//最后的项目位置在/home/wwwroot/ftptest/tmall/web</span><br><span class="line">//配置tomcat</span><br><span class="line">vi /usr/local/tomcat7/conf/server.xml </span><br><span class="line">//然后在&lt;host下面增加一行</span><br><span class="line">&lt;Context path=&quot;/tmall&quot; docBase=&quot;/home/wwwroot/ftptest/tmall/web&quot; debug=&quot;0&quot; reloadable=&quot;false&quot; /&gt;</span><br><span class="line">//重启tomcat</span><br><span class="line">/usr/local/tomcat7/bin/shutdown.sh</span><br><span class="line">/usr/local/tomcat7/bin/startup.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p> <img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657597958254.png" alt="1657597958254"></p>
+ <img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657597958254.png" class title="tomcat配置应用">
+
+<p> 下载tmall.sql，上传到虚拟机的操作系统中，才通过docker的cp转移到容器中。</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//Linux MySQL默认是大小写敏感的，但是模仿天猫在设计的时候是在windows上开发的，而windows上的Mysql默认是非大小写敏感的，所以JDBC代码有的表名是大写，有的是小写的，一旦运行起来就会因为大小写不一致导致无法识别表名。 为了解决这个矛盾，就需要把MySQL的大小写敏感修改为非敏感。解决办法如下：</span><br><span class="line">vi /etc/my.cnf</span><br><span class="line">//打开后在[mysqld]后添加添加</span><br><span class="line">lower_case_table_names=1</span><br><span class="line">//重启mysql</span><br><span class="line">systemctl restart mysqld.service</span><br><span class="line">//连接数据库</span><br><span class="line">mysql -uroot -padmin</span><br><span class="line">//创建数据库</span><br><span class="line">CREATE DATABASE tmall DEFAULT CHARACTER SET utf8;</span><br><span class="line">//查看</span><br><span class="line">show databases;</span><br><span class="line">//导入数据</span><br><span class="line">mysql -u root -padmin --default-character-set=utf8 tmall &lt; /home/wwwroot/ftptest/tmall.sql</span><br><span class="line">//重新登录验证</span><br><span class="line">mysql -uroot -padmin</span><br><span class="line">use tmall;</span><br><span class="line">show tables;</span><br><span class="line">select count(*) from product;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="设置自启动"><a href="#设置自启动" class="headerlink" title="设置自启动"></a>设置自启动</h4><h5 id="服务自启动"><a href="#服务自启动" class="headerlink" title="服务自启动"></a>服务自启动</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//分别执行如下代码就可以开启服务的自启动了。</span><br><span class="line">systemctl enable vsftpd.service</span><br><span class="line">systemctl enable mysqld.service</span><br><span class="line">//关闭</span><br><span class="line">systemctl disable vsftpd.service</span><br><span class="line">systemctl disable mysqld.service</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="脚本自启动"><a href="#脚本自启动" class="headerlink" title="脚本自启动"></a>脚本自启动</h5><p> 有个文件叫做 rc.local, 把脚本放进去就可以了。<br>不过这个脚本在 centos7里被降级了，不能被执行，所以要执行如下语句使得其可以被执行先 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/rc.d/rc.local</span><br><span class="line">//然后修改 /etc/rc.d/rc.local, 放入 tomcat脚本即可</span><br><span class="line">vi /etc/rc.d/rc.local</span><br><span class="line">/usr/local/tomcat7/bin/startup.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598168031.png" alt="1657598168031"></p>
+<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598168031.png" class title="tomcat自启动">
+
+<h4 id="容器打包成镜像"><a href="#容器打包成镜像" class="headerlink" title="容器打包成镜像"></a>容器打包成镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//容器打包成镜像</span><br><span class="line">docker commit -m=&quot;my tmall&quot; -a=&quot;yujin&quot; centos7 blknjyty/mytmall:v1</span><br><span class="line">//运行镜像</span><br><span class="line">docker run -dit --privileged -p80:80 -p8080:8080  --name mytmall blknjyty/mytmall:v1  /usr/sbin/init</span><br><span class="line">//本机访问</span><br><span class="line">http://虚拟机ip:8080/tmall/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598367247.png" alt="1657598367247"></p>
+<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598367247.png" class title="项目启动图">
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/08/React%E5%85%A5%E9%97%A8%E6%B8%B8%E6%88%8F/" rel="prev" title="React入门游戏">
+      <i class="fa fa-chevron-left"></i> React入门游戏
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E4%B8%80%E4%B8%AALinux%E9%95%9C%E5%83%8F"><span class="nav-number">2.1.</span> <span class="nav-text">拉取一个Linux镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ftp%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.2.</span> <span class="nav-text">安装ftp服务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#vsftpd%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.2.1.</span> <span class="nav-text">vsftpd介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E5%90%AF%E5%81%9C"><span class="nav-number">2.2.2.</span> <span class="nav-text">安装和启停</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.3.</span> <span class="nav-text">增加用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.4.</span> <span class="nav-text">配置用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.2.5.</span> <span class="nav-text">配置端口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%89%B4%E6%9D%83%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.6.</span> <span class="nav-text">鉴权配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.2.7.</span> <span class="nav-text">重启服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.2.8.</span> <span class="nav-text">开放端口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85java"><span class="nav-number">2.3.</span> <span class="nav-text">安装java</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85mysql"><span class="nav-number">2.4.</span> <span class="nav-text">安装mysql</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85tomcat"><span class="nav-number">2.5.</span> <span class="nav-text">安装tomcat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2java%E5%BA%94%E7%94%A8%E5%92%8Csql%E8%AF%AD%E5%8F%A5"><span class="nav-number">2.6.</span> <span class="nav-text">部署java应用和sql语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">2.7.</span> <span class="nav-text">设置自启动</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">2.7.1.</span> <span class="nav-text">服务自启动</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="nav-number">2.7.2.</span> <span class="nav-text">脚本自启动</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E6%89%93%E5%8C%85%E6%88%90%E9%95%9C%E5%83%8F"><span class="nav-number">2.8.</span> <span class="nav-text">容器打包成镜像</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">jy</p>
+  <div class="site-description" itemprop="description">为了我和小田的美好生活而努力</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
