@@ -146,176 +146,107 @@
       </tags>
   </entry>
   <entry>
-    <title>k8s</title>
-    <url>/2022/07/05/k8s/</url>
-    <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
+    <title>jdbc的使用</title>
+    <url>/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="命名查询"><a href="#命名查询" class="headerlink" title="命名查询"></a>命名查询</h3><p>spring data jdbc最底层的接口是Repository</p>
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Indexed</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Repository</span>&lt;T, ID&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其次是CrudRepository，其继承Repository接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@NoRepositoryBean</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">CrudRepository</span>&lt;T, ID&gt; <span class="keyword">extends</span> <span class="title class_">Repository</span>&lt;T, ID&gt; &#123;</span><br><span class="line"><span class="comment">//里面有很多定义好的方法</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后是PagingAndSortingRepository，其继承CrudRepository</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@NoRepositoryBean</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PagingAndSortingRepository</span>&lt;T, ID&gt; <span class="keyword">extends</span> <span class="title class_">CrudRepository</span>&lt;T, ID&gt; &#123;</span><br><span class="line"><span class="comment">//比CrudRepository多了分页和排序的方法</span></span><br><span class="line">Iterable&lt;T&gt; <span class="title function_">findAll</span><span class="params">(Sort sort)</span>;</span><br><span class="line">Page&lt;T&gt; <span class="title function_">findAll</span><span class="params">(Pageable pageable)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一种使用方法就是自定义Repository接口，继承PagingAndSortingRepository接口，然后可以使用其默认的实现好的方法，只要按照其规定好的方法格式，框架会帮我们生成sql语句，与数据库交互，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">JobRepository</span> <span class="keyword">extends</span> <span class="title class_">PagingAndSortingRepository</span>&lt;Job, Long&gt; &#123;</span><br><span class="line">	<span class="comment">//根据工作id查询工作</span></span><br><span class="line">  List&lt;Job&gt; <span class="title function_">findByJobId</span><span class="params">(<span class="type">long</span> jobId)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@Table(&quot;job&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Job</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">long</span> jobId;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">long</span> name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。</p>
-<p>   除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服务，服务器故障不用停机，从开发环境到测试环境到生产环境的迁移极其方便，一个配置文件搞定，一次生成image，到处运行 </p>
-</blockquote>
-<h4 id="1-2-Kubernetes-在哪些地方使用"><a href="#1-2-Kubernetes-在哪些地方使用" class="headerlink" title="1.2  Kubernetes 在哪些地方使用"></a>1.2  <strong>Kubernetes</strong> 在哪些地方使用</h4><p>我们在企业生产过程中能够的使用步骤一般是：</p>
-<ul>
-<li><p>创建集群：master管理、监控，node打工人</p>
-</li>
-<li><p>部署应用：通过k8s的方式(默认容器是docker),即在yaml文件中指定容器镜像等配置</p>
-</li>
-<li><p>发布应用：部署完应用后必须发布才能被外部访问，因为此时的ip地址只有同一个集群才能访问</p>
-</li>
-<li><p>扩展应用：比如遇上双11等活动对机器进行扩容，过后再进行缩容。</p>
-</li>
-<li><p>更新应用：有新版本了，滚动更新，根据新的image创建一个pod，分配各种资源，然后自动负载均衡，删除老的pod，然后继续更新，不会中断服务； 更新错了怎么办，不会影响生产业务，回滚就好了</p>
-</li>
-</ul>
-<h4 id="1-3-master"><a href="#1-3-master" class="headerlink" title="1.3 master"></a>1.3 master</h4><blockquote>
-<p>Kubernetes 可以管理大规模的集群，使集群中的每一个节点彼此连接，能够像控制一台单一的计算机一样控制整个集群。</p>
-<p> <strong>master</strong> 是集群的”大脑”，负责管理整个集群：像应用的调度、更新、扩缩容等。</p>
-</blockquote>
-<p>master上包含组件：</p>
-<ul>
-<li> <strong>kube-apiserver</strong> : 集群入口，所有操作都经过此</li>
-<li> <strong>kube-controller-manager</strong> ：所有资源的控制中心</li>
-<li> <strong>kube-scheduler</strong> ：具体负责资源调度的进程</li>
-</ul>
-<h4 id="1-4-node"><a href="#1-4-node" class="headerlink" title="1.4 node"></a>1.4 node</h4><blockquote>
-<p>就是具体”干活”的，一个Node一般是一个虚拟机或物理机，它上面事先运行着 docker 服务和 kubelet 服务（ Kubernetes 的一个组件），当接收到 master 下发的”任务”后，Node 就要去完成任务（用docker 运行一个指定的应用）</p>
-</blockquote>
-<p>node上包含的组件：</p>
-<ul>
-<li> <strong>kubelet</strong> ：node上的Agent，负责pod对应容器的创建、启停等，听master指挥干活并随时汇报。</li>
-<li> <strong>kube-proxy</strong> ： 在Node节点上实现Pod网络代理，实现Kubernetes Service的通信和负载均衡机制的重要组件。 </li>
-<li> <strong>docker</strong> ： Docker引擎，负责本机的容器的创建和管理工作 </li>
-</ul>
-<h4 id="1-5-Etcd"><a href="#1-5-Etcd" class="headerlink" title="1.5 Etcd"></a>1.5 Etcd</h4><blockquote>
-<p>Etcd是Kubernetes提供默认的键值存储系统，保存所有集群数据，使用时需要为Etcd数据提供备份计划 </p>
-</blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1657022314159.png" alt="1657022314159"></p>
-<img src="/2022/07/05/k8s/1657022314159.png" class title="Kubernetes网络架构图">
+<p>官网提供了一些其他的形象查询方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;<span class="keyword">interface</span> <span class="title class_">PersonRepository</span> <span class="keyword">extends</span> <span class="title class_">Repository</span>&lt;Person, Long&gt; &#123;</span><br><span class="line"></span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByEmailAddressAndLastname</span><span class="params">(EmailAddress emailAddress, String lastname)</span>;</span><br><span class="line"></span><br><span class="line">&gt;<span class="comment">// Enables the distinct flag for the query</span></span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findDistinctPeopleByLastnameOrFirstname</span><span class="params">(String lastname, String firstname)</span>;</span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findPeopleDistinctByLastnameOrFirstname</span><span class="params">(String lastname, String firstname)</span>;</span><br><span class="line"></span><br><span class="line">&gt;<span class="comment">// Enabling ignoring case for an individual property</span></span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByLastnameIgnoreCase</span><span class="params">(String lastname)</span>;</span><br><span class="line">&gt;<span class="comment">// Enabling ignoring case for all suitable properties</span></span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByLastnameAndFirstnameAllIgnoreCase</span><span class="params">(String lastname, String firstname)</span>;</span><br><span class="line"></span><br><span class="line">&gt;<span class="comment">// Enabling static ORDER BY for a query</span></span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByLastnameOrderByFirstnameAsc</span><span class="params">(String lastname)</span>;</span><br><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByLastnameOrderByFirstnameDesc</span><span class="params">(String lastname)</span>;</span><br><span class="line">&gt;&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-6-对象"><a href="#1-6-对象" class="headerlink" title="1.6 对象"></a>1.6 对象</h4><h5 id="1-6-1-Pod"><a href="#1-6-1-Pod" class="headerlink" title="1.6.1 Pod"></a>1.6.1 Pod</h5><blockquote>
-<p>集群调度的最小单元，Pod 是一组容器（当然也可以只有一个）。容器本身就是一个小盒子了，Pod 相当于在容器上又包了一层小盒子。所以Pod里的容器有如下特点：</p>
+<p>同时也支持<strong>嵌套属性</strong>的查询</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;List&lt;Person&gt; <span class="title function_">findByAddress_ZipCode</span><span class="params">(ZipCode zipCode)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>同时除了我们传入的实体类的属性，Spring Data Jdbc还识别 <strong>Page ， Sort</strong> 等参数</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;Page&lt;User&gt; <span class="title function_">findByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br><span class="line"></span><br><span class="line">&gt;Slice&lt;User&gt; <span class="title function_">findByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br><span class="line"></span><br><span class="line">&gt;List&lt;User&gt; <span class="title function_">findByLastname</span><span class="params">(String lastname, Sort sort)</span>;</span><br><span class="line"></span><br><span class="line">&gt;List&lt;User&gt; <span class="title function_">findByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;<span class="type">Sort</span> <span class="variable">sort</span> <span class="operator">=</span> Sort.by(<span class="string">&quot;firstname&quot;</span>).ascending()</span><br><span class="line">&gt;.and(Sort.by(<span class="string">&quot;lastname&quot;</span>).descending());</span><br><span class="line">&gt;<span class="comment">//当然也可以这样，更加地安全</span></span><br><span class="line">&gt;TypedSort&lt;Person&gt; person = Sort.sort(Person.class);</span><br><span class="line">&gt;<span class="type">Sort</span> <span class="variable">sort</span> <span class="operator">=</span> person.by(Person::getFirstname).ascending()</span><br><span class="line">&gt;.and(person.by(Person::getLastname).descending());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;Pageable pageable=PageRequest.of(<span class="number">1</span>, <span class="number">20</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>甚至可以<strong>限制查询个数</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;Page&lt;User&gt; <span class="title function_">queryFirst10ByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br><span class="line"></span><br><span class="line">&gt;Slice&lt;User&gt; <span class="title function_">findTop3ByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br><span class="line"></span><br><span class="line">&gt;List&lt;User&gt; <span class="title function_">findFirst10ByLastname</span><span class="params">(String lastname, Sort sort)</span>;</span><br><span class="line"></span><br><span class="line">&gt;List&lt;User&gt; <span class="title function_">findTop10ByLastname</span><span class="params">(String lastname, Pageable pageable)</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回类型 <code>Streamable</code>    <code>Iterable</code>  <code>Collections </code>  <code>Stream</code>可以自定义</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;<span class="comment">//Streamable和StreamStream的区别在于Stream必须关闭</span></span><br><span class="line">&gt;<span class="keyword">try</span> (Stream&lt;User&gt; stream = repository.findAllByCustomQueryAndStream()) &#123;</span><br><span class="line">&gt;stream.forEach(…);</span><br><span class="line">&gt;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;Streamable&lt;Person&gt; result = repository.findByFirstnameContaining(<span class="string">&quot;av&quot;</span>)</span><br><span class="line">&gt;.and(repository.findByLastnameContaining(<span class="string">&quot;ea&quot;</span>));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>空值</strong>的指定</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;<span class="keyword">import</span> org.springframework.lang.Nullable;</span><br><span class="line"></span><br><span class="line">&gt;<span class="keyword">interface</span> <span class="title class_">UserRepository</span> <span class="keyword">extends</span> <span class="title class_">Repository</span>&lt;User, Long&gt; &#123;</span><br><span class="line">&gt;<span class="comment">//入参和返回值有一个为空，抛出异常IllegalArgumentException </span></span><br><span class="line">&gt;User <span class="title function_">getByEmailAddress</span><span class="params">(EmailAddress emailAddress)</span>;    </span><br><span class="line">&gt;<span class="comment">//入参和返回值均可以是null</span></span><br><span class="line">&gt;<span class="meta">@Nullable</span></span><br><span class="line">&gt;User <span class="title function_">findByEmailAddress</span><span class="params">(<span class="meta">@Nullable</span> EmailAddress emailAdress)</span>;</span><br><span class="line">&gt;<span class="comment">//没有查询到返回Optional.empty()，但是入参为空时抛出异常IllegalArgumentException </span></span><br><span class="line">&gt;Optional&lt;User&gt; <span class="title function_">findOptionalByEmailAddress</span><span class="params">(EmailAddress emailAddress)</span>; </span><br><span class="line">&gt;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>异步返回</strong>结果</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&gt;<span class="meta">@Async</span></span><br><span class="line">&gt;Future&lt;User&gt; <span class="title function_">findByFirstname</span><span class="params">(String firstname)</span>;               </span><br><span class="line"></span><br><span class="line">&gt;<span class="meta">@Async</span></span><br><span class="line">&gt;CompletableFuture&lt;User&gt; <span class="title function_">findOneByFirstname</span><span class="params">(String firstname)</span>; </span><br><span class="line"></span><br><span class="line">&gt;<span class="meta">@Async</span></span><br><span class="line">&gt;ListenableFuture&lt;User&gt; <span class="title function_">findOneByLastname</span><span class="params">(String lastname)</span>; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="Query注解"><a href="#Query注解" class="headerlink" title="@Query注解"></a>@Query注解</h3><p>优先注解查询，没有注解去找命名查询。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">UserRepository</span> <span class="keyword">extends</span> <span class="title class_">CrudRepository</span>&lt;User, Long&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Query(&quot;select firstName, lastName from User u where u.emailAddress = :email&quot;)</span></span><br><span class="line">  User <span class="title function_">findByEmailAddress</span><span class="params">(<span class="meta">@Param(&quot;email&quot;)</span> String email)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//可以使用 @Modifying on 查询方法将查询标记为修改查询，如以下示例所示</span></span><br><span class="line"><span class="meta">@Modifying</span></span><br><span class="line"><span class="meta">@Query(&quot;UPDATE DUMMYENTITY SET name = :name WHERE id = :id&quot;)</span></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">updateName</span><span class="params">(<span class="meta">@Param(&quot;id&quot;)</span> Long id, <span class="meta">@Param(&quot;name&quot;)</span> String name)</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="jdbcTempalte"><a href="#jdbcTempalte" class="headerlink" title="jdbcTempalte"></a>jdbcTempalte</h3><p><a href>参考文章</a>(<a href="https://www.cnblogs.com/wenxuehai/p/14716372.html">https://www.cnblogs.com/wenxuehai/p/14716372.html</a>)</p>
+<h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><blockquote>
+<p>JdbcTemplate 是 Spring 对 JDBC 的封装，目的是使JDBC更加易于使用，JdbcTemplate是Spring的一部分。JdbcTemplate 处理了资源的建立和释放，它帮助我们避免一些常见的错误，比如忘了总要关闭连接。他运行核心的JDBC工作流，如Statement的建立和执行，而我们只需要提供SQL语句和提取结果即可。</p>
+<p>Spring为了简化数据库访问，主要做了以下几点工作：</p>
 <ul>
-<li>可以直接通过 volume 共享存储。</li>
-<li>有相同的网络空间，通俗点说就是有一样的ip地址，有一样的网卡和网络设置。</li>
-<li>多个容器之间可以“了解”对方，比如知道其他人的镜像，知道别人定义的端口等。</li>
+<li>提供了简化的访问JDBC的模板类，不必手动释放资源；</li>
+<li>提供了一个统一的 DAO 类以实现 Data Access Object 模式；</li>
+<li>把<code>SQLException</code>封装为<code>DataAccessException</code>，这个异常是一个<code>RuntimeException</code>，并且让我们能区分SQL异常的原因，例如，<code>DuplicateKeyException</code>表示违反了一个唯一约束；</li>
+<li>能方便地集成Hibernate、JPA和MyBatis这些数据库访问框架。</li>
 </ul>
 </blockquote>
-<h5 id="1-6-2-Service"><a href="#1-6-2-Service" class="headerlink" title="1.6.2 Service"></a>1.6.2 Service</h5><blockquote>
-<p>即服务发现，不管Deployment的Pod有多少个，不管它是更新、销毁还是重建，Service总是能发现并维护好它的ip列表。</p>
-<p>Service通过标签Label，知道其负责了哪几个Pod。这样就更加灵活，使其和Deployment解耦开来</p>
-</blockquote>
-<h5 id="1-6-3-Volume"><a href="#1-6-3-Volume" class="headerlink" title="1.6.3 Volume"></a>1.6.3 Volume</h5><blockquote>
-<p> Volume(存储卷)Volume是Pod中能够被多个容器共享的磁盘目录。 </p>
-<p>Kubernetes提供了非常丰富的Volume类型:</p>
+<h4 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h4><blockquote>
+<p>jdbcTemplate主要提供的5类方法及使用：</p>
+<p>（1）execute() 方法：可以执行任何SQL语句，一般用于执行DDL语句。</p>
+<p>（2）update(sqlStr, 参数列表) 方法：用于执行新增、修改、删除等语句。</p>
+<p>（3）batchUpdate() 方法：用于执行批处理相关语句，batchUpdate方法第二参数是一个元素为 Object[] 数组类型的 List 集合。</p>
+<p>（4）query() 方法及 queryForXXX() 方法：用于执行查询相关语句，查询结果为基本数据类型或者是单个对象一般使用 queryForObject()</p>
 <ul>
-<li>emptyDir：临时空间，Pod分配到Node时创建，无须指定宿主主机上对应的目录，在Kubernetes会自动分配当前Node的一个目录，当Pod被移除时，emptyDir中的数据也会永久删除。</li>
-<li>hostPath：为Pod挂载宿主主机上的文件或目录。用于数据永久保存。在不同的Node上具有相同配置的Pod,可能会因为宿主机上的目录和文件不同而导致Volume上的目录和文件的访问结果不一致。</li>
-<li>gcePersistentDisk：使用谷歌公有云提供的永久磁盘。数据永久保存。</li>
-<li>NFS：NFS 是 Network File System 的缩写，即网络文件系统。Kubernetes 中通过简单地配置就可以挂载 NFS 到 Pod 中，而 NFS 中的数据是可以永久保存的，同时 NFS 支持同时写操作。</li>
+<li>queryForInt()：查询一行数据并返回 int 型结果。例子：jdbcTemplate.queryForInt(“select count(*) from user”)</li>
+<li>queryForObject(sqlStr, 指定的数据类型, 参数列表)：查询一行任何类型的数据，最后一个参数指定返回结果类型。例子：jdbcTemplate.queryForObject(“selct count(*) from user”, Integer.class)</li>
+<li>queryForMap(sqlStr, 参数列表)：查询一行数据并将该行数据转换为 Map 返回。将会将列名作为key，列值作为 value 封装成 map。当查询出来的行数大于1时会报错。例子：jdbcTemplate.queryForMap(“select * from user where username = ?”, “aaa”);``</li>
+<li>List&lt;Map&lt;String, Object&gt;&gt; queryForList(sqlStr, 参数列表)：将查询结果集封装为 list 集合，该集合的每一条元素都是一个 map。</li>
+<li>query(sqlStr, RowMapper对象, 参数列表)：查询多行数据，并将结果集封装为元素是 JavaBean 的 list。（注意，指定的JavaBean的属性最好不要是基本类型，因为查询出来的结果可能是null，而null赋值为基本数据类型将会报错。比如int最好定义为Integer）</li>
 </ul>
+<p>（5）call() 方法：用于执行存储过程、函数相关语句。</p>
 </blockquote>
-<h5 id="1-6-4-Namespace"><a href="#1-6-4-Namespace" class="headerlink" title="1.6.4 Namespace"></a>1.6.4 Namespace</h5><blockquote>
-<p> 命名空间，Namespace在很多情况下用于实现多租户的资源隔离。Namespace通过集群内部的资源对象”分配”到不同的Namespace中，形成逻辑上分组的不同项目，便于不同的分组共享使用整个集群的资源的同时还能被分别管理。 </p>
-</blockquote>
-<h5 id="1-6-5-Deployment"><a href="#1-6-5-Deployment" class="headerlink" title="1.6.5 Deployment"></a>1.6.5 Deployment</h5><blockquote>
-<p> 通过Kubernetes的 <strong>Deployment</strong> 的配置文件去描述应用，比如应用叫什么名字、使用的镜像名字、要运行几个实例、需要多少的内存资源、cpu 资源等等。即应用管理者，是用于部署应用的对象。<strong>不会单独创建一个pod资源对象，而是创建Deployment对象，通过Deployment来管理pod。</strong> </p>
-</blockquote>
-<h5 id="1-6-6-ReplicaSet"><a href="#1-6-6-ReplicaSet" class="headerlink" title="1.6.6 ReplicaSet"></a>1.6.6 ReplicaSet</h5><blockquote>
-<p> ReplicaSet 实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本，所以我们通常不需要直接使用 ReplicaSet。 </p>
-</blockquote>
-<h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
-<img src="/2022/07/05/k8s/20210111140539700.png" class title="Kubernetes网络架构图">
+<h4 id="具体方法介绍"><a href="#具体方法介绍" class="headerlink" title="具体方法介绍"></a>具体方法介绍</h4><h5 id="增"><a href="#增" class="headerlink" title="增"></a>增</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//单个新增</span></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span>&#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addUser</span><span class="params">(User user)</span> &#123;</span><br><span class="line">        <span class="comment">//创建SQL语句</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;insert into user values(?, ?, ?)&quot;</span>;</span><br><span class="line">        <span class="comment">//调用方法执行SQL</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">updateRow</span> <span class="operator">=</span> jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword());</span><br><span class="line">        </span><br><span class="line">        System.out.println(updateRow);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<ul>
-<li><p>服务器上有Docker和相关镜像的前提下</p>
-</li>
-<li><p>创建Deployment的YAML描述文件，根据yaml文件创建服务和集群</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//批量新增</span></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span> &#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addBath</span><span class="params">(List&lt;Object[]&gt; userList)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;insert into user values(?, ?, ?)&quot;</span>;</span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">        List&lt;Object[]&gt; userList = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">        Object[] arr1 = &#123;1, &quot;name1&quot;, &quot;password1&quot;&#125;;</span></span><br><span class="line"><span class="comment">        Object[] arr2 = &#123;2, &quot;name2&quot;, &quot;password2&quot;&#125;;</span></span><br><span class="line"><span class="comment">        Object[] arr3 = &#123;3, &quot;name3&quot;, &quot;password3&quot;&#125;;</span></span><br><span class="line"><span class="comment">        userList.add(arr1);</span></span><br><span class="line"><span class="comment">        userList.add(arr2);</span></span><br><span class="line"><span class="comment">        userList.add(arr3);</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">        <span class="type">int</span>[] ints = jdbcTemplate.batchUpdate(sql, userList);  <span class="comment">//batchUpdate方法第二个参数是集合，该集合元素是数组，数组里面的每个值对应着添加到数据库表里面的字段值。该方法返回影响行数数组</span></span><br><span class="line">        System.out.println(Arrays.toString(ints));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line">name: string # POD名称</span><br><span class="line">namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line">containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="改删"><a href="#改删" class="headerlink" title="改删"></a>改删</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//单个修改 删除</span></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span>&#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">     <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateUser</span><span class="params">(User user)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;update user set name=?, password=? where id=?&quot;</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">updateRow</span> <span class="operator">=</span> jdbcTemplate.update(sql, user.getName(), user.getPassword(), user.getId());</span><br><span class="line">        System.out.println(updateRow);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteUser</span><span class="params">(<span class="type">int</span> userId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;delete from user where id=?&quot;</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">updateRow</span> <span class="operator">=</span> jdbcTemplate.update(sql, userId);</span><br><span class="line">        System.out.println(updateRow);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
-<img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//批量修改 删除</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span> &#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="comment">//批量修改</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateBatch</span><span class="params">(List&lt;Object[]&gt; listArg)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;update user set name=?, password=? where id=?&quot;</span>;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        List&lt;Object[]&gt; userList = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">        Object[] arr1 = &#123;1, &quot;name1&quot;, &quot;password1&quot;&#125;;</span></span><br><span class="line"><span class="comment">        Object[] arr2 = &#123;2, &quot;name2&quot;, &quot;password2&quot;&#125;;</span></span><br><span class="line"><span class="comment">        Object[] arr3 = &#123;3, &quot;name3&quot;, &quot;password3&quot;&#125;;</span></span><br><span class="line"><span class="comment">        userList.add(arr1);</span></span><br><span class="line"><span class="comment">        userList.add(arr2);</span></span><br><span class="line"><span class="comment">        userList.add(arr3);</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">        <span class="type">int</span>[] ints = jdbcTemplate.batchUpdate(sql, listArg);</span><br><span class="line">        System.out.println(Arrays.toString(ints));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//批量删除</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">deleteBath</span><span class="params">(List&lt;Object[]&gt; listArg)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;delete from user where id=?&quot;</span>;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        List&lt;Object[]&gt; userList = new ArrayList&lt;&gt;();</span></span><br><span class="line"><span class="comment">        Object[] arr1 = &#123;6&#125;;</span></span><br><span class="line"><span class="comment">        Object[] arr2 = &#123;7&#125;;</span></span><br><span class="line"><span class="comment">        userList.add(arr1);</span></span><br><span class="line"><span class="comment">        userList.add(arr2);</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="type">int</span>[] ints = jdbcTemplate.batchUpdate(sql, listArg);</span><br><span class="line">        System.out.println(Arrays.toString(ints));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p>创建Deployment对象</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml </span><br></pre></td></tr></table></figure></li>
-<li><p>创建了Deployment对象再查看pod</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
-<p>​      <img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图"></p>
-<p>​         x修改 spec.replicas为3之后再查看，就有三个pod。</p>
-<ul>
-<li><p>查看pod启动日志</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl logs +pod的name</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>此时集群内部已经可以访问项目了。··············</p>
-<ul>
-<li><p>使集群对外部提供服务，创建service关联，对外暴露ip提供服务</p>
-<blockquote>
-<p>运行pod ip是docker网桥的IP地址段进行分配的，通常是一个虚拟的二层网络，外部网络并没有办法访问，并且，pod ip是随时会变的，不是固定的，k8s引入了Service的概念，通过Service管理这些pod，Service创建后的Service IP是固定的。但是Service IP(Cluster IP)是一个虚拟的IP,由Kubernetes管理和分配P地址，外部网络无法访问。k8s有三种方式暴露Service给外部网络访问。</p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111163501631.png" alt="20210111163501631"></p>
-<img src="/2022/07/05/k8s/20210111163501631.png" class title="pod的ip"></blockquote>
-</li>
-</ul>
-</blockquote>
-<h3 id="3-Serivce暴露ip方式"><a href="#3-Serivce暴露ip方式" class="headerlink" title="3.Serivce暴露ip方式"></a>3.Serivce暴露ip方式</h3><h4 id="3-1-NodePort"><a href="#3-1-NodePort" class="headerlink" title="3.1 NodePort"></a>3.1 NodePort</h4><blockquote>
-<p> 在k8s上可以给Service设置成NodePort类型，这样的话可以让Kubernetes在其所有节点上开放一个端口给外部访问（所有节点上都使用相同的端口号）， 并将传入的连接转发给作为Service服务对象的pod。这样我们的pod就可以被外部请求访问到 </p>
-</blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111203759964.png" alt="20210111203759964"></p>
-<img src="/2022/07/05/k8s/20210111203759964.png" class title="NodePort方式">
+<h5 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h5><p> <strong>queryForObject</strong>  (sqlStr, 指定的数据类型, 参数列表)：查询一行任何类型的数据，最后一个参数指定返回结果类型。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span>&#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">     <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getUserCount</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select count(*) from user&quot;</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">userCount</span> <span class="operator">=</span> jdbcTemplate.queryForObject(sql, <span class="type">int</span>.class);  <span class="comment">//第二个参数是返回类型的class</span></span><br><span class="line">        <span class="keyword">return</span> userCount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p>创建serivice的yaml文件</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl expose deployment countgame --port=8082 --target-port=8082 --type=NodePort -o yaml --dry-run &gt; svc.yaml</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span>&#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">     <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">getUserInfo</span><span class="params">(<span class="type">int</span> userId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from user where id=?&quot;</span>;</span><br><span class="line">        <span class="comment">// rowMapper 是一个接口，可以使用这个接口里面的实现类完成数据的封装，规定每一行记录和JavaBean的属性如何映射</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> jdbcTemplate.queryForObject(sql, <span class="keyword">new</span> <span class="title class_">BeanPropertyRowMapper</span>&lt;&gt;(User.class), userId);</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>参数：</p>
-<p>1.countgame 为指定的service对象名称<br>2.- -port 是指service暴露在cluster ip上的端口，通过<cluster ip>:port 访问集群内部service的入口<br>3.- -target-port指 对应pod容器里面监听的端口<br>4.- -type=NodePort ， <nodeIP>:nodePort 是提供给集群外部客户访问service的入口<br>5.–dry-run表示测试不在k8s运行（不会具体执行该命令）<br>6.-o yaml 生成yaml格式<br>7.最后面的 “&gt; deploy.yaml” 表示将生成yaml内容输出到deploy.yaml文件</nodeIP></cluster></p>
-<p><strong>配置文件内容基本如下：</strong></p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011117261340-1657085291453.png" alt="2021011117261340"></p>
-<img src="/2022/07/05/k8s/2021011117261340-1657085291453.png" class title="service配置文件内容"></li>
-<li><p>创建Service对象</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#创建service</span><br><span class="line">kubectl apply -f svc.yaml</span><br><span class="line">#查看service</span><br><span class="line">kubectl get svc</span><br><span class="line">#查看service关联的pod</span><br><span class="line">kubectl describe svc coutgame</span><br></pre></td></tr></table></figure>
+<p> <strong>query</strong>  (sqlStr, RowMapper对象, 参数列表)：查询多行数据，并将结果集封装为元素是 JavaBean 的 list。（注意，指定的 JavaBean 的属性最好不要是基本类型，因为查询出来的结果可能是null，而null赋值为基本数据类型将会报错。比如int最好定义为Integer） </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span>&#123;</span><br><span class="line">    <span class="comment">//注入JdbcTemplate</span></span><br><span class="line">     <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getAllUser</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from user&quot;</span>;</span><br><span class="line">        List&lt;User&gt; userList = jdbcTemplate.query(sql, <span class="keyword">new</span> <span class="title class_">BeanPropertyRowMapper</span>&lt;&gt;(User.class));</span><br><span class="line">        <span class="keyword">return</span> userList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111172704176.png" alt="20210111172704176"></p>
-<img src="/2022/07/05/k8s/20210111172704176.png" class title="创建并查看">
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111200610224.png" alt="20210111200610224"></p>
-<img src="/2022/07/05/k8s/20210111200610224.png" class title="查看"></li>
-<li><p> 可以看到service名称为countgame的service的对外端口为11413，会把通过这个端口访问的请求转发到service对象关联的pod对象的8082端口上 。访问192.168.137.110：11413/countgame/user/toGame可以访问项目</p>
-</li>
-<li><p><strong>缺点： 服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护，所以生产环境不建议这么使用</strong> </p>
-</li>
-</ul>
-<h4 id="3-2-LoadBalane"><a href="#3-2-LoadBalane" class="headerlink" title="3.2 LoadBalane"></a>3.2 LoadBalane</h4><blockquote>
-<p>LoadBalane是上面通过NodePort暴露外部访问的一个优化，增加了一个负载均衡器，上面的NodePort是所有节点都开放一个端口，直接给外部访问，并没有Node节点的负载均衡。LoadBalane则是在上面的基础上增加了一层，只提供一个公网ip给外部访问，外部访问这个ip再负载均衡分发给Node节点的Pod</p>
-</blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011120562767.png" alt="2021011120562767"></p>
-<img src="/2022/07/05/k8s/2021011120562767.png" class title="LoadBalane">
 
-<p>部署起来和上述NodePort界面差不多。kind参数变为LoadBalane</p>
-<ul>
-<li>缺点： 每一个用 LoadBalancer 暴露的服务都会有它自己的 IP 地址和端口，不能做到一个ip地址就可以访问所有服务。 </li>
-</ul>
-<h4 id="3-3-Ingress"><a href="#3-3-Ingress" class="headerlink" title="3.3 Ingress"></a>3.3 Ingress</h4><blockquote>
-<p>采用 NodePort 方式暴露服务面临问题是，服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护；如果采用LoadBalane，每个服务都得开放一个公网IP，也会很庞大。这时候Ingress暴露服务就是一种很合适的方案。可以通过一个Ingress暴露多个服务。</p>
-</blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
-<img src="/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
 
-<p>参考：<a href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
-<p><a href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
-<p><a href="http://www.imooc.com/article/285913?block_id=tuijian_wz">博文3</a></p>
+
 ]]></content>
       <categories>
         <category>技术栈</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
+        <tag>SpringDataJdbc</tag>
       </tags>
   </entry>
   <entry>
@@ -548,6 +479,336 @@
       </tags>
   </entry>
   <entry>
+    <title>jooq使用</title>
+    <url>/2022/07/15/jooq%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="JOOQ简介"><a href="#JOOQ简介" class="headerlink" title="JOOQ简介"></a>JOOQ简介</h3><blockquote>
+<p><a href="https://jooq.org/">jOOQ</a>，是一个ORM框架，利用其生成的Java代码和流畅的API，可以快速构建有类型约束的安全的SQL语句 。 </p>
+</blockquote>
+<span id="more"></span>
+
+<blockquote>
+<p><strong>优点：</strong></p>
+<ol>
+<li><p>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。通过jOOQ提供的API，配合生成的Java代码，可以很方便的进行数据库操作 </p>
+</li>
+<li><p>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了SQL注入的风险 </p>
+</li>
+<li><p>jOOQ的代码生成策略是根据配置全量生成，任何对于数据库的改动，如果会影响到业务代码，在编译期间就会被发现，可以及时进行修复 </p>
+</li>
+</ol>
+</blockquote>
+<h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><blockquote>
+<p>所有的操作jooq都提供两种方式， 第一种是使用 DSLContext API 以类SQL的语法进行调用，第二种是利用 Record API 进行调用 。这里面只记录第一种，了解第二种请点击<a href="https://jooq.diamondfsd.com/learn/section-2-base-curd.html">这里</a></p>
+<p>了解：</p>
+<ul>
+<li><code>dslContext</code> 代表<code>DSLContext</code>实例</li>
+<li><code>S1_USER</code> 由jOOQ插件生成的表描述常量</li>
+<li><code>S1_USER.*</code> 由jOOQ插件生成的表内字段常量</li>
+</ul>
+<p>了解三个接口：</p>
+<ul>
+<li><code>org.jooq.Result</code> 结果集接口，此接口实现了List接口，可以当做一个集合来操作，是一个数据库查询结果集的包装类，除了集合的相关方法，该接口还提供了一些结果集转换，格式化，提取字段等方法。通常我们查询出来的结果都是此接口的实现类，掌握好此接口是jOOQ的基础接口，基本所有的SQL查询操作，都会碰到这个接口 </li>
+<li><code>org.jooq.Record </code> 此接口再使用关系型数据库时，主要用于定义数据库表记录，储存的内容是一条表记录的字段和值，每个值会储存对应字段的类型，可以通过通用的 <code>getValue(Field field)</code> 方法，取到对应字段的值，也可以将这个接口看做是一条记录的字段/值映射 </li>
+<li><code>org.jooq.DSLContext</code> jOOQ的核心接口之一，可以理解为一个SQL执行器，通过静态方法 <code>DSL.using</code>，可以获取一个 <code>DSLContext</code> 实例，此实例抽象了所有对于SQL的操作API，可以通过其提供的API方便的进行SQL操作  </li>
+</ul>
+</blockquote>
+<h4 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 类SQL语法 insertInto 方法第一个参数通常是表常量</span></span><br><span class="line">dslContext.insertInto(S1_USER, S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">        .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .values(<span class="string">&quot;username2&quot;</span>, <span class="string">&quot;demo-address2&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .execute();</span><br><span class="line"> <span class="comment">//批量插入</span></span><br><span class="line"> List&lt;S1UserRecord&gt; recordList = IntStream.range(<span class="number">0</span>, <span class="number">10</span>).mapToObj(i -&gt; &#123;</span><br><span class="line">    <span class="type">S1UserRecord</span> <span class="variable">s1UserRecord</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">    s1UserRecord.setUsername(<span class="string">&quot;usernameBatchInsert&quot;</span> + i);</span><br><span class="line">    s1UserRecord.setEmail(<span class="string">&quot;diamondfsd@gmail.com&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> s1UserRecord;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br><span class="line">dslContext.batchInsert(recordList).execute();</span><br><span class="line"><span class="comment">//插入后获取主键</span></span><br><span class="line"><span class="comment">//通过此方法插入数据，可以通过 returning API读取想要返回的数据，此语法支持返回多个值，通过fetchOne()方法可以取到一个Record对象</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">    .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">    .returning(S1_USER.ID)</span><br><span class="line">    .fetchOne().getId();</span><br><span class="line"><span class="comment">//插入时主键重复的处理办法</span></span><br><span class="line"><span class="comment">// 第一种 ：这里执行完，返回affecteRow影响行数为0，即不生效</span></span><br><span class="line"><span class="comment">// 生成的SQL: insert ignore into `learn-jooq`.`s1_user` (`id`, `username`) values (1, &#x27;username-1&#x27;)</span></span><br><span class="line"><span class="type">int</span> <span class="variable">affecteRow</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">    .values(<span class="number">1</span>, <span class="string">&quot;username-1&quot;</span>)</span><br><span class="line">    .onDuplicateKeyIgnore()</span><br><span class="line">    .execute();</span><br><span class="line"><span class="comment">// 第二种:更新主键所在列</span></span><br><span class="line"><span class="comment">//生成SQL: insert into `learn-jooq`.`s1_user` (`id`, `username`, `address`) values (1, &#x27;duplicateKey-update&#x27;, &#x27;hello world&#x27;) on duplicate key update `learn-jooq`.`s1_user`.`username` = &#x27;duplicateKey-update&#x27;, `learn-jooq`.`s1_user`.`address` = &#x27;update&#x27;</span></span><br><span class="line">dslContext.insertInto(S1_USER)</span><br><span class="line">    .set(S1_USER.ID, <span class="number">1</span>)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-insert&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">    .onDuplicateKeyUpdate()</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-update&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update&quot;</span>)</span><br><span class="line">    .execute();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.update(S1_USER)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;apiUsername-1&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update-address&quot;</span>)</span><br><span class="line">    .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">    .execute()</span><br><span class="line">    </span><br><span class="line"><span class="comment">//批量更新</span></span><br><span class="line">  <span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line">record1.setUsername(<span class="string">&quot;batchUsername-1&quot;</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">record2.setUsername(<span class="string">&quot;batchUsername-2&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;S1UserRecord&gt; userRecordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">userRecordList.add(record1);</span><br><span class="line">userRecordList.add(record2);</span><br><span class="line">dslContext.batchUpdate(userRecordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><blockquote>
+<p> 基本查询方法，默认查询指定表的所有字段，返回一个结果集的包装，通过<code>Result.into</code>方法，可以将结果集转换为任意指定类型集合，当然也可以通过 <code>Record.getValue</code> 方法取得任意字段值，值类型依赖于字段类型 </p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user`</span></span><br><span class="line">Result&lt;Record&gt; fetchResult = dslContext.select().from(S1_USER).fetch();</span><br><span class="line">List&lt;S1UserRecord&gt; result = fetch.into(S1UserRecord.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user` where `learn-jooq`.`s1_user`.`id` in (1, 2)</span></span><br><span class="line">Result&lt;Record&gt; fetchAll = dslContext.select().from(S1_USER)</span><br><span class="line">                .where(S1_USER.ID.in(<span class="number">1</span>, <span class="number">2</span>)).fetch();</span><br><span class="line">fetchAll.forEach(record -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">id</span> <span class="operator">=</span> record.getValue(S1_USER.ID);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> record.getValue(S1_USER.USERNAME);</span><br><span class="line">    <span class="type">String</span> <span class="variable">address</span> <span class="operator">=</span> record.getValue(S1_USER.ADDRESS);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">createTime</span> <span class="operator">=</span> record.getValue(S1_USER.CREATE_TIME);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">updateTime</span> <span class="operator">=</span> record.getValue(S1_USER.UPDATE_TIME);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>jooq也支持关联查询</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//UserMessagePojo为新建的Pojo类，用于存储查询结果，可以忽略具体内容</span></span><br><span class="line">Result&lt;Record3&lt;String, String, String&gt;&gt; record3Result =</span><br><span class="line">        dslContext.select(S1_USER.USERNAME,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_TITLE,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_CONTENT)</span><br><span class="line">        .from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .fetch();</span><br><span class="line">List&lt;UserMessagePojo&gt; userMessagePojoList = record3Result.into(UserMessagePojo.class)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Condition动态查询</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">query</span><span class="params">(String name,String age)</span> &#123;</span><br><span class="line">		Condition condition=DSL.trueCondition();<span class="comment">//真实条件</span></span><br><span class="line">		<span class="keyword">if</span>(name!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.NAME.eq(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(age!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.AGE.eq(Integer.parseInt(age)));</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Student&gt; list=context.select().from(Tables.STUDENT).where(condition).fetch().into(Student.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.delete(S1_USER).where(S1_USER.USERNAME.eq(<span class="string">&quot;demo1&quot;</span>)).execute();</span><br><span class="line"></span><br><span class="line"><span class="comment">//批量删除</span></span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">dslContext.batchDelete(record1, record2).execute();</span><br><span class="line"><span class="comment">// </span></span><br><span class="line">List&lt;S1UserRecord&gt; recordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">recordList.add(record1);</span><br><span class="line">recordList.add(record2);</span><br><span class="line">dslContext.batchDelete(recordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h3 id="结果处理"><a href="#结果处理" class="headerlink" title="结果处理"></a>结果处理</h3><blockquote>
+<p>查询操作通常以fetch API 作为结束API，例如常用的有，所有的读取类方法都差不多，掌握一个就能很快的举一反三</p>
+<ul>
+<li>读取多条<ul>
+<li><code>fetch</code> 读取集合</li>
+<li><code>fetchSet</code> 读取并返回一个Set集合，常用于去重</li>
+<li><code>fetchArray</code> 读取并返回一个数组</li>
+</ul>
+</li>
+<li>读取单条<ul>
+<li><code>fetchOne</code> 读取单条记录，如果记录超过一条会报错</li>
+<li><code>fetchAny</code> 读取单条记录，如果有多条，会取第一条数据</li>
+<li><code>fetchSingle</code> 读取单条记录，如果记录为空或者记录超过一条会报错</li>
+</ul>
+</li>
+<li>读取并返回Map<ul>
+<li><code>fetchMap</code> 读取并返回一个Map</li>
+<li><code>fetchGroups</code> 读取并返回一个分组Map</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><ul>
+<li><p><code>fetch()</code><br>无参调用此方法，返回的是一个<code>Result</code>结果集对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result&lt;Record&gt; records = dslContext.select().from(S1_USER).fetch();</span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(RecordMapper mapper)</code><br><code>RecordMapper</code>接口的提供<code>map</code>方法，用于来返回数据。<code>map</code> 方法传入一个 <code>Record</code> 对象。可以使用lambda表达式将 <code>Record</code> 对象转换成一个指定类型的POJO</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;S1UserPojo&gt; userPojoList = dslContext.select()</span><br><span class="line">            .from(S1_USER)</span><br><span class="line">            .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">            .fetch(r -&gt; r.into(S1UserPojo.class));</span><br></pre></td></tr></table></figure>
+
+<p>多表查询，字段相同时，直接用into方法将结果集转换为POJO时，相同字段名称的方法会以最后一个字段值为准。这时候，我们可以现将结果集通过 <code>into(Table table)</code> 方法将结果集转换为指定表的<code>Record</code>对象，然后再<code>into</code>进指定的POJO类中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 多表关联查询，查询s2_user_message.id = 2的数据，直接into的结果getId()却是1</span></span><br><span class="line"><span class="comment">// 这是因为同时关联查询了s1_user表，该表的id字段值为1</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; r.into(S2UserMessage.class));</span><br><span class="line"><span class="comment">// userMessage.getId() == 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将结果集into进指定的表描述中，然后在into至指定的POJO类</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage2 = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; &#123;</span><br><span class="line">            <span class="type">S2UserMessage</span> <span class="variable">fetchUserMessage</span> <span class="operator">=</span> r.into(S2_USER_MESSAGE).into(S2UserMessage.class);</span><br><span class="line">            fetchUserMessage.setUsername(r.get(S1_USER.USERNAME));</span><br><span class="line">            <span class="keyword">return</span> fetchUserMessage;</span><br><span class="line">        &#125;);</span><br><span class="line"><span class="comment">// userMessage.getId() == 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(Field field)</code><br><code>Field</code>是一个接口，代码生成器生成的表字段常量例如 <code>S1_USER.ID</code>, 都实现了 <code>Field</code> 接口，这个重载可以直接取出指定表字段，会自动根据传入的字段推测其类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; id = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(S1_USER.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(String fieldName, Class type)</code><br>可以直接通过字段名称字符串获取指定字段值，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(<span class="string">&quot;id&quot;</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(int fieldIndex, Class type)</code><br>可以通过查询字段下标顺序进行查询指定字段，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select(S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">        .from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>)).fetch(<span class="number">0</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetch-1"><a href="#fetch-1" class="headerlink" title="fetch"></a>fetch</h4><p>此方法可以将结果集处理为一个Map格式，此方法有很多重载，这里介绍几个常用的，注意，此方法作为key的字段必须确定是在当前结果集中是唯一的，如果出现重复key，此方法会抛出异常</p>
+<ul>
+<li><p><code>fetchMap(Field field, Class type)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, S1UserPojo&gt; idUserPojoMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1UserPojo.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchMap(Feild field, Field field)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, String&gt; idUserNameMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1_USER.USERNAME);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetchgroup"><a href="#fetchgroup" class="headerlink" title="fetchgroup"></a>fetchgroup</h4><p>此方法可以将结果集处理为一个Map格式，和<code>fetchMap</code>类似，只不过这里的值为一个指定类型的集合，通常在处理一对多数据时会用到</p>
+<ul>
+<li><p><code>fetchGroups(Field field, Class type)</code><br>以表字段值为Key，返回一个<code>K:List</code> 的Map对象</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;S2UserMessage&gt;&gt; userIdUserMessageMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2UserMessage.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchGroups(Field keyField, Field valueField)</code></p>
+</li>
+<li><p>以表字段值为Key，返回一个K:List<V>的Map对象</V></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;Integer&gt;&gt; userIdUserMessageIdMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2_USER_MESSAGE.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><a href="https://jooq.diamondfsd.com/learn/section-1-how-to-start.html">参考JOOQ中文文档教程</a></p>
+<p><a href="https://blog.csdn.net/qq_39940674/article/details/93383177">更多用法参考</a></p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>jooq</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s</title>
+    <url>/2022/07/05/k8s/</url>
+    <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
+
+<blockquote>
+<p>我们只到Docker应用容器引擎，使得服务的创建、销毁、移植等变得十分快捷、方便。Kubernate可以理解为管理、编排容器的工具，管理多个应用(集群规模)的创建、部署、服务、扩容缩容、更新等等。就是类似于Docker-compose的功能。</p>
+<p>   除集群规模管理外，k8s可以更快的更新新版本，打包应用，更新的时候可以做到不用中断服务，服务器故障不用停机，从开发环境到测试环境到生产环境的迁移极其方便，一个配置文件搞定，一次生成image，到处运行 </p>
+</blockquote>
+<h4 id="1-2-Kubernetes-在哪些地方使用"><a href="#1-2-Kubernetes-在哪些地方使用" class="headerlink" title="1.2  Kubernetes 在哪些地方使用"></a>1.2  <strong>Kubernetes</strong> 在哪些地方使用</h4><p>我们在企业生产过程中能够的使用步骤一般是：</p>
+<ul>
+<li><p>创建集群：master管理、监控，node打工人</p>
+</li>
+<li><p>部署应用：通过k8s的方式(默认容器是docker),即在yaml文件中指定容器镜像等配置</p>
+</li>
+<li><p>发布应用：部署完应用后必须发布才能被外部访问，因为此时的ip地址只有同一个集群才能访问</p>
+</li>
+<li><p>扩展应用：比如遇上双11等活动对机器进行扩容，过后再进行缩容。</p>
+</li>
+<li><p>更新应用：有新版本了，滚动更新，根据新的image创建一个pod，分配各种资源，然后自动负载均衡，删除老的pod，然后继续更新，不会中断服务； 更新错了怎么办，不会影响生产业务，回滚就好了</p>
+</li>
+</ul>
+<h4 id="1-3-master"><a href="#1-3-master" class="headerlink" title="1.3 master"></a>1.3 master</h4><blockquote>
+<p>Kubernetes 可以管理大规模的集群，使集群中的每一个节点彼此连接，能够像控制一台单一的计算机一样控制整个集群。</p>
+<p> <strong>master</strong> 是集群的”大脑”，负责管理整个集群：像应用的调度、更新、扩缩容等。</p>
+</blockquote>
+<p>master上包含组件：</p>
+<ul>
+<li> <strong>kube-apiserver</strong> : 集群入口，所有操作都经过此</li>
+<li> <strong>kube-controller-manager</strong> ：所有资源的控制中心</li>
+<li> <strong>kube-scheduler</strong> ：具体负责资源调度的进程</li>
+</ul>
+<h4 id="1-4-node"><a href="#1-4-node" class="headerlink" title="1.4 node"></a>1.4 node</h4><blockquote>
+<p>就是具体”干活”的，一个Node一般是一个虚拟机或物理机，它上面事先运行着 docker 服务和 kubelet 服务（ Kubernetes 的一个组件），当接收到 master 下发的”任务”后，Node 就要去完成任务（用docker 运行一个指定的应用）</p>
+</blockquote>
+<p>node上包含的组件：</p>
+<ul>
+<li> <strong>kubelet</strong> ：node上的Agent，负责pod对应容器的创建、启停等，听master指挥干活并随时汇报。</li>
+<li> <strong>kube-proxy</strong> ： 在Node节点上实现Pod网络代理，实现Kubernetes Service的通信和负载均衡机制的重要组件。 </li>
+<li> <strong>docker</strong> ： Docker引擎，负责本机的容器的创建和管理工作 </li>
+</ul>
+<h4 id="1-5-Etcd"><a href="#1-5-Etcd" class="headerlink" title="1.5 Etcd"></a>1.5 Etcd</h4><blockquote>
+<p>Etcd是Kubernetes提供默认的键值存储系统，保存所有集群数据，使用时需要为Etcd数据提供备份计划 </p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1657022314159.png" alt="1657022314159"></p>
+<img src="/2022/07/05/k8s/1657022314159.png" class title="Kubernetes网络架构图">
+
+<h4 id="1-6-对象"><a href="#1-6-对象" class="headerlink" title="1.6 对象"></a>1.6 对象</h4><h5 id="1-6-1-Pod"><a href="#1-6-1-Pod" class="headerlink" title="1.6.1 Pod"></a>1.6.1 Pod</h5><blockquote>
+<p>集群调度的最小单元，Pod 是一组容器（当然也可以只有一个）。容器本身就是一个小盒子了，Pod 相当于在容器上又包了一层小盒子。所以Pod里的容器有如下特点：</p>
+<ul>
+<li>可以直接通过 volume 共享存储。</li>
+<li>有相同的网络空间，通俗点说就是有一样的ip地址，有一样的网卡和网络设置。</li>
+<li>多个容器之间可以“了解”对方，比如知道其他人的镜像，知道别人定义的端口等。</li>
+</ul>
+</blockquote>
+<h5 id="1-6-2-Service"><a href="#1-6-2-Service" class="headerlink" title="1.6.2 Service"></a>1.6.2 Service</h5><blockquote>
+<p>即服务发现，不管Deployment的Pod有多少个，不管它是更新、销毁还是重建，Service总是能发现并维护好它的ip列表。</p>
+<p>Service通过标签Label，知道其负责了哪几个Pod。这样就更加灵活，使其和Deployment解耦开来</p>
+</blockquote>
+<h5 id="1-6-3-Volume"><a href="#1-6-3-Volume" class="headerlink" title="1.6.3 Volume"></a>1.6.3 Volume</h5><blockquote>
+<p> Volume(存储卷)Volume是Pod中能够被多个容器共享的磁盘目录。 </p>
+<p>Kubernetes提供了非常丰富的Volume类型:</p>
+<ul>
+<li>emptyDir：临时空间，Pod分配到Node时创建，无须指定宿主主机上对应的目录，在Kubernetes会自动分配当前Node的一个目录，当Pod被移除时，emptyDir中的数据也会永久删除。</li>
+<li>hostPath：为Pod挂载宿主主机上的文件或目录。用于数据永久保存。在不同的Node上具有相同配置的Pod,可能会因为宿主机上的目录和文件不同而导致Volume上的目录和文件的访问结果不一致。</li>
+<li>gcePersistentDisk：使用谷歌公有云提供的永久磁盘。数据永久保存。</li>
+<li>NFS：NFS 是 Network File System 的缩写，即网络文件系统。Kubernetes 中通过简单地配置就可以挂载 NFS 到 Pod 中，而 NFS 中的数据是可以永久保存的，同时 NFS 支持同时写操作。</li>
+</ul>
+</blockquote>
+<h5 id="1-6-4-Namespace"><a href="#1-6-4-Namespace" class="headerlink" title="1.6.4 Namespace"></a>1.6.4 Namespace</h5><blockquote>
+<p> 命名空间，Namespace在很多情况下用于实现多租户的资源隔离。Namespace通过集群内部的资源对象”分配”到不同的Namespace中，形成逻辑上分组的不同项目，便于不同的分组共享使用整个集群的资源的同时还能被分别管理。 </p>
+</blockquote>
+<h5 id="1-6-5-Deployment"><a href="#1-6-5-Deployment" class="headerlink" title="1.6.5 Deployment"></a>1.6.5 Deployment</h5><blockquote>
+<p> 通过Kubernetes的 <strong>Deployment</strong> 的配置文件去描述应用，比如应用叫什么名字、使用的镜像名字、要运行几个实例、需要多少的内存资源、cpu 资源等等。即应用管理者，是用于部署应用的对象。<strong>不会单独创建一个pod资源对象，而是创建Deployment对象，通过Deployment来管理pod。</strong> </p>
+</blockquote>
+<h5 id="1-6-6-ReplicaSet"><a href="#1-6-6-ReplicaSet" class="headerlink" title="1.6.6 ReplicaSet"></a>1.6.6 ReplicaSet</h5><blockquote>
+<p> ReplicaSet 实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本，所以我们通常不需要直接使用 ReplicaSet。 </p>
+</blockquote>
+<h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
+<img src="/2022/07/05/k8s/20210111140539700.png" class title="Kubernetes网络架构图">
+
+<blockquote>
+<ul>
+<li><p>服务器上有Docker和相关镜像的前提下</p>
+</li>
+<li><p>创建Deployment的YAML描述文件，根据yaml文件创建服务和集群</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create deployment countgame --image=192.168.137.110:5000/countgame:0.91 --dry-run -o yaml  &gt; deploy.yaml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line">name: string # POD名称</span><br><span class="line">namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line">containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
+<img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
+
+<ul>
+<li><p>创建Deployment对象</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml </span><br></pre></td></tr></table></figure></li>
+<li><p>创建了Deployment对象再查看pod</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
+<p>​      <img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图"></p>
+<p>​         x修改 spec.replicas为3之后再查看，就有三个pod。</p>
+<ul>
+<li><p>查看pod启动日志</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl logs +pod的name</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>此时集群内部已经可以访问项目了。··············</p>
+<ul>
+<li><p>使集群对外部提供服务，创建service关联，对外暴露ip提供服务</p>
+<blockquote>
+<p>运行pod ip是docker网桥的IP地址段进行分配的，通常是一个虚拟的二层网络，外部网络并没有办法访问，并且，pod ip是随时会变的，不是固定的，k8s引入了Service的概念，通过Service管理这些pod，Service创建后的Service IP是固定的。但是Service IP(Cluster IP)是一个虚拟的IP,由Kubernetes管理和分配P地址，外部网络无法访问。k8s有三种方式暴露Service给外部网络访问。</p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111163501631.png" alt="20210111163501631"></p>
+<img src="/2022/07/05/k8s/20210111163501631.png" class title="pod的ip"></blockquote>
+</li>
+</ul>
+</blockquote>
+<h3 id="3-Serivce暴露ip方式"><a href="#3-Serivce暴露ip方式" class="headerlink" title="3.Serivce暴露ip方式"></a>3.Serivce暴露ip方式</h3><h4 id="3-1-NodePort"><a href="#3-1-NodePort" class="headerlink" title="3.1 NodePort"></a>3.1 NodePort</h4><blockquote>
+<p> 在k8s上可以给Service设置成NodePort类型，这样的话可以让Kubernetes在其所有节点上开放一个端口给外部访问（所有节点上都使用相同的端口号）， 并将传入的连接转发给作为Service服务对象的pod。这样我们的pod就可以被外部请求访问到 </p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111203759964.png" alt="20210111203759964"></p>
+<img src="/2022/07/05/k8s/20210111203759964.png" class title="NodePort方式">
+
+<ul>
+<li><p>创建serivice的yaml文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl expose deployment countgame --port=8082 --target-port=8082 --type=NodePort -o yaml --dry-run &gt; svc.yaml</span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<p>1.countgame 为指定的service对象名称<br>2.- -port 是指service暴露在cluster ip上的端口，通过<cluster ip>:port 访问集群内部service的入口<br>3.- -target-port指 对应pod容器里面监听的端口<br>4.- -type=NodePort ， <nodeIP>:nodePort 是提供给集群外部客户访问service的入口<br>5.–dry-run表示测试不在k8s运行（不会具体执行该命令）<br>6.-o yaml 生成yaml格式<br>7.最后面的 “&gt; deploy.yaml” 表示将生成yaml内容输出到deploy.yaml文件</nodeIP></cluster></p>
+<p><strong>配置文件内容基本如下：</strong></p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011117261340-1657085291453.png" alt="2021011117261340"></p>
+<img src="/2022/07/05/k8s/2021011117261340-1657085291453.png" class title="service配置文件内容"></li>
+<li><p>创建Service对象</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#创建service</span><br><span class="line">kubectl apply -f svc.yaml</span><br><span class="line">#查看service</span><br><span class="line">kubectl get svc</span><br><span class="line">#查看service关联的pod</span><br><span class="line">kubectl describe svc coutgame</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111172704176.png" alt="20210111172704176"></p>
+<img src="/2022/07/05/k8s/20210111172704176.png" class title="创建并查看">
+
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111200610224.png" alt="20210111200610224"></p>
+<img src="/2022/07/05/k8s/20210111200610224.png" class title="查看"></li>
+<li><p> 可以看到service名称为countgame的service的对外端口为11413，会把通过这个端口访问的请求转发到service对象关联的pod对象的8082端口上 。访问192.168.137.110：11413/countgame/user/toGame可以访问项目</p>
+</li>
+<li><p><strong>缺点： 服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护，所以生产环境不建议这么使用</strong> </p>
+</li>
+</ul>
+<h4 id="3-2-LoadBalane"><a href="#3-2-LoadBalane" class="headerlink" title="3.2 LoadBalane"></a>3.2 LoadBalane</h4><blockquote>
+<p>LoadBalane是上面通过NodePort暴露外部访问的一个优化，增加了一个负载均衡器，上面的NodePort是所有节点都开放一个端口，直接给外部访问，并没有Node节点的负载均衡。LoadBalane则是在上面的基础上增加了一层，只提供一个公网ip给外部访问，外部访问这个ip再负载均衡分发给Node节点的Pod</p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011120562767.png" alt="2021011120562767"></p>
+<img src="/2022/07/05/k8s/2021011120562767.png" class title="LoadBalane">
+
+<p>部署起来和上述NodePort界面差不多。kind参数变为LoadBalane</p>
+<ul>
+<li>缺点： 每一个用 LoadBalancer 暴露的服务都会有它自己的 IP 地址和端口，不能做到一个ip地址就可以访问所有服务。 </li>
+</ul>
+<h4 id="3-3-Ingress"><a href="#3-3-Ingress" class="headerlink" title="3.3 Ingress"></a>3.3 Ingress</h4><blockquote>
+<p>采用 NodePort 方式暴露服务面临问题是，服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护；如果采用LoadBalane，每个服务都得开放一个公网IP，也会很庞大。这时候Ingress暴露服务就是一种很合适的方案。可以通过一个Ingress暴露多个服务。</p>
+</blockquote>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
+<img src="/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
+
+<p>参考：<a href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
+<p><a href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
+<p><a href="http://www.imooc.com/article/285913?block_id=tuijian_wz">博文3</a></p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>maven</title>
+    <url>/2022/07/06/maven/</url>
+    <content><![CDATA[<h5 id="解决问题："><a href="#解决问题：" class="headerlink" title="解决问题："></a>解决问题：</h5><blockquote>
+<p>1.jar包依赖2.jar依赖传递3.jar版本冲突4.项目生命周期</p>
+</blockquote>
+<span id="more"></span>
+
+<h5 id="文件解析："><a href="#文件解析：" class="headerlink" title="文件解析："></a>文件解析：</h5><p><img src="/2022/07/06/maven/gitee\TechnologyStack\images\1625198265(1).jpg" alt="1625198265(D:\gitee\Blog\source\_posts\maven\1625198265(1).jpg)"><img src="/2022/07/06/maven/1625198265(1).jpg" class title="maven目录"></p>
+<h5 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h5><p>1.找mvn可执行文件—bin下面的运行脚本</p>
+<p>2.找配置文件 conf/setting.xml ,优先找目录优先级：~/.m2 &gt; M2_HOME/conf</p>
+<p>3.本地仓库寻找插件clean，没有则去远程仓库下载</p>
+<p>4.运行插件</p>
+<h5 id="标签详解："><a href="#标签详解：" class="headerlink" title="标签详解："></a>标签详解：</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>项目包名<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>项目唯一标识<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>版本号<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--打包类型：jar/war/pom--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--父级文件用pm：install时不会生成jar或者war包</span></span><br><span class="line"><span class="comment">	主要作用：1.可以通过&lt;modules&gt;标签来整合子模块的编译顺序（Maven引入依赖使用最短路径原则，例如a&lt;–b&lt;–c1.0 ，d&lt;–e&lt;–f&lt;–c1.1，由于路径最短，最终引入的为c1.0；但路径长度相同时，则会引入先申明的依赖）。因此尽量将更加底层的service放在更先的位置优先加载依赖较为合适。</span></span><br><span class="line"><span class="comment">2.可以将一些子项目中共用的依赖或将其版本统一写到父级配置中，以便统一管理。</span></span><br><span class="line"><span class="comment">3.groupId, artifactId, version能直接从父级继承，减少子项目的pom配置。</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--需要部署用war：编译后的.class文件按层级结构形成文件树后打包形成的压缩包。它会将项目中依赖的所有jar包都放在WEB-INF/lib这个文件夹下--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--内部调用用jar：当我们使用mvn install命令的时候，能够发现在项目中与src文件夹同级新生成了一个target文件夹，这个文件夹内的classes文件夹即为刚才提到的编译后形成的文件夹--&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>打包类型<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。模型本身的版本很少改变，虽然如此，但它仍然是必不可少的，这是为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。相对路径允许你选择一个不同的路径。默认值是../pom.xml。Maven首先在构建当前项目的地方寻找父项 </span></span><br><span class="line"><span class="comment">            目的pom，其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 继承自该项目的所有子项目的默认依赖信息。这部分的依赖信息不会被立即解析,而是当子项目声明一个依赖（必须描述group ID和 artifact </span></span><br><span class="line"><span class="comment">        ID信息），如果group ID和artifact ID以外的一些信息没有描述，则通过group ID和artifact ID 匹配到这里的依赖，并使用这里的依赖信息。 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                ......</span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--该元素描述了项目相关的所有依赖。 这些依赖组成了项目构建过程中的一个个环节。它们自动从项目定义的仓库中下载。要获取更多信息，请看项目依赖机制。 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">       <span class="comment">&lt;!--参见dependencies/dependency元素 --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">         	<span class="comment">&lt;!--依赖的group ID --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖的artifact ID --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-artifact<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖的版本号。 在Maven 2里, 也可以配置成版本号的范围。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， </span></span><br><span class="line"><span class="comment">                尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。如果设置extensions为 true，就可以在 plugin里定义新的类型。所以前面的类型的例子不完整。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖范围。在项目发布过程中，帮助决定哪些构件被包括进来。欲知详情请参考依赖机制。 - compile ：默认范围，用于编译 - provided：类似于编译，但支持你期待jdk或者容器提供，类似于classpath </span></span><br><span class="line"><span class="comment">                - runtime: 在执行时需要使用 - test: 用于test任务时使用 - system: 需要外在提供相应的元素。通过systemPath来取得 </span></span><br><span class="line"><span class="comment">                - systemPath: 仅用于范围为system。提供相应的路径 - optional: 当项目自身被依赖时，标注依赖是否传递。用于连续依赖时使用 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">           <span class="comment">&lt;!--可选依赖，如果你在项目B中把C依赖声明为可选，你就需要在依赖于B的项目（例如项目A）中显式的引用对C的依赖。可选依赖阻断依赖的传递性。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--构建项目所需要的信息--&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--子项目可以引用的默认插件信息。该插件配置项直到被引用时才会被解析或绑定到生命周期。给定插件的任何本地配置都会覆盖这里的配置 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--使用的插件列表 。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--plugin元素包含描述插件所需要的信息。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--插件在仓库里的group ID --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--插件在仓库里的artifact ID --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--被使用的插件的版本（或版本范围） --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">version</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">                 <span class="comment">&lt;!--在构建生命周期中执行一组目标的配置。每个目标可能有不同的配置。 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!--execution元素包含了插件执行需要的信息 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--执行目标的标识符，用于标识构建过程中的目标，或者匹配继承过程中需要合并的执行目标 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">id</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--绑定了目标的构建生命周期阶段，如果省略，目标会被绑定到源数据里配置的默认阶段 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">phase</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--配置的执行目标 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goals</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--配置是否被传播到子POM --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">inherited</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--作为DOM对象的配置 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">configuration</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--项目引入插件所需要的额外依赖 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!--参见dependencies/dependency元素 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                            ......</span><br><span class="line">                        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--任何配置是否被传播到子项目 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">inherited</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--作为DOM对象的配置 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">configuration</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="maven仓库"><a href="#maven仓库" class="headerlink" title="maven仓库"></a>maven仓库</h5><p>分为本地和远程两个仓库</p>
+<p>本地：~/.m2/settings.xml  </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>本地仓库地址<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>远程：在配置文件中找到repositories和mirror，设置远程仓库和镜像。</p>
+<p>mirror相当于一个拦截器，它会拦截maven对remote repository的相关请求，把请求里的remote repository地址，重定向到mirror里配置的地址。</p>
+<h5 id="mvn构建生命周期："><a href="#mvn构建生命周期：" class="headerlink" title="mvn构建生命周期："></a>mvn构建生命周期：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">:valid：验证项目;</span><br><span class="line">:compile：执行编译;</span><br><span class="line">:test:使用合适的框架进行测试;</span><br><span class="line">:package：创建jar/war包;</span><br><span class="line">:verify:对继承测试的结果进行检查;</span><br><span class="line">:install：打包到本地仓库，供其他项目使用;</span><br><span class="line">:depoly：拷贝到远程仓库;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+
+<p>为了完成 default 生命周期，这些阶段（包括其他未在上面罗列的生命周期阶段）将被按顺序地执行。</p>
+<p>Maven 有以下三个标准的生命周期：</p>
+<ul>
+<li><strong>clean</strong>：项目清理的处理</li>
+<li>**default(或 build)**：项目部署的处理</li>
+<li><strong>site</strong>：项目站点文档创建的处理</li>
+</ul>
+<p>常用命令和生命周期的关系：</p>
+<p><em>注：当一个阶段通过 Maven 命令调用时，例如 mvn compile，只有该阶段之前以及包括该阶段在内的所有阶段会被执行。</em></p>
+<p> mvn clean: 移除上一下次构建生成的文件（具体涉及clean生命周期，有兴趣可以自己查查）</p>
+<p>mvn clean install :执行clean，然后再从头valid一直到install</p>
+<p>clean install -DskipTests：跳过测试执行clean install</p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>maven</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>个人博客创建教程</title>
     <url>/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<p><a href="https://zhuanlan.zhihu.com/p/102592286">参考文章链接</a></p>
@@ -636,49 +897,6 @@
       </categories>
       <tags>
         <tag>教程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>maven</title>
-    <url>/2022/07/06/maven/</url>
-    <content><![CDATA[<h5 id="解决问题："><a href="#解决问题：" class="headerlink" title="解决问题："></a>解决问题：</h5><blockquote>
-<p>1.jar包依赖2.jar依赖传递3.jar版本冲突4.项目生命周期</p>
-</blockquote>
-<span id="more"></span>
-
-<h5 id="文件解析："><a href="#文件解析：" class="headerlink" title="文件解析："></a>文件解析：</h5><p><img src="/2022/07/06/maven/gitee\TechnologyStack\images\1625198265(1).jpg" alt="1625198265(D:\gitee\Blog\source\_posts\maven\1625198265(1).jpg)"><img src="/2022/07/06/maven/1625198265(1).jpg" class title="maven目录"></p>
-<h5 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h5><p>1.找mvn可执行文件—bin下面的运行脚本</p>
-<p>2.找配置文件 conf/setting.xml ,优先找目录优先级：~/.m2 &gt; M2_HOME/conf</p>
-<p>3.本地仓库寻找插件clean，没有则去远程仓库下载</p>
-<p>4.运行插件</p>
-<h5 id="标签详解："><a href="#标签详解：" class="headerlink" title="标签详解："></a>标签详解：</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>项目包名<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>项目唯一标识<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>版本号<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--打包类型：jar/war/pom--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--父级文件用pm：install时不会生成jar或者war包</span></span><br><span class="line"><span class="comment">	主要作用：1.可以通过&lt;modules&gt;标签来整合子模块的编译顺序（Maven引入依赖使用最短路径原则，例如a&lt;–b&lt;–c1.0 ，d&lt;–e&lt;–f&lt;–c1.1，由于路径最短，最终引入的为c1.0；但路径长度相同时，则会引入先申明的依赖）。因此尽量将更加底层的service放在更先的位置优先加载依赖较为合适。</span></span><br><span class="line"><span class="comment">2.可以将一些子项目中共用的依赖或将其版本统一写到父级配置中，以便统一管理。</span></span><br><span class="line"><span class="comment">3.groupId, artifactId, version能直接从父级继承，减少子项目的pom配置。</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--需要部署用war：编译后的.class文件按层级结构形成文件树后打包形成的压缩包。它会将项目中依赖的所有jar包都放在WEB-INF/lib这个文件夹下--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--内部调用用jar：当我们使用mvn install命令的时候，能够发现在项目中与src文件夹同级新生成了一个target文件夹，这个文件夹内的classes文件夹即为刚才提到的编译后形成的文件夹--&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>打包类型<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。模型本身的版本很少改变，虽然如此，但它仍然是必不可少的，这是为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。相对路径允许你选择一个不同的路径。默认值是../pom.xml。Maven首先在构建当前项目的地方寻找父项 </span></span><br><span class="line"><span class="comment">            目的pom，其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 继承自该项目的所有子项目的默认依赖信息。这部分的依赖信息不会被立即解析,而是当子项目声明一个依赖（必须描述group ID和 artifact </span></span><br><span class="line"><span class="comment">        ID信息），如果group ID和artifact ID以外的一些信息没有描述，则通过group ID和artifact ID 匹配到这里的依赖，并使用这里的依赖信息。 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                ......</span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--该元素描述了项目相关的所有依赖。 这些依赖组成了项目构建过程中的一个个环节。它们自动从项目定义的仓库中下载。要获取更多信息，请看项目依赖机制。 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">       <span class="comment">&lt;!--参见dependencies/dependency元素 --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">         	<span class="comment">&lt;!--依赖的group ID --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖的artifact ID --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-artifact<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖的版本号。 在Maven 2里, 也可以配置成版本号的范围。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， </span></span><br><span class="line"><span class="comment">                尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。如果设置extensions为 true，就可以在 plugin里定义新的类型。所以前面的类型的例子不完整。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--依赖范围。在项目发布过程中，帮助决定哪些构件被包括进来。欲知详情请参考依赖机制。 - compile ：默认范围，用于编译 - provided：类似于编译，但支持你期待jdk或者容器提供，类似于classpath </span></span><br><span class="line"><span class="comment">                - runtime: 在执行时需要使用 - test: 用于test任务时使用 - system: 需要外在提供相应的元素。通过systemPath来取得 </span></span><br><span class="line"><span class="comment">                - systemPath: 仅用于范围为system。提供相应的路径 - optional: 当项目自身被依赖时，标注依赖是否传递。用于连续依赖时使用 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">           <span class="comment">&lt;!--可选依赖，如果你在项目B中把C依赖声明为可选，你就需要在依赖于B的项目（例如项目A）中显式的引用对C的依赖。可选依赖阻断依赖的传递性。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!--构建项目所需要的信息--&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--子项目可以引用的默认插件信息。该插件配置项直到被引用时才会被解析或绑定到生命周期。给定插件的任何本地配置都会覆盖这里的配置 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--使用的插件列表 。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--plugin元素包含描述插件所需要的信息。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--插件在仓库里的group ID --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--插件在仓库里的artifact ID --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--被使用的插件的版本（或版本范围） --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">version</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">                 <span class="comment">&lt;!--在构建生命周期中执行一组目标的配置。每个目标可能有不同的配置。 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!--execution元素包含了插件执行需要的信息 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--执行目标的标识符，用于标识构建过程中的目标，或者匹配继承过程中需要合并的执行目标 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">id</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--绑定了目标的构建生命周期阶段，如果省略，目标会被绑定到源数据里配置的默认阶段 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">phase</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--配置的执行目标 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goals</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--配置是否被传播到子POM --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">inherited</span> /&gt;</span></span><br><span class="line">                            <span class="comment">&lt;!--作为DOM对象的配置 --&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">configuration</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--项目引入插件所需要的额外依赖 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">                        <span class="comment">&lt;!--参见dependencies/dependency元素 --&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                            ......</span><br><span class="line">                        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--任何配置是否被传播到子项目 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">inherited</span> /&gt;</span></span><br><span class="line">                    <span class="comment">&lt;!--作为DOM对象的配置 --&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">configuration</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="maven仓库"><a href="#maven仓库" class="headerlink" title="maven仓库"></a>maven仓库</h5><p>分为本地和远程两个仓库</p>
-<p>本地：~/.m2/settings.xml  </p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>本地仓库地址<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>远程：在配置文件中找到repositories和mirror，设置远程仓库和镜像。</p>
-<p>mirror相当于一个拦截器，它会拦截maven对remote repository的相关请求，把请求里的remote repository地址，重定向到mirror里配置的地址。</p>
-<h5 id="mvn构建生命周期："><a href="#mvn构建生命周期：" class="headerlink" title="mvn构建生命周期："></a>mvn构建生命周期：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@startuml</span><br><span class="line">:valid：验证项目;</span><br><span class="line">:compile：执行编译;</span><br><span class="line">:test:使用合适的框架进行测试;</span><br><span class="line">:package：创建jar/war包;</span><br><span class="line">:verify:对继承测试的结果进行检查;</span><br><span class="line">:install：打包到本地仓库，供其他项目使用;</span><br><span class="line">:depoly：拷贝到远程仓库;</span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
-
-<p>为了完成 default 生命周期，这些阶段（包括其他未在上面罗列的生命周期阶段）将被按顺序地执行。</p>
-<p>Maven 有以下三个标准的生命周期：</p>
-<ul>
-<li><strong>clean</strong>：项目清理的处理</li>
-<li>**default(或 build)**：项目部署的处理</li>
-<li><strong>site</strong>：项目站点文档创建的处理</li>
-</ul>
-<p>常用命令和生命周期的关系：</p>
-<p><em>注：当一个阶段通过 Maven 命令调用时，例如 mvn compile，只有该阶段之前以及包括该阶段在内的所有阶段会被执行。</em></p>
-<p> mvn clean: 移除上一下次构建生成的文件（具体涉及clean生命周期，有兴趣可以自己查查）</p>
-<p>mvn clean install :执行clean，然后再从头valid一直到install</p>
-<p>clean install -DskipTests：跳过测试执行clean install</p>
-]]></content>
-      <categories>
-        <category>技术栈</category>
-      </categories>
-      <tags>
-        <tag>maven</tag>
       </tags>
   </entry>
   <entry>
