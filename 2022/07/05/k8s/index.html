@@ -29,6 +29,8 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1657022314159.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/1657022314159.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1658136737531.png">
+<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/1658136910839.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111140539700.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111140539700.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011113290971.png">
@@ -45,12 +47,10 @@
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111172704176.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/20210111200610224.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/20210111200610224.png">
-<meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011120562767.png">
-<meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011120562767.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/gitee/Blog/source_posts/k8s/2021011121501187.png">
 <meta property="og:image" content="http://example.com/2022/07/05/k8s/2021011121501187.png">
 <meta property="article:published_time" content="2022-07-05T06:39:19.000Z">
-<meta property="article:modified_time" content="2022-07-15T06:43:05.624Z">
+<meta property="article:modified_time" content="2022-07-18T09:47:07.245Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
@@ -306,7 +306,7 @@
 <ul>
 <li> <strong>kubelet</strong> ：node上的Agent，负责pod对应容器的创建、启停等，听master指挥干活并随时汇报。</li>
 <li> <strong>kube-proxy</strong> ： 在Node节点上实现Pod网络代理，实现Kubernetes Service的通信和负载均衡机制的重要组件。 </li>
-<li> <strong>docker</strong> ： Docker引擎，负责本机的容器的创建和管理工作 </li>
+<li> ** <strong>Container Runtime(docker)</strong> ： 默认Docker引擎，负责本机的容器的创建和管理工作 </li>
 </ul>
 <h4 id="1-5-Etcd"><a href="#1-5-Etcd" class="headerlink" title="1.5 Etcd"></a>1.5 Etcd</h4><blockquote>
 <p>Etcd是Kubernetes提供默认的键值存储系统，保存所有集群数据，使用时需要为Etcd数据提供备份计划 </p>
@@ -322,13 +322,14 @@
 <li>多个容器之间可以“了解”对方，比如知道其他人的镜像，知道别人定义的端口等。</li>
 </ul>
 </blockquote>
+<p>通俗解释： 再打个形象的比喻，在同一个 Pod 里的几个 Docker 服务/程序，好像被部署在同一台机器上，可以通过 localhost 互相访问，并且可以共用 Pod 里的存储资源 <img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136737531.png" alt="1658136737531"></p>
 <h5 id="1-6-2-Service"><a href="#1-6-2-Service" class="headerlink" title="1.6.2 Service"></a>1.6.2 Service</h5><blockquote>
 <p>即服务发现，不管Deployment的Pod有多少个，不管它是更新、销毁还是重建，Service总是能发现并维护好它的ip列表。</p>
 <p>Service通过标签Label，知道其负责了哪几个Pod。这样就更加灵活，使其和Deployment解耦开来</p>
 </blockquote>
 <h5 id="1-6-3-Volume"><a href="#1-6-3-Volume" class="headerlink" title="1.6.3 Volume"></a>1.6.3 Volume</h5><blockquote>
-<p> Volume(存储卷)Volume是Pod中能够被多个容器共享的磁盘目录。 </p>
-<p>Kubernetes提供了非常丰富的Volume类型:</p>
+<p> Volume(存储卷)Volume是Pod中能够被多个容器共享的磁盘目录。即 <strong>数据卷 volume 是 Pod 内部的磁盘资源</strong>。 </p>
+<p> Kubernetes提供了非常丰富的Volume类型:</p>
 <ul>
 <li>emptyDir：临时空间，Pod分配到Node时创建，无须指定宿主主机上对应的目录，在Kubernetes会自动分配当前Node的一个目录，当Pod被移除时，emptyDir中的数据也会永久删除。</li>
 <li>hostPath：为Pod挂载宿主主机上的文件或目录。用于数据永久保存。在不同的Node上具有相同配置的Pod,可能会因为宿主机上的目录和文件不同而导致Volume上的目录和文件的访问结果不一致。</li>
@@ -337,14 +338,17 @@
 </ul>
 </blockquote>
 <h5 id="1-6-4-Namespace"><a href="#1-6-4-Namespace" class="headerlink" title="1.6.4 Namespace"></a>1.6.4 Namespace</h5><blockquote>
-<p> 命名空间，Namespace在很多情况下用于实现多租户的资源隔离。Namespace通过集群内部的资源对象”分配”到不同的Namespace中，形成逻辑上分组的不同项目，便于不同的分组共享使用整个集群的资源的同时还能被分别管理。 </p>
+<p>  namespace 跟 Pod 没有直接关系，而是 K8S 另一个维度的对象 。 <strong>namespace 是为了把一个 K8S 集群划分为若干个资源不可共享的虚拟集群而诞生的</strong>。 </p>
+<p>  也就是说，<strong>可以通过在 K8S 集群内创建 namespace 来分隔资源和对象</strong>。比如我有 2 个业务 A 和 B，那么我可以创建 ns-a 和 ns-b 分别部署业务 A 和 B 的服务，如在 ns-a 中部署了一个 deployment，名字是 hello，返回用户的是“hello a”；在 ns-b 中也部署了一个 deployment，名字恰巧也是 hello，返回用户的是“hello b”（要知道，在同一个 namespace 下 deployment 不能同名；但是不同 namespace 之间没有影响）。本文提到的所有对象，都是在 namespace 下的； </p>
 </blockquote>
 <h5 id="1-6-5-Deployment"><a href="#1-6-5-Deployment" class="headerlink" title="1.6.5 Deployment"></a>1.6.5 Deployment</h5><blockquote>
 <p> 通过Kubernetes的 <strong>Deployment</strong> 的配置文件去描述应用，比如应用叫什么名字、使用的镜像名字、要运行几个实例、需要多少的内存资源、cpu 资源等等。即应用管理者，是用于部署应用的对象。<strong>不会单独创建一个pod资源对象，而是创建Deployment对象，通过Deployment来管理pod。</strong> </p>
 </blockquote>
 <h5 id="1-6-6-ReplicaSet"><a href="#1-6-6-ReplicaSet" class="headerlink" title="1.6.6 ReplicaSet"></a>1.6.6 ReplicaSet</h5><blockquote>
-<p> ReplicaSet 实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本，所以我们通常不需要直接使用 ReplicaSet。 </p>
+<p> ReplicaSet 实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本，所以我们通常不需要直接使用 ReplicaSet。  因此，它通常用来保证给定数量的、完全相同的 Pod 的可用性。 </p>
 </blockquote>
+<p>通俗解释： ReplicaSet 的作用就是管理和控制 Pod，管控他们好好干活。但是，ReplicaSet 受控于 Deployment。形象来说，<strong>ReplicaSet 就是总包工头手下的小包工头</strong>。 </p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136910839.png" alt="1658136910839"></p>
 <h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
 <img src="/2022/07/05/k8s/20210111140539700.png" class title="k8s架构图">
 
@@ -412,19 +416,13 @@
 </li>
 <li><p><strong>缺点： 服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护，所以生产环境不建议这么使用</strong> </p>
 </li>
+<li><p><strong>优点：</strong> <strong>Service 是 K8S 服务的核心，屏蔽了服务细节，统一对外暴露服务接口，真正做到了“微服务”</strong>。举个例子，我们的一个服务 A，部署了 3 个备份，也就是 3 个 Pod；对于用户来说，只需要关注一个 Service 的入口就可以，而不需要操心究竟应该请求哪一个 Pod。优势非常明显：<strong>一方面外部用户不需要感知因为 Pod 上服务的意外崩溃、K8S 重新拉起 Pod 而造成的 IP 变更，外部用户也不需要感知因升级、变更服务带来的 Pod 替换而造成的 IP 变化，另一方面，Service 还可以做流量负载均衡</strong> </p>
+</li>
 </ul>
-<h4 id="3-2-LoadBalane"><a href="#3-2-LoadBalane" class="headerlink" title="3.2 LoadBalane"></a>3.2 LoadBalane</h4><blockquote>
-<p>LoadBalane是上面通过NodePort暴露外部访问的一个优化，增加了一个负载均衡器，上面的NodePort是所有节点都开放一个端口，直接给外部访问，并没有Node节点的负载均衡。LoadBalane则是在上面的基础上增加了一层，只提供一个公网ip给外部访问，外部访问这个ip再负载均衡分发给Node节点的Pod</p>
-</blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011120562767.png" alt="2021011120562767"></p>
-<img src="/2022/07/05/k8s/2021011120562767.png" class title="LoadBalane">
-
-<p>部署起来和上述NodePort界面差不多。kind参数变为LoadBalane</p>
-<ul>
-<li>缺点： 每一个用 LoadBalancer 暴露的服务都会有它自己的 IP 地址和端口，不能做到一个ip地址就可以访问所有服务。 </li>
-</ul>
-<h4 id="3-3-Ingress"><a href="#3-3-Ingress" class="headerlink" title="3.3 Ingress"></a>3.3 Ingress</h4><blockquote>
-<p>采用 NodePort 方式暴露服务面临问题是，服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护；如果采用LoadBalane，每个服务都得开放一个公网IP，也会很庞大。这时候Ingress暴露服务就是一种很合适的方案。可以通过一个Ingress暴露多个服务。</p>
+<h4 id="3-2-Ingress"><a href="#3-2-Ingress" class="headerlink" title="3.2 Ingress"></a>3.2 Ingress</h4><blockquote>
+<p> Service 主要负责 K8S 集群内部的网络拓扑。那么集群外部怎么访问集群内部呢？这个时候就需要 Ingress 了 .</p>
+<p>Ingress 是对集群中服务的外部访问进行管理的 API 对象，典型的访问方式是 HTTP。</p>
+<p>Ingress 可以提供负载均衡、SSL 终结和基于名称的虚拟托管。</p>
 </blockquote>
 <p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
 <img src="/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
@@ -515,7 +513,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">1.概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-Kubernetes"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是 Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Kubernetes-%E5%9C%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">1.2  Kubernetes 在哪些地方使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-master"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-node"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Etcd"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 Etcd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-1-Pod"><span class="nav-number">1.6.1.</span> <span class="nav-text">1.6.1 Pod</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-2-Service"><span class="nav-number">1.6.2.</span> <span class="nav-text">1.6.2 Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-3-Volume"><span class="nav-number">1.6.3.</span> <span class="nav-text">1.6.3 Volume</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-4-Namespace"><span class="nav-number">1.6.4.</span> <span class="nav-text">1.6.4 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-5-Deployment"><span class="nav-number">1.6.5.</span> <span class="nav-text">1.6.5 Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-6-ReplicaSet"><span class="nav-number">1.6.6.</span> <span class="nav-text">1.6.6 ReplicaSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">2.</span> <span class="nav-text">2.项目部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Serivce%E6%9A%B4%E9%9C%B2ip%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">3.Serivce暴露ip方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-NodePort"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 NodePort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-LoadBalane"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 LoadBalane</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Ingress"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Ingress</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">1.概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF-Kubernetes"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是 Kubernetes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Kubernetes-%E5%9C%A8%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">1.2  Kubernetes 在哪些地方使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-master"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 master</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-node"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Etcd"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 Etcd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-1-Pod"><span class="nav-number">1.6.1.</span> <span class="nav-text">1.6.1 Pod</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-2-Service"><span class="nav-number">1.6.2.</span> <span class="nav-text">1.6.2 Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-3-Volume"><span class="nav-number">1.6.3.</span> <span class="nav-text">1.6.3 Volume</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-4-Namespace"><span class="nav-number">1.6.4.</span> <span class="nav-text">1.6.4 Namespace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-5-Deployment"><span class="nav-number">1.6.5.</span> <span class="nav-text">1.6.5 Deployment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-6-6-ReplicaSet"><span class="nav-number">1.6.6.</span> <span class="nav-text">1.6.6 ReplicaSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2"><span class="nav-number">2.</span> <span class="nav-text">2.项目部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Serivce%E6%9A%B4%E9%9C%B2ip%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">3.Serivce暴露ip方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-NodePort"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 NodePort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Ingress"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Ingress</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
