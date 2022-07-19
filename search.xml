@@ -250,6 +250,120 @@
       </tags>
   </entry>
   <entry>
+    <title>jooq使用</title>
+    <url>/2022/07/15/jooq%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="JOOQ简介"><a href="#JOOQ简介" class="headerlink" title="JOOQ简介"></a>JOOQ简介</h3><blockquote>
+<p><a href="https://jooq.org/">jOOQ</a>，是一个ORM框架，利用其生成的Java代码和流畅的API，可以快速构建有类型约束的安全的SQL语句 。 </p>
+</blockquote>
+<span id="more"></span>
+
+<blockquote>
+<p><strong>优点：</strong></p>
+<ol>
+<li><p>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。通过jOOQ提供的API，配合生成的Java代码，可以很方便的进行数据库操作 </p>
+</li>
+<li><p>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了SQL注入的风险 </p>
+</li>
+<li><p>jOOQ的代码生成策略是根据配置全量生成，任何对于数据库的改动，如果会影响到业务代码，在编译期间就会被发现，可以及时进行修复 </p>
+</li>
+</ol>
+</blockquote>
+<h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><blockquote>
+<p>所有的操作jooq都提供两种方式， 第一种是使用 DSLContext API 以类SQL的语法进行调用，第二种是利用 Record API 进行调用 。这里面只记录第一种，了解第二种请点击<a href="https://jooq.diamondfsd.com/learn/section-2-base-curd.html">这里</a></p>
+<p>了解：</p>
+<ul>
+<li><code>dslContext</code> 代表<code>DSLContext</code>实例</li>
+<li><code>S1_USER</code> 由jOOQ插件生成的表描述常量</li>
+<li><code>S1_USER.*</code> 由jOOQ插件生成的表内字段常量</li>
+</ul>
+<p>了解三个接口：</p>
+<ul>
+<li><code>org.jooq.Result</code> 结果集接口，此接口实现了List接口，可以当做一个集合来操作，是一个数据库查询结果集的包装类，除了集合的相关方法，该接口还提供了一些结果集转换，格式化，提取字段等方法。通常我们查询出来的结果都是此接口的实现类，掌握好此接口是jOOQ的基础接口，基本所有的SQL查询操作，都会碰到这个接口 </li>
+<li><code>org.jooq.Record </code> 此接口再使用关系型数据库时，主要用于定义数据库表记录，储存的内容是一条表记录的字段和值，每个值会储存对应字段的类型，可以通过通用的 <code>getValue(Field field)</code> 方法，取到对应字段的值，也可以将这个接口看做是一条记录的字段/值映射 </li>
+<li><code>org.jooq.DSLContext</code> jOOQ的核心接口之一，可以理解为一个SQL执行器，通过静态方法 <code>DSL.using</code>，可以获取一个 <code>DSLContext</code> 实例，此实例抽象了所有对于SQL的操作API，可以通过其提供的API方便的进行SQL操作  </li>
+</ul>
+</blockquote>
+<h4 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 类SQL语法 insertInto 方法第一个参数通常是表常量</span></span><br><span class="line">dslContext.insertInto(S1_USER, S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">        .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .values(<span class="string">&quot;username2&quot;</span>, <span class="string">&quot;demo-address2&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .execute();</span><br><span class="line"> <span class="comment">//批量插入</span></span><br><span class="line"> List&lt;S1UserRecord&gt; recordList = IntStream.range(<span class="number">0</span>, <span class="number">10</span>).mapToObj(i -&gt; &#123;</span><br><span class="line">    <span class="type">S1UserRecord</span> <span class="variable">s1UserRecord</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">    s1UserRecord.setUsername(<span class="string">&quot;usernameBatchInsert&quot;</span> + i);</span><br><span class="line">    s1UserRecord.setEmail(<span class="string">&quot;diamondfsd@gmail.com&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> s1UserRecord;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br><span class="line">dslContext.batchInsert(recordList).execute();</span><br><span class="line"><span class="comment">//插入后获取主键</span></span><br><span class="line"><span class="comment">//通过此方法插入数据，可以通过 returning API读取想要返回的数据，此语法支持返回多个值，通过fetchOne()方法可以取到一个Record对象</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">    .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">    .returning(S1_USER.ID)</span><br><span class="line">    .fetchOne().getId();</span><br><span class="line"><span class="comment">//插入时主键重复的处理办法</span></span><br><span class="line"><span class="comment">// 第一种 ：这里执行完，返回affecteRow影响行数为0，即不生效</span></span><br><span class="line"><span class="comment">// 生成的SQL: insert ignore into `learn-jooq`.`s1_user` (`id`, `username`) values (1, &#x27;username-1&#x27;)</span></span><br><span class="line"><span class="type">int</span> <span class="variable">affecteRow</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">    .values(<span class="number">1</span>, <span class="string">&quot;username-1&quot;</span>)</span><br><span class="line">    .onDuplicateKeyIgnore()</span><br><span class="line">    .execute();</span><br><span class="line"><span class="comment">// 第二种:更新主键所在列</span></span><br><span class="line"><span class="comment">//生成SQL: insert into `learn-jooq`.`s1_user` (`id`, `username`, `address`) values (1, &#x27;duplicateKey-update&#x27;, &#x27;hello world&#x27;) on duplicate key update `learn-jooq`.`s1_user`.`username` = &#x27;duplicateKey-update&#x27;, `learn-jooq`.`s1_user`.`address` = &#x27;update&#x27;</span></span><br><span class="line">dslContext.insertInto(S1_USER)</span><br><span class="line">    .set(S1_USER.ID, <span class="number">1</span>)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-insert&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">    .onDuplicateKeyUpdate()</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-update&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update&quot;</span>)</span><br><span class="line">    .execute();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.update(S1_USER)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;apiUsername-1&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update-address&quot;</span>)</span><br><span class="line">    .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">    .execute()</span><br><span class="line">    </span><br><span class="line"><span class="comment">//批量更新</span></span><br><span class="line">  <span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line">record1.setUsername(<span class="string">&quot;batchUsername-1&quot;</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">record2.setUsername(<span class="string">&quot;batchUsername-2&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;S1UserRecord&gt; userRecordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">userRecordList.add(record1);</span><br><span class="line">userRecordList.add(record2);</span><br><span class="line">dslContext.batchUpdate(userRecordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><blockquote>
+<p> 基本查询方法，默认查询指定表的所有字段，返回一个结果集的包装，通过<code>Result.into</code>方法，可以将结果集转换为任意指定类型集合，当然也可以通过 <code>Record.getValue</code> 方法取得任意字段值，值类型依赖于字段类型 </p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user`</span></span><br><span class="line">Result&lt;Record&gt; fetchResult = dslContext.select().from(S1_USER).fetch();</span><br><span class="line">List&lt;S1UserRecord&gt; result = fetch.into(S1UserRecord.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user` where `learn-jooq`.`s1_user`.`id` in (1, 2)</span></span><br><span class="line">Result&lt;Record&gt; fetchAll = dslContext.select().from(S1_USER)</span><br><span class="line">                .where(S1_USER.ID.in(<span class="number">1</span>, <span class="number">2</span>)).fetch();</span><br><span class="line">fetchAll.forEach(record -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">id</span> <span class="operator">=</span> record.getValue(S1_USER.ID);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> record.getValue(S1_USER.USERNAME);</span><br><span class="line">    <span class="type">String</span> <span class="variable">address</span> <span class="operator">=</span> record.getValue(S1_USER.ADDRESS);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">createTime</span> <span class="operator">=</span> record.getValue(S1_USER.CREATE_TIME);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">updateTime</span> <span class="operator">=</span> record.getValue(S1_USER.UPDATE_TIME);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>jooq也支持关联查询</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//UserMessagePojo为新建的Pojo类，用于存储查询结果，可以忽略具体内容</span></span><br><span class="line">Result&lt;Record3&lt;String, String, String&gt;&gt; record3Result =</span><br><span class="line">        dslContext.select(S1_USER.USERNAME,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_TITLE,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_CONTENT)</span><br><span class="line">        .from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .fetch();</span><br><span class="line">List&lt;UserMessagePojo&gt; userMessagePojoList = record3Result.into(UserMessagePojo.class)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Condition动态查询</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">query</span><span class="params">(String name,String age)</span> &#123;</span><br><span class="line">		Condition condition=DSL.trueCondition();<span class="comment">//真实条件</span></span><br><span class="line">		<span class="keyword">if</span>(name!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.NAME.eq(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(age!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.AGE.eq(Integer.parseInt(age)));</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Student&gt; list=context.select().from(Tables.STUDENT).where(condition).fetch().into(Student.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.delete(S1_USER).where(S1_USER.USERNAME.eq(<span class="string">&quot;demo1&quot;</span>)).execute();</span><br><span class="line"></span><br><span class="line"><span class="comment">//批量删除</span></span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">dslContext.batchDelete(record1, record2).execute();</span><br><span class="line"><span class="comment">// </span></span><br><span class="line">List&lt;S1UserRecord&gt; recordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">recordList.add(record1);</span><br><span class="line">recordList.add(record2);</span><br><span class="line">dslContext.batchDelete(recordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h3 id="结果处理"><a href="#结果处理" class="headerlink" title="结果处理"></a>结果处理</h3><blockquote>
+<p>查询操作通常以fetch API 作为结束API，例如常用的有，所有的读取类方法都差不多，掌握一个就能很快的举一反三</p>
+<ul>
+<li>读取多条<ul>
+<li><code>fetch</code> 读取集合</li>
+<li><code>fetchSet</code> 读取并返回一个Set集合，常用于去重</li>
+<li><code>fetchArray</code> 读取并返回一个数组</li>
+</ul>
+</li>
+<li>读取单条<ul>
+<li><code>fetchOne</code> 读取单条记录，如果记录超过一条会报错</li>
+<li><code>fetchAny</code> 读取单条记录，如果有多条，会取第一条数据</li>
+<li><code>fetchSingle</code> 读取单条记录，如果记录为空或者记录超过一条会报错</li>
+</ul>
+</li>
+<li>读取并返回Map<ul>
+<li><code>fetchMap</code> 读取并返回一个Map</li>
+<li><code>fetchGroups</code> 读取并返回一个分组Map</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><ul>
+<li><p><code>fetch()</code><br>无参调用此方法，返回的是一个<code>Result</code>结果集对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result&lt;Record&gt; records = dslContext.select().from(S1_USER).fetch();</span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(RecordMapper mapper)</code><br><code>RecordMapper</code>接口的提供<code>map</code>方法，用于来返回数据。<code>map</code> 方法传入一个 <code>Record</code> 对象。可以使用lambda表达式将 <code>Record</code> 对象转换成一个指定类型的POJO</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;S1UserPojo&gt; userPojoList = dslContext.select()</span><br><span class="line">            .from(S1_USER)</span><br><span class="line">            .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">            .fetch(r -&gt; r.into(S1UserPojo.class));</span><br></pre></td></tr></table></figure>
+
+<p>多表查询，字段相同时，直接用into方法将结果集转换为POJO时，相同字段名称的方法会以最后一个字段值为准。这时候，我们可以现将结果集通过 <code>into(Table table)</code> 方法将结果集转换为指定表的<code>Record</code>对象，然后再<code>into</code>进指定的POJO类中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 多表关联查询，查询s2_user_message.id = 2的数据，直接into的结果getId()却是1</span></span><br><span class="line"><span class="comment">// 这是因为同时关联查询了s1_user表，该表的id字段值为1</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; r.into(S2UserMessage.class));</span><br><span class="line"><span class="comment">// userMessage.getId() == 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将结果集into进指定的表描述中，然后在into至指定的POJO类</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage2 = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; &#123;</span><br><span class="line">            <span class="type">S2UserMessage</span> <span class="variable">fetchUserMessage</span> <span class="operator">=</span> r.into(S2_USER_MESSAGE).into(S2UserMessage.class);</span><br><span class="line">            fetchUserMessage.setUsername(r.get(S1_USER.USERNAME));</span><br><span class="line">            <span class="keyword">return</span> fetchUserMessage;</span><br><span class="line">        &#125;);</span><br><span class="line"><span class="comment">// userMessage.getId() == 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(Field field)</code><br><code>Field</code>是一个接口，代码生成器生成的表字段常量例如 <code>S1_USER.ID</code>, 都实现了 <code>Field</code> 接口，这个重载可以直接取出指定表字段，会自动根据传入的字段推测其类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; id = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(S1_USER.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(String fieldName, Class type)</code><br>可以直接通过字段名称字符串获取指定字段值，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(<span class="string">&quot;id&quot;</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(int fieldIndex, Class type)</code><br>可以通过查询字段下标顺序进行查询指定字段，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select(S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">        .from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>)).fetch(<span class="number">0</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetch-1"><a href="#fetch-1" class="headerlink" title="fetch"></a>fetch</h4><p>此方法可以将结果集处理为一个Map格式，此方法有很多重载，这里介绍几个常用的，注意，此方法作为key的字段必须确定是在当前结果集中是唯一的，如果出现重复key，此方法会抛出异常</p>
+<ul>
+<li><p><code>fetchMap(Field field, Class type)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, S1UserPojo&gt; idUserPojoMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1UserPojo.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchMap(Feild field, Field field)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, String&gt; idUserNameMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1_USER.USERNAME);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetchgroup"><a href="#fetchgroup" class="headerlink" title="fetchgroup"></a>fetchgroup</h4><p>此方法可以将结果集处理为一个Map格式，和<code>fetchMap</code>类似，只不过这里的值为一个指定类型的集合，通常在处理一对多数据时会用到</p>
+<ul>
+<li><p><code>fetchGroups(Field field, Class type)</code><br>以表字段值为Key，返回一个<code>K:List</code> 的Map对象</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;S2UserMessage&gt;&gt; userIdUserMessageMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2UserMessage.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchGroups(Field keyField, Field valueField)</code></p>
+</li>
+<li><p>以表字段值为Key，返回一个K:List<V>的Map对象</V></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;Integer&gt;&gt; userIdUserMessageIdMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2_USER_MESSAGE.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><a href="https://jooq.diamondfsd.com/learn/section-1-how-to-start.html">参考JOOQ中文文档教程</a></p>
+<p><a href="https://blog.csdn.net/qq_39940674/article/details/93383177">更多用法参考</a></p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>jooq</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>gradle</title>
     <url>/2022/07/07/gradle/</url>
     <content><![CDATA[<h2 id="Groovy简介"><a href="#Groovy简介" class="headerlink" title="Groovy简介"></a>Groovy简介</h2><p>整理自github仓库：<a href="https://github.com/kwf2030/gradle-tutorial">https://github.com/kwf2030/gradle-tutorial</a></p>
@@ -479,120 +593,6 @@
       </tags>
   </entry>
   <entry>
-    <title>jooq使用</title>
-    <url>/2022/07/15/jooq%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="JOOQ简介"><a href="#JOOQ简介" class="headerlink" title="JOOQ简介"></a>JOOQ简介</h3><blockquote>
-<p><a href="https://jooq.org/">jOOQ</a>，是一个ORM框架，利用其生成的Java代码和流畅的API，可以快速构建有类型约束的安全的SQL语句 。 </p>
-</blockquote>
-<span id="more"></span>
-
-<blockquote>
-<p><strong>优点：</strong></p>
-<ol>
-<li><p>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。通过jOOQ提供的API，配合生成的Java代码，可以很方便的进行数据库操作 </p>
-</li>
-<li><p>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了SQL注入的风险 </p>
-</li>
-<li><p>jOOQ的代码生成策略是根据配置全量生成，任何对于数据库的改动，如果会影响到业务代码，在编译期间就会被发现，可以及时进行修复 </p>
-</li>
-</ol>
-</blockquote>
-<h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><blockquote>
-<p>所有的操作jooq都提供两种方式， 第一种是使用 DSLContext API 以类SQL的语法进行调用，第二种是利用 Record API 进行调用 。这里面只记录第一种，了解第二种请点击<a href="https://jooq.diamondfsd.com/learn/section-2-base-curd.html">这里</a></p>
-<p>了解：</p>
-<ul>
-<li><code>dslContext</code> 代表<code>DSLContext</code>实例</li>
-<li><code>S1_USER</code> 由jOOQ插件生成的表描述常量</li>
-<li><code>S1_USER.*</code> 由jOOQ插件生成的表内字段常量</li>
-</ul>
-<p>了解三个接口：</p>
-<ul>
-<li><code>org.jooq.Result</code> 结果集接口，此接口实现了List接口，可以当做一个集合来操作，是一个数据库查询结果集的包装类，除了集合的相关方法，该接口还提供了一些结果集转换，格式化，提取字段等方法。通常我们查询出来的结果都是此接口的实现类，掌握好此接口是jOOQ的基础接口，基本所有的SQL查询操作，都会碰到这个接口 </li>
-<li><code>org.jooq.Record </code> 此接口再使用关系型数据库时，主要用于定义数据库表记录，储存的内容是一条表记录的字段和值，每个值会储存对应字段的类型，可以通过通用的 <code>getValue(Field field)</code> 方法，取到对应字段的值，也可以将这个接口看做是一条记录的字段/值映射 </li>
-<li><code>org.jooq.DSLContext</code> jOOQ的核心接口之一，可以理解为一个SQL执行器，通过静态方法 <code>DSL.using</code>，可以获取一个 <code>DSLContext</code> 实例，此实例抽象了所有对于SQL的操作API，可以通过其提供的API方便的进行SQL操作  </li>
-</ul>
-</blockquote>
-<h4 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 类SQL语法 insertInto 方法第一个参数通常是表常量</span></span><br><span class="line">dslContext.insertInto(S1_USER, S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">        .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .values(<span class="string">&quot;username2&quot;</span>, <span class="string">&quot;demo-address2&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .execute();</span><br><span class="line"> <span class="comment">//批量插入</span></span><br><span class="line"> List&lt;S1UserRecord&gt; recordList = IntStream.range(<span class="number">0</span>, <span class="number">10</span>).mapToObj(i -&gt; &#123;</span><br><span class="line">    <span class="type">S1UserRecord</span> <span class="variable">s1UserRecord</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">    s1UserRecord.setUsername(<span class="string">&quot;usernameBatchInsert&quot;</span> + i);</span><br><span class="line">    s1UserRecord.setEmail(<span class="string">&quot;diamondfsd@gmail.com&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> s1UserRecord;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br><span class="line">dslContext.batchInsert(recordList).execute();</span><br><span class="line"><span class="comment">//插入后获取主键</span></span><br><span class="line"><span class="comment">//通过此方法插入数据，可以通过 returning API读取想要返回的数据，此语法支持返回多个值，通过fetchOne()方法可以取到一个Record对象</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">    .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">    .returning(S1_USER.ID)</span><br><span class="line">    .fetchOne().getId();</span><br><span class="line"><span class="comment">//插入时主键重复的处理办法</span></span><br><span class="line"><span class="comment">// 第一种 ：这里执行完，返回affecteRow影响行数为0，即不生效</span></span><br><span class="line"><span class="comment">// 生成的SQL: insert ignore into `learn-jooq`.`s1_user` (`id`, `username`) values (1, &#x27;username-1&#x27;)</span></span><br><span class="line"><span class="type">int</span> <span class="variable">affecteRow</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">    .values(<span class="number">1</span>, <span class="string">&quot;username-1&quot;</span>)</span><br><span class="line">    .onDuplicateKeyIgnore()</span><br><span class="line">    .execute();</span><br><span class="line"><span class="comment">// 第二种:更新主键所在列</span></span><br><span class="line"><span class="comment">//生成SQL: insert into `learn-jooq`.`s1_user` (`id`, `username`, `address`) values (1, &#x27;duplicateKey-update&#x27;, &#x27;hello world&#x27;) on duplicate key update `learn-jooq`.`s1_user`.`username` = &#x27;duplicateKey-update&#x27;, `learn-jooq`.`s1_user`.`address` = &#x27;update&#x27;</span></span><br><span class="line">dslContext.insertInto(S1_USER)</span><br><span class="line">    .set(S1_USER.ID, <span class="number">1</span>)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-insert&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">    .onDuplicateKeyUpdate()</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-update&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update&quot;</span>)</span><br><span class="line">    .execute();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.update(S1_USER)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;apiUsername-1&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update-address&quot;</span>)</span><br><span class="line">    .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">    .execute()</span><br><span class="line">    </span><br><span class="line"><span class="comment">//批量更新</span></span><br><span class="line">  <span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line">record1.setUsername(<span class="string">&quot;batchUsername-1&quot;</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">record2.setUsername(<span class="string">&quot;batchUsername-2&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;S1UserRecord&gt; userRecordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">userRecordList.add(record1);</span><br><span class="line">userRecordList.add(record2);</span><br><span class="line">dslContext.batchUpdate(userRecordList).execute();</span><br></pre></td></tr></table></figure>
-
-<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><blockquote>
-<p> 基本查询方法，默认查询指定表的所有字段，返回一个结果集的包装，通过<code>Result.into</code>方法，可以将结果集转换为任意指定类型集合，当然也可以通过 <code>Record.getValue</code> 方法取得任意字段值，值类型依赖于字段类型 </p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user`</span></span><br><span class="line">Result&lt;Record&gt; fetchResult = dslContext.select().from(S1_USER).fetch();</span><br><span class="line">List&lt;S1UserRecord&gt; result = fetch.into(S1UserRecord.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user` where `learn-jooq`.`s1_user`.`id` in (1, 2)</span></span><br><span class="line">Result&lt;Record&gt; fetchAll = dslContext.select().from(S1_USER)</span><br><span class="line">                .where(S1_USER.ID.in(<span class="number">1</span>, <span class="number">2</span>)).fetch();</span><br><span class="line">fetchAll.forEach(record -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">id</span> <span class="operator">=</span> record.getValue(S1_USER.ID);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> record.getValue(S1_USER.USERNAME);</span><br><span class="line">    <span class="type">String</span> <span class="variable">address</span> <span class="operator">=</span> record.getValue(S1_USER.ADDRESS);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">createTime</span> <span class="operator">=</span> record.getValue(S1_USER.CREATE_TIME);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">updateTime</span> <span class="operator">=</span> record.getValue(S1_USER.UPDATE_TIME);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>jooq也支持关联查询</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//UserMessagePojo为新建的Pojo类，用于存储查询结果，可以忽略具体内容</span></span><br><span class="line">Result&lt;Record3&lt;String, String, String&gt;&gt; record3Result =</span><br><span class="line">        dslContext.select(S1_USER.USERNAME,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_TITLE,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_CONTENT)</span><br><span class="line">        .from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .fetch();</span><br><span class="line">List&lt;UserMessagePojo&gt; userMessagePojoList = record3Result.into(UserMessagePojo.class)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Condition动态查询</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">query</span><span class="params">(String name,String age)</span> &#123;</span><br><span class="line">		Condition condition=DSL.trueCondition();<span class="comment">//真实条件</span></span><br><span class="line">		<span class="keyword">if</span>(name!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.NAME.eq(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(age!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.AGE.eq(Integer.parseInt(age)));</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Student&gt; list=context.select().from(Tables.STUDENT).where(condition).fetch().into(Student.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.delete(S1_USER).where(S1_USER.USERNAME.eq(<span class="string">&quot;demo1&quot;</span>)).execute();</span><br><span class="line"></span><br><span class="line"><span class="comment">//批量删除</span></span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">dslContext.batchDelete(record1, record2).execute();</span><br><span class="line"><span class="comment">// </span></span><br><span class="line">List&lt;S1UserRecord&gt; recordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">recordList.add(record1);</span><br><span class="line">recordList.add(record2);</span><br><span class="line">dslContext.batchDelete(recordList).execute();</span><br></pre></td></tr></table></figure>
-
-<h3 id="结果处理"><a href="#结果处理" class="headerlink" title="结果处理"></a>结果处理</h3><blockquote>
-<p>查询操作通常以fetch API 作为结束API，例如常用的有，所有的读取类方法都差不多，掌握一个就能很快的举一反三</p>
-<ul>
-<li>读取多条<ul>
-<li><code>fetch</code> 读取集合</li>
-<li><code>fetchSet</code> 读取并返回一个Set集合，常用于去重</li>
-<li><code>fetchArray</code> 读取并返回一个数组</li>
-</ul>
-</li>
-<li>读取单条<ul>
-<li><code>fetchOne</code> 读取单条记录，如果记录超过一条会报错</li>
-<li><code>fetchAny</code> 读取单条记录，如果有多条，会取第一条数据</li>
-<li><code>fetchSingle</code> 读取单条记录，如果记录为空或者记录超过一条会报错</li>
-</ul>
-</li>
-<li>读取并返回Map<ul>
-<li><code>fetchMap</code> 读取并返回一个Map</li>
-<li><code>fetchGroups</code> 读取并返回一个分组Map</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><ul>
-<li><p><code>fetch()</code><br>无参调用此方法，返回的是一个<code>Result</code>结果集对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result&lt;Record&gt; records = dslContext.select().from(S1_USER).fetch();</span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(RecordMapper mapper)</code><br><code>RecordMapper</code>接口的提供<code>map</code>方法，用于来返回数据。<code>map</code> 方法传入一个 <code>Record</code> 对象。可以使用lambda表达式将 <code>Record</code> 对象转换成一个指定类型的POJO</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;S1UserPojo&gt; userPojoList = dslContext.select()</span><br><span class="line">            .from(S1_USER)</span><br><span class="line">            .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">            .fetch(r -&gt; r.into(S1UserPojo.class));</span><br></pre></td></tr></table></figure>
-
-<p>多表查询，字段相同时，直接用into方法将结果集转换为POJO时，相同字段名称的方法会以最后一个字段值为准。这时候，我们可以现将结果集通过 <code>into(Table table)</code> 方法将结果集转换为指定表的<code>Record</code>对象，然后再<code>into</code>进指定的POJO类中</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 多表关联查询，查询s2_user_message.id = 2的数据，直接into的结果getId()却是1</span></span><br><span class="line"><span class="comment">// 这是因为同时关联查询了s1_user表，该表的id字段值为1</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; r.into(S2UserMessage.class));</span><br><span class="line"><span class="comment">// userMessage.getId() == 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将结果集into进指定的表描述中，然后在into至指定的POJO类</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage2 = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; &#123;</span><br><span class="line">            <span class="type">S2UserMessage</span> <span class="variable">fetchUserMessage</span> <span class="operator">=</span> r.into(S2_USER_MESSAGE).into(S2UserMessage.class);</span><br><span class="line">            fetchUserMessage.setUsername(r.get(S1_USER.USERNAME));</span><br><span class="line">            <span class="keyword">return</span> fetchUserMessage;</span><br><span class="line">        &#125;);</span><br><span class="line"><span class="comment">// userMessage.getId() == 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(Field field)</code><br><code>Field</code>是一个接口，代码生成器生成的表字段常量例如 <code>S1_USER.ID</code>, 都实现了 <code>Field</code> 接口，这个重载可以直接取出指定表字段，会自动根据传入的字段推测其类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; id = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(S1_USER.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(String fieldName, Class type)</code><br>可以直接通过字段名称字符串获取指定字段值，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(<span class="string">&quot;id&quot;</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(int fieldIndex, Class type)</code><br>可以通过查询字段下标顺序进行查询指定字段，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select(S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">        .from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>)).fetch(<span class="number">0</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="fetch-1"><a href="#fetch-1" class="headerlink" title="fetch"></a>fetch</h4><p>此方法可以将结果集处理为一个Map格式，此方法有很多重载，这里介绍几个常用的，注意，此方法作为key的字段必须确定是在当前结果集中是唯一的，如果出现重复key，此方法会抛出异常</p>
-<ul>
-<li><p><code>fetchMap(Field field, Class type)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, S1UserPojo&gt; idUserPojoMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1UserPojo.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetchMap(Feild field, Field field)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, String&gt; idUserNameMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1_USER.USERNAME);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="fetchgroup"><a href="#fetchgroup" class="headerlink" title="fetchgroup"></a>fetchgroup</h4><p>此方法可以将结果集处理为一个Map格式，和<code>fetchMap</code>类似，只不过这里的值为一个指定类型的集合，通常在处理一对多数据时会用到</p>
-<ul>
-<li><p><code>fetchGroups(Field field, Class type)</code><br>以表字段值为Key，返回一个<code>K:List</code> 的Map对象</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;S2UserMessage&gt;&gt; userIdUserMessageMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2UserMessage.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetchGroups(Field keyField, Field valueField)</code></p>
-</li>
-<li><p>以表字段值为Key，返回一个K:List<V>的Map对象</V></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;Integer&gt;&gt; userIdUserMessageIdMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2_USER_MESSAGE.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><a href="https://jooq.diamondfsd.com/learn/section-1-how-to-start.html">参考JOOQ中文文档教程</a></p>
-<p><a href="https://blog.csdn.net/qq_39940674/article/details/93383177">更多用法参考</a></p>
-]]></content>
-      <categories>
-        <category>技术栈</category>
-      </categories>
-      <tags>
-        <tag>jooq</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>k8s</title>
     <url>/2022/07/05/k8s/</url>
     <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
@@ -647,7 +647,10 @@
 <li>多个容器之间可以“了解”对方，比如知道其他人的镜像，知道别人定义的端口等。</li>
 </ul>
 </blockquote>
-<p>通俗解释： 再打个形象的比喻，在同一个 Pod 里的几个 Docker 服务/程序，好像被部署在同一台机器上，可以通过 localhost 互相访问，并且可以共用 Pod 里的存储资源 <img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136737531.png" alt="1658136737531"></p>
+<p>通俗解释： 再打个形象的比喻，在同一个 Pod 里的几个 Docker 服务/程序，好像被部署在同一台机器上，可以通过 localhost 互相访问，并且可以共用 Pod 里的存储资源 </p>
+<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136737531.png" alt="1658136737531"></p>
+<img src="/2022/07/05/k8s/1658136737531.png" class title="pod">
+
 <h5 id="1-6-2-Service"><a href="#1-6-2-Service" class="headerlink" title="1.6.2 Service"></a>1.6.2 Service</h5><blockquote>
 <p>即服务发现，不管Deployment的Pod有多少个，不管它是更新、销毁还是重建，Service总是能发现并维护好它的ip列表。</p>
 <p>Service通过标签Label，知道其负责了哪几个Pod。这样就更加灵活，使其和Deployment解耦开来</p>
@@ -674,6 +677,8 @@
 </blockquote>
 <p>通俗解释： ReplicaSet 的作用就是管理和控制 Pod，管控他们好好干活。但是，ReplicaSet 受控于 Deployment。形象来说，<strong>ReplicaSet 就是总包工头手下的小包工头</strong>。 </p>
 <p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136910839.png" alt="1658136910839"></p>
+<img src="/2022/07/05/k8s/1658136910839.png" class title="rs">
+
 <h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
 <img src="/2022/07/05/k8s/20210111140539700.png" class title="k8s架构图">
 
