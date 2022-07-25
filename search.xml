@@ -6,6 +6,8 @@
     <content><![CDATA[<h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><blockquote>
 <p> <strong>许多应用程序会从配置文件、命令行参数或环境变量中读取配 置信息</strong> , <strong>ConﬁgMap</strong>提供了这么一个 <strong>向容器中注入配置信息的机制</strong>， <strong>ConﬁgMap 可以被用来保存单个属性，也 可以用来保存整个配置文件或者 JSON 二进制大对象</strong>  </p>
 </blockquote>
+<span id="more"></span>
+
 <h3 id="怎么创建ConfigMap"><a href="#怎么创建ConfigMap" class="headerlink" title="怎么创建ConfigMap:"></a>怎么创建ConfigMap:</h3><h4 id="指定目录创建"><a href="#指定目录创建" class="headerlink" title="指定目录创建"></a>指定目录创建</h4><p>比如 docs/user-guide/configmap/kubectl/ 目录下有两个文件，game.property和ui.property，里面数据如下</p>
 <p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219586753.png" alt="1658219586753"></p>
 <img src="/2022/07/25/ConfigMap/1658219586753.png" class width="1">
@@ -88,6 +90,8 @@
     <content><![CDATA[<h4 id="Pod文件基础信息"><a href="#Pod文件基础信息" class="headerlink" title="Pod文件基础信息"></a>Pod文件基础信息</h4><blockquote>
 <p><strong>Pod 可以被理解成一群可以共享网络、存储和计算资源的容器化服务的集合</strong>, 是可以在 Kubernetes 中创建和管理的、最小的可部署的计算单元。</p>
 </blockquote>
+<span id="more"></span>
+
 <figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">group/apiversion</span>  <span class="comment"># 如果没有给定 group 名称，那么默认为 core，可以使用 kubectl api-versions  获取当前 k8s 版本上所有的 apiVersion 版本信息( 每个版本可能不同 )</span></span><br><span class="line"><span class="attr">kind:</span>       <span class="comment">#资源类别</span></span><br><span class="line"><span class="string">metadata：</span>  <span class="comment">#资源元数据</span></span><br><span class="line">   <span class="string">name</span></span><br><span class="line">   <span class="string">namespace</span></span><br><span class="line">   <span class="string">lables</span></span><br><span class="line">   <span class="string">annotations</span>   <span class="comment"># 主要目的是方便用户阅读查找</span></span><br><span class="line"><span class="attr">spec:</span> <span class="comment"># 期望的状态（disired state）</span></span><br><span class="line"><span class="string">status：#</span> <span class="string">当前状态，本字段有</span> <span class="string">Kubernetes</span> <span class="string">自身维护，用户不能去定义</span></span><br></pre></td></tr></table></figure>
 
 <p><a href="https://blog.csdn.net/heian_99/article/details/104167639">参考文章</a></p>
@@ -204,6 +208,8 @@
     <content><![CDATA[<h3 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a><strong>ReplicaSet</strong></h3><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><blockquote>
 <p> 主要的作用就是用来确保容器应用的副本数始终保持在用户定义的副本数 。即如 果有容器异常退出，会自动创建新的Pod来替代；而如果异常多出来的容器也会自动回收</p>
 </blockquote>
+<span id="more"></span>
+
 <h4 id="yaml"><a href="#yaml" class="headerlink" title="yaml"></a>yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ReplicaSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">frontend</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">tier:</span> <span class="string">frontend</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">tier:</span> <span class="string">frontend</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">GET_HOSTS_FROM</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">dns</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 
 <p>创建rs后</p>
@@ -269,6 +275,8 @@
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
 <p> <strong>Secret 解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者 Pod Spec 中。Secret 可以以 Volume 或者环境变量的方式使用</strong>  </p>
 </blockquote>
+<span id="more"></span>
+
 <h3 id="类型："><a href="#类型：" class="headerlink" title="类型："></a>类型：</h3><ul>
 <li>Service Account ：用来访问 Kubernetes API，由 Kubernetes 自动创建，并且会自动挂载到 Pod 的/run/secrets/kubernetes.io/serviceaccount  目录中</li>
 <li>Opaque ：base64编码格式的Secret，用来存储密码、密钥等</li>
@@ -329,6 +337,8 @@
     <content><![CDATA[<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><blockquote>
 <p>Kubernetes Service  定义了这样一种抽象：一个 Pod  的逻辑分组，一种可以访问它们的策略 —— 通常称为微 服务。 这一组 Pod  能够被 Service  访问到，通常是通过 Label Selector</p>
 </blockquote>
+<span id="more"></span>
+
 <p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658194586057.png" alt="1658194586057"></p>
  <img src="/2022/07/25/Service/1658194586057.png" class width="1">
 
@@ -399,6 +409,8 @@
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
 <p>容器磁盘上的文件的生命周期是短暂的，这就使得在容器中运行重要应用时会出现一些问题。首先，当容器崩溃 时，kubelet 会重启它，但是容器中的文件将丢失——容器以干净的状态（镜像最初的状态）重新启动。其次，在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 中的 Volume 抽象就很好的解决了 这些问题</p>
 </blockquote>
+<span id="more"></span>
+
 <p>Kubernetes 中的卷有明确的寿命 —— 与封装它的 Pod 相同。所f以，卷的生命比 Pod 中的所有容器都长，当这 个容器重启时数据仍然得以保存。当然，当 Pod 不再存在时，卷也将不复存在。也许更重要的是，Kubernetes 支持多种类型的卷，Pod 可以同时使用任意数量的卷</p>
 <h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><h4 id="emptyDir"><a href="#emptyDir" class="headerlink" title="emptyDir"></a>emptyDir</h4><blockquote>
 <p>简介：当 Pod 被分配给节点时，首先创建 emptyDir 卷，并且只要该 Pod 在该节点上运行，该卷就会存在。正如卷的名 字所述，它最初是空的。Pod 中的容器可以读取和写入 emptyDir 卷中的相同文件，尽管该卷可以挂载到每个容 器中的相同或不同路径上。当出于任何原因从节点中删除 Pod 时， emptyDir 中的数据将被永久删除<br><strong>简而言之，作用就是使容器间进行空间的共享</strong>， 可以添加文件，实现不同容器共享,不同路径挂载。 </p>
@@ -930,6 +942,50 @@
       </tags>
   </entry>
   <entry>
+    <title>k8s实操</title>
+    <url>/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
+    <content><![CDATA[<h3 id="布置集群参考文章"><a href="#布置集群参考文章" class="headerlink" title="布置集群参考文章"></a><a href="https://blog.csdn.net/heian_99/article/details/103933928">布置集群参考文章</a></h3><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><span id="more"></span>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//创建名为nginx-deployment 的nginx应用</span><br><span class="line">kubectl run nginx-deployment --image=wangyanglinux/myapp:v1  --port=80 --replicas=1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
+ <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class width="1">
+
+<h4 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//</span><br><span class="line">kubectl get pod </span><br><span class="line">//</span><br><span class="line">kubectl get pod -o wode</span><br><span class="line">//</span><br><span class="line">kubectl get deployment</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl delete deployment deployment名字</span><br><span class="line">kubectl delete pod pod名字</span><br></pre></td></tr></table></figure>
+
+<h4 id="副本集扩容"><a href="#副本集扩容" class="headerlink" title="副本集扩容"></a>副本集扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale --replicas=3 deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
+ <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class width="2">
+
+<h4 id="修改pod端口"><a href="#修改pod端口" class="headerlink" title="修改pod端口"></a>修改pod端口</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//80修改为30003</span><br><span class="line">kubectl expose deployment nginx-deployment --port=30003 --target-port=80</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class width="3">
+
+<p>修改Service类型</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl edit svc nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="4">
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="5">
+
+
+
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>k8s</title>
     <url>/2022/07/05/k8s/</url>
     <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
@@ -1106,48 +1162,6 @@
       </tags>
   </entry>
   <entry>
-    <title>k8s实操</title>
-    <url>/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
-    <content><![CDATA[<h3 id="布置集群参考文章"><a href="#布置集群参考文章" class="headerlink" title="布置集群参考文章"></a><a href="https://blog.csdn.net/heian_99/article/details/103933928">布置集群参考文章</a></h3><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//创建名为nginx-deployment 的nginx应用</span><br><span class="line">kubectl run nginx-deployment --image=wangyanglinux/myapp:v1  --port=80 --replicas=1</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class width="1">
-
-<h4 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//</span><br><span class="line">kubectl get pod </span><br><span class="line">//</span><br><span class="line">kubectl get pod -o wode</span><br><span class="line">//</span><br><span class="line">kubectl get deployment</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl delete deployment deployment名字</span><br><span class="line">kubectl delete pod pod名字</span><br></pre></td></tr></table></figure>
-
-<h4 id="副本集扩容"><a href="#副本集扩容" class="headerlink" title="副本集扩容"></a>副本集扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale --replicas=3 deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class width="2">
-
-<h4 id="修改pod端口"><a href="#修改pod端口" class="headerlink" title="修改pod端口"></a>修改pod端口</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//80修改为30003</span><br><span class="line">kubectl expose deployment nginx-deployment --port=30003 --target-port=80</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class width="3">
-
-<p>修改Service类型</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl edit svc nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="4">
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="5">
-
-
-
-]]></content>
-      <categories>
-        <category>技术栈</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>maven</title>
     <url>/2022/07/06/maven/</url>
     <content><![CDATA[<h5 id="解决问题："><a href="#解决问题：" class="headerlink" title="解决问题："></a>解决问题：</h5><blockquote>
@@ -1194,6 +1208,8 @@
     <title>springEL</title>
     <url>/2022/07/25/springEL/</url>
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>参考文档：<a href="https://blog.csdn.net/u012045045/article/details/85338962">https://blog.csdn.net/u012045045/article/details/85338962</a></p>
+<span id="more"></span>
+
 <blockquote>
 <ol>
 <li>文字表达<ol start="2">
@@ -1745,6 +1761,8 @@
     <title>jdbc的使用</title>
     <url>/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="入门例子"><a href="#入门例子" class="headerlink" title="入门例子"></a>入门例子</h2><p>以maven项目为例，需要引入SpringDataJdbc依赖，数据库驱动依赖，配置数据源。</p>
+<span id="more"></span>
+
 <p>参考文章：<a href="https://blog.csdn.net/m0_67392182/article/details/125243331">https://blog.csdn.net/m0_67392182/article/details/125243331</a></p>
 <p>假设有表</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">user</span></span><br><span class="line">(</span><br><span class="line">    id          <span class="type">bigint</span> unsigned auto_increment comment <span class="string">&#x27;主键&#x27;</span></span><br><span class="line">        <span class="keyword">primary</span> key,</span><br><span class="line">    username    <span class="type">varchar</span>(<span class="number">20</span>)  <span class="keyword">null</span> comment <span class="string">&#x27;用户名&#x27;</span>,</span><br><span class="line">    password    <span class="type">varchar</span>(<span class="number">20</span>)  <span class="keyword">null</span> comment <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">    version     <span class="type">int</span> unsigned <span class="keyword">null</span> comment <span class="string">&#x27;版本号&#x27;</span>,</span><br><span class="line">    create_by   <span class="type">varchar</span>(<span class="number">20</span>)  <span class="keyword">null</span> comment <span class="string">&#x27;创建人&#x27;</span>,</span><br><span class="line">    create_time datetime     <span class="keyword">null</span> comment <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">    update_by   <span class="type">varchar</span>(<span class="number">20</span>)  <span class="keyword">null</span> comment <span class="string">&#x27;修改人&#x27;</span>,</span><br><span class="line">    update_time datetime     <span class="keyword">null</span> comment <span class="string">&#x27;修改时间&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
