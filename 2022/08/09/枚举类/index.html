@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是枚举类 ​    实例（也叫对象）有限且固定不变的类，在Java里被称为枚举类。   例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示： 123public enum SeasonEnum&amp;#123;    SPRING,SUMMER,FALL,WINTER;&amp;#125;     枚举类是一种特殊的类，它一样可以有自己的成员变量、方法，可以实现一个或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BLKNjyty的博客">
+<meta property="og:url" content="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/index.html">
+<meta property="og:site_name" content="BLKNjyty的博客">
+<meta property="og:description" content="什么是枚举类 ​    实例（也叫对象）有限且固定不变的类，在Java里被称为枚举类。   例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示： 123public enum SeasonEnum&amp;#123;    SPRING,SUMMER,FALL,WINTER;&amp;#125;     枚举类是一种特殊的类，它一样可以有自己的成员变量、方法，可以实现一个或">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
+<meta property="og:image" content="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png">
+<meta property="article:published_time" content="2022-08-09T06:38:18.984Z">
+<meta property="article:modified_time" content="2022-08-09T06:39:53.076Z">
+<meta property="article:author" content="jy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
+
+<link rel="canonical" href="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | BLKNjyty的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BLKNjyty的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="jy">
+      <meta itemprop="description" content="为了我和小田的美好生活而努力">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BLKNjyty的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-09 14:38:18" itemprop="dateCreated datePublished" datetime="2022-08-09T14:38:18+08:00">2022-08-09</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="什么是枚举类"><a href="#什么是枚举类" class="headerlink" title="什么是枚举类"></a>什么是枚举类</h1><blockquote>
+<p>​    实例（也叫对象）有限且固定不变的类，在Java里被称为<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%9E%9A%E4%B8%BE&spm=1001.2101.3001.7020">枚举</a>类。</p>
+<p>  例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">SeasonEnum</span>&#123;</span><br><span class="line">    SPRING,SUMMER,FALL,WINTER;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>   枚举类是一种特殊的类，它一样可以有自己的成员变量、方法，可以实现一个或多个接口，也可以有自己的构造器。 </p>
+<h1 id="为什么需要枚举类"><a href="#为什么需要枚举类" class="headerlink" title="为什么需要枚举类"></a>为什么需要枚举类</h1><blockquote>
+<p>（1）就如上面所说的，有些类的实例有限且固定，需要有一种特定且方便的方式来表示这种类。</p>
+<p>  （2）使用枚举类可以使程序更加健壮，避免创建对象的随意性。</p>
+<p>  （3）避免一些常量值的意义不明确</p>
+</blockquote>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><blockquote>
+<pre><code>（1） 枚举类默认继承 java.lang.Enum 类，而不是 Object 类，因此枚举类不能显示继承其他父类。
+（2） 使用 enum 定义的非抽象的枚举类默认会使用 final 修饰，因此非抽象枚举类不能派生子类（即不能被继承）。
+
+         &gt; final关键字回顾：final修饰的类不能被继承、修饰的方法不能被重写、修饰的属性其值不能改变。
+
+（3） 枚举类的构造器只能使用 private 访问控制符，如果忽略访问控制符的话，则默认使用 private 修饰；如果强制指定其他的访问控制符（例如public、procted等）,则会报错。
+
+（4） 枚举类的所有实例必须在枚举类的第一行显示列出，否则这个枚举类永远都不可能产生实例。列出的这些实例，系统会自动给它们加上 public static final 修饰。枚举类的实例以逗号分隔，分号结束，这些列出的枚举值代表了该枚举类的所有可能的实例
+</code></pre>
+</blockquote>
+<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Weekday</span> &#123;</span><br><span class="line">    SUN(<span class="number">0</span>),MON(<span class="number">1</span>),TUS(<span class="number">2</span>),WED(<span class="number">3</span>),THU(<span class="number">4</span>),FRI(<span class="number">5</span>),SAT(<span class="number">6</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Weekday</span><span class="params">(<span class="type">int</span> value)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.value = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Weekday <span class="title function_">getNextDay</span><span class="params">(Weekday nowDay)</span>&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">nextDayValue</span> <span class="operator">=</span> nowDay.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (++nextDayValue == <span class="number">7</span>)&#123;</span><br><span class="line">            nextDayValue =<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> getWeekdayByValue(nextDayValue);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Weekday <span class="title function_">getWeekdayByValue</span><span class="params">(<span class="type">int</span> value)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Weekday c : Weekday.values()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (c.value == value) &#123;</span><br><span class="line">                <span class="keyword">return</span> c;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test2</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;nowday ====&gt; &quot;</span> + Weekday.SAT);</span><br><span class="line">        System.out.println(<span class="string">&quot;nowday int ====&gt; &quot;</span> + Weekday.SAT.ordinal());</span><br><span class="line">        System.out.println(<span class="string">&quot;nextday ====&gt; &quot;</span> + Weekday.getNextDay(Weekday.SAT)); <span class="comment">// 输出 SUN</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//输出：</span></span><br><span class="line">        <span class="comment">//nowday ====&gt; SAT</span></span><br><span class="line">        <span class="comment">//nowday int ====&gt; 6</span></span><br><span class="line">        <span class="comment">//nextday ====&gt; SUN</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="枚举类的方法"><a href="#枚举类的方法" class="headerlink" title="枚举类的方法"></a>枚举类的方法</h2><blockquote>
+<p> Weekday可以调用的方法和参数。发现它有两个方法：value()和valueOf()。还有我们刚刚定义的七个变量。 </p>
+</blockquote>
+<p><img src="/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee\Blog\source_posts\枚举类\20170213132500481.png" alt="20170213132500481"></p>
+<img src="/2022/08/09/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png" class title="哈哈">
+
+<h2 id="枚举类变量的方法"><a href="#枚举类变量的方法" class="headerlink" title="枚举类变量的方法"></a>枚举类变量的方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Weekday</span> &#123;</span><br><span class="line">    SUN,MON,TUS,WED,THU,FRI,SAT</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test3</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//它的作用是传来一个字符串，然后将它转变为对应的枚举变量。前提是你传的字符串和定义枚举变量的字符串一抹一样，区分大小写。如果你传了一个不存在的字符串，那么会抛出异常。</span></span><br><span class="line">        System.out.println(Weekday.valueOf(<span class="string">&quot;mon&quot;</span>.toUpperCase()));</span><br><span class="line">        <span class="comment">//MON</span></span><br><span class="line">		<span class="comment">//这个方法会返回包括所有枚举变量的数组。在该例中，返回的就是包含了七个星期的Weekday[]。可以方便的用来做循环。</span></span><br><span class="line">        <span class="keyword">for</span> (Weekday w : Weekday.values())&#123;</span><br><span class="line">            <span class="comment">//默认请款下，枚举类会给所有的枚举变量一个默认的次序，该次序从0开始，类似于数组的下标。而.ordinal()方法就是获取这个次序（或者说下标）</span></span><br><span class="line">            System.out.println(w + <span class="string">&quot;.ordinal()  ====&gt;&quot;</span> +w.ordinal());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//SUN.ordinal()  ====&gt;0</span></span><br><span class="line">        <span class="comment">//MON.ordinal()  ====&gt;1</span></span><br><span class="line">        <span class="comment">//TUS.ordinal()  ====&gt;2</span></span><br><span class="line">        <span class="comment">//WED.ordinal()  ====&gt;3</span></span><br><span class="line">        <span class="comment">//THU.ordinal()  ====&gt;4</span></span><br><span class="line">        <span class="comment">//FRI.ordinal()  ====&gt;5</span></span><br><span class="line">        <span class="comment">//SAT.ordinal()  ====&gt;6</span></span><br><span class="line">		</span><br><span class="line">        <span class="comment">//该方法用来比较两个枚举变量的”大小”，实际上比较的是两个枚举变量的次序，返回两个次序相减后的结果，如果为负数，就证明变量1”小于”变量2 （变量1.compareTo(变量2)，返回【变量1.ordinal() - 变量2.ordinal()】）</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.FRI) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.FRI));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.MON) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.MON));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.SUM) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.SUN));</span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.FRI) ===&gt; -4</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.MON) ===&gt; 0</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.SUM) ===&gt; 1</span></span><br><span class="line">		</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//它和toString()方法的返回值一样</span></span><br><span class="line">        <span class="comment">//唯一的区别是，你可以重写toString方法。name变量就是枚举变量的字符串形式。</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.name() ====&gt; &quot;</span> + Weekday.MON.name());</span><br><span class="line">        <span class="comment">//Weekday.MON.name() ====&gt; MON</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h1><h2 id="定义的扩展"><a href="#定义的扩展" class="headerlink" title="定义的扩展"></a>定义的扩展</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Weekday</span> &#123;</span><br><span class="line">    MON(<span class="number">1</span>,<span class="string">&quot;mon&quot;</span>),TUS(<span class="number">2</span>,<span class="string">&quot;tus&quot;</span>),WED(<span class="number">3</span>,<span class="string">&quot;wed&quot;</span>),THU(<span class="number">4</span>,<span class="string">&quot;thu&quot;</span>),FRI(<span class="number">5</span>,<span class="string">&quot;fri&quot;</span>),SAT(<span class="number">6</span>,<span class="string">&quot;sat&quot;</span>),SUN(<span class="number">0</span>,<span class="string">&quot;sun&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> value;</span><br><span class="line">    <span class="keyword">private</span> String label;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Weekday</span><span class="params">(<span class="type">int</span> value,String label)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.value = value;</span><br><span class="line">        <span class="built_in">this</span>.label = label;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="枚举类中定义抽象方法"><a href="#枚举类中定义抽象方法" class="headerlink" title="枚举类中定义抽象方法"></a>枚举类中定义抽象方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">TrafficLamp</span> &#123;</span><br><span class="line">    RED(<span class="number">30</span>) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> TrafficLamp <span class="title function_">getNextLamp</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> GREEN;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, GREEN(<span class="number">45</span>) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> TrafficLamp <span class="title function_">getNextLamp</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> YELLOW;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, YELLOW(<span class="number">5</span>) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> TrafficLamp <span class="title function_">getNextLamp</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> RED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">TrafficLamp</span><span class="params">(<span class="type">int</span> time)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.time = time;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//一个抽象方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> TrafficLamp <span class="title function_">getNextLamp</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 因为RED本身就是一个TrafficLamp对象的引用。实际上，在初始化这个枚举类的时候，你可以理解为执行的是<code>TrafficLamp RED = new TrafficLamp（30）</code> ，但是因为TrafficLamp里面有抽象方法，还记得匿名内部类么？ </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">TrafficLamp</span> <span class="variable">RED</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TrafficLamp</span>（<span class="number">30</span>）&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> TrafficLamp <span class="title function_">getNextLamp</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> GREEN;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p> 而在枚举类中，我们只需要像上面那样写【<code>RED(30)&#123;&#125;</code>】就可以了，因为java会自动的去帮我们完成这一系列操作。 </p>
+</blockquote>
+<h2 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Signal</span> &#123;</span><br><span class="line">    GREEN, YELLOW, RED</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrafficLight</span> &#123;</span><br><span class="line">    <span class="type">Signal</span> <span class="variable">color</span> <span class="operator">=</span> Signal.RED;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">change</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">switch</span> (color) &#123;</span><br><span class="line">        <span class="keyword">case</span> RED:</span><br><span class="line">            color = Signal.GREEN;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> YELLOW:</span><br><span class="line">            color = Signal.RED;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> GREEN:</span><br><span class="line">            color = Signal.YELLOW;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="实现接口"><a href="#实现接口" class="headerlink" title="实现接口"></a>实现接口</h2><blockquote>
+<p> 虽然枚举类不能继承其他类，但是还是可以实现接口的 </p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Behaviour</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">getInfo</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Color</span> <span class="keyword">implements</span> <span class="title class_">Behaviour</span> &#123;</span><br><span class="line">    RED(<span class="string">&quot;红色&quot;</span>, <span class="number">1</span>), GREEN(<span class="string">&quot;绿色&quot;</span>, <span class="number">2</span>), BLANK(<span class="string">&quot;白色&quot;</span>, <span class="number">3</span>), YELLO(<span class="string">&quot;黄色&quot;</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="comment">// 成员变量</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> index;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Color</span><span class="params">(String name, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.index = index;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接口方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接口方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="built_in">this</span>.index + <span class="string">&quot;:&quot;</span> + <span class="built_in">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用接口组织枚举类"><a href="#使用接口组织枚举类" class="headerlink" title="使用接口组织枚举类"></a>使用接口组织枚举类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Food</span> &#123;</span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">Coffee</span> <span class="keyword">implements</span> <span class="title class_">Food</span> &#123;</span><br><span class="line">        BLACK_COFFEE, DECAF_COFFEE, LATTE, CAPPUCCINO</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">Dessert</span> <span class="keyword">implements</span> <span class="title class_">Food</span> &#123;</span><br><span class="line">        FRUIT, CAKE, GELATO</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用枚举类创建单例模式"><a href="#使用枚举类创建单例模式" class="headerlink" title="使用枚举类创建单例模式"></a>使用枚举类创建单例模式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">EasySingleton</span>&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="双检索实现单例"><a href="#双检索实现单例" class="headerlink" title="双检索实现单例"></a><strong>双检索实现单例</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DoubleCheckedLockingSingleton</span>&#123;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span>  DoubleCheckedLockingSingleton INSTANCE;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">private</span> <span class="title function_">DoubleCheckedLockingSingleton</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">public</span> DoubleCheckedLockingSingleton <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(INSTANCE == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(DoubleCheckedLockingSingleton.class)&#123;</span><br><span class="line">                <span class="comment">//double checking Singleton instance</span></span><br><span class="line">                <span class="keyword">if</span>(INSTANCE == <span class="literal">null</span>)&#123;</span><br><span class="line">                    INSTANCE = <span class="keyword">new</span> <span class="title class_">DoubleCheckedLockingSingleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> INSTANCE;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用静态工厂方法实现单例："><a href="#用静态工厂方法实现单例：" class="headerlink" title="用静态工厂方法实现单例："></a><strong>用静态工厂方法实现单例：</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getSingleton</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhou520yue520/article/details/80952404">博文1</a></p>
+<p><a target="_blank" rel="noopener" href="https://sharember.blog.csdn.net/article/details/55049192?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1-55049192-blog-80952404.pc_relevant_multi_platform_featuressortv2dupreplace&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1-55049192-blog-80952404.pc_relevant_multi_platform_featuressortv2dupreplace&utm_relevant_index=1">博文2</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/09/Process/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/09/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">什么是枚举类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">为什么需要枚举类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">枚举类的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">枚举类变量的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">高级用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%9A%84%E6%89%A9%E5%B1%95"><span class="nav-number">6.1.</span> <span class="nav-text">定义的扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%B1%BB%E4%B8%AD%E5%AE%9A%E4%B9%89%E6%8A%BD%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">枚举类中定义抽象方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#switch"><span class="nav-number">6.3.</span> <span class="nav-text">switch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3"><span class="nav-number">6.4.</span> <span class="nav-text">实现接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%8E%A5%E5%8F%A3%E7%BB%84%E7%BB%87%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="nav-number">6.5.</span> <span class="nav-text">使用接口组织枚举类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%88%9B%E5%BB%BA%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.6.</span> <span class="nav-text">使用枚举类创建单例模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%A3%80%E7%B4%A2%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B"><span class="nav-number">6.6.1.</span> <span class="nav-text">双检索实现单例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E9%9D%99%E6%80%81%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%EF%BC%9A"><span class="nav-number">6.6.2.</span> <span class="nav-text">用静态工厂方法实现单例：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">jy</p>
+  <div class="site-description" itemprop="description">为了我和小田的美好生活而努力</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
