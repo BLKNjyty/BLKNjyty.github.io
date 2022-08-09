@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://example.com/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658228144040.png">
 <meta property="og:image" content="http://example.com/2022/07/25/Volume/1658228144040.png">
 <meta property="article:published_time" content="2022-07-25T03:43:19.000Z">
-<meta property="article:modified_time" content="2022-07-25T06:09:34.524Z">
+<meta property="article:modified_time" content="2022-08-09T06:30:50.421Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
@@ -272,7 +272,7 @@
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/cache</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">    <span class="attr">emptyDir:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658227996350.png" alt="1658227996350"></p>
- <img src="/2022/07/25/Volume/1658227996350.png" class width="1">
+ <img src="/2022/07/25/Volume/1658227996350.png" class title="得分">
 
 <h4 id="hostPath"><a href="#hostPath" class="headerlink" title="hostPath"></a>hostPath</h4><blockquote>
 <p>简介： hostPath 卷将主机节点的文件系统中的文件或目录挂载到集群中 ，简而言之就是节点之间的共享</p>
@@ -285,13 +285,13 @@
 </ul>
 <p> 除了所需的 path 属性之外，用户还可以为 hostPath 卷指定 type </p>
 <p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228122967.png" alt="1658228122967"></p>
- <img src="/2022/07/25/Volume/1658228122967.png" class width="2">
+ <img src="/2022/07/25/Volume/1658228122967.png" class title="搜索树">
 
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/test-pd</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">    <span class="attr">hostPath:</span></span><br><span class="line">      <span class="comment"># directory location on host</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/data</span></span><br><span class="line">      <span class="comment"># this field is optional</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">Directory</span></span><br></pre></td></tr></table></figure>
 
 <p>如下所示，master节点和node1节点均可见index.html</p>
 <p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228144040.png" alt="1658228144040"></p>
- <img src="/2022/07/25/Volume/1658228144040.png" class width="3">
+ <img src="/2022/07/25/Volume/1658228144040.png" class title="爱是">
 
 
     </div>
