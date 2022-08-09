@@ -216,12 +216,12 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//查看pod和标签</span><br><span class="line">kubectl get pod  --show-labels</span><br><span class="line">//修改pod的标签</span><br><span class="line">kubectl label pod frontend-dtx7t tier=frontend1 --overwrite=True</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147537315.png" alt="1658147537315"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147537315.png" class width="1">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147537315.png" class title="图">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//删除rs</span><br><span class="line">kubectl delete rs --all</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147623117.png" alt="1658147623117"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147623117.png" class width="2">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147623117.png" class title="图图">
 
 <h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><blockquote>
 <p> <strong>Deployment 的作用是管理和控制 Pod 和 ReplicaSet，管控它们运行在用户期望的状态中</strong>。 </p>
@@ -234,24 +234,24 @@
 
 <p><strong>查看pod和rs</strong></p>
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193426313.png" alt="1658193426313"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193426313.png" class width="3">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193426313.png" class title="图图图">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//显示标签</span><br><span class="line">kubectl get pod --show-labels</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193468849.png" alt="1658193468849"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193468849.png" class width="4">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193468849.png" class title="图图图图">
 
 <h4 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale deployment nginx-deployment --replicas 10</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193499915.png" alt="1658193499915"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193499915.png" class width="5">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193499915.png" class title="图图图图图">
 
 <h4 id="自动扩展"><a href="#自动扩展" class="headerlink" title="自动扩展"></a>自动扩展</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//如果集群支持 horizontal pod autoscaling 的话，还可以为Deployment设置自动扩展</span><br><span class="line">kubectl autoscale deployment nginx-deployment --min=10 --max=15 --cpu-percent=80</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h4 id="更新镜像"><a href="#更新镜像" class="headerlink" title="更新镜像"></a>更新镜像</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193624346.png" alt="1658193624346"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193624346.png" class width="6">
+ <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193624346.png" class title="哈哈哈">
 
 <h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl rollout undo deployment/nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -942,50 +942,6 @@
       </tags>
   </entry>
   <entry>
-    <title>k8s实操</title>
-    <url>/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
-    <content><![CDATA[<h3 id="布置集群参考文章"><a href="#布置集群参考文章" class="headerlink" title="布置集群参考文章"></a><a href="https://blog.csdn.net/heian_99/article/details/103933928">布置集群参考文章</a></h3><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><span id="more"></span>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//创建名为nginx-deployment 的nginx应用</span><br><span class="line">kubectl run nginx-deployment --image=wangyanglinux/myapp:v1  --port=80 --replicas=1</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class width="1">
-
-<h4 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//</span><br><span class="line">kubectl get pod </span><br><span class="line">//</span><br><span class="line">kubectl get pod -o wode</span><br><span class="line">//</span><br><span class="line">kubectl get deployment</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl delete deployment deployment名字</span><br><span class="line">kubectl delete pod pod名字</span><br></pre></td></tr></table></figure>
-
-<h4 id="副本集扩容"><a href="#副本集扩容" class="headerlink" title="副本集扩容"></a>副本集扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale --replicas=3 deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class width="2">
-
-<h4 id="修改pod端口"><a href="#修改pod端口" class="headerlink" title="修改pod端口"></a>修改pod端口</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//80修改为30003</span><br><span class="line">kubectl expose deployment nginx-deployment --port=30003 --target-port=80</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class width="3">
-
-<p>修改Service类型</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl edit svc nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="4">
-
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="5">
-
-
-
-]]></content>
-      <categories>
-        <category>技术栈</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>k8s</title>
     <url>/2022/07/05/k8s/</url>
     <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
@@ -1153,6 +1109,50 @@
 <p>参考：<a href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
 <p><a href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
 <p><a href="http://www.imooc.com/article/285913?block_id=tuijian_wz">博文3</a></p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s实操</title>
+    <url>/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
+    <content><![CDATA[<h3 id="布置集群参考文章"><a href="#布置集群参考文章" class="headerlink" title="布置集群参考文章"></a><a href="https://blog.csdn.net/heian_99/article/details/103933928">布置集群参考文章</a></h3><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><span id="more"></span>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//创建名为nginx-deployment 的nginx应用</span><br><span class="line">kubectl run nginx-deployment --image=wangyanglinux/myapp:v1  --port=80 --replicas=1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
+ <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class width="1">
+
+<h4 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//</span><br><span class="line">kubectl get pod </span><br><span class="line">//</span><br><span class="line">kubectl get pod -o wode</span><br><span class="line">//</span><br><span class="line">kubectl get deployment</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl delete deployment deployment名字</span><br><span class="line">kubectl delete pod pod名字</span><br></pre></td></tr></table></figure>
+
+<h4 id="副本集扩容"><a href="#副本集扩容" class="headerlink" title="副本集扩容"></a>副本集扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale --replicas=3 deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
+ <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class width="2">
+
+<h4 id="修改pod端口"><a href="#修改pod端口" class="headerlink" title="修改pod端口"></a>修改pod端口</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//80修改为30003</span><br><span class="line">kubectl expose deployment nginx-deployment --port=30003 --target-port=80</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class width="3">
+
+<p>修改Service类型</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl edit svc nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="4">
+
+<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
+<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class width="5">
+
+
+
 ]]></content>
       <categories>
         <category>技术栈</category>
