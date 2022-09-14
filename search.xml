@@ -2,31 +2,31 @@
 <search>
   <entry>
     <title>ConfigMap</title>
-    <url>/2022/07/25/ConfigMap/</url>
+    <url>/blknjyty.github.io/2022/07/25/ConfigMap/</url>
     <content><![CDATA[<h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><blockquote>
 <p> <strong>许多应用程序会从配置文件、命令行参数或环境变量中读取配 置信息</strong> , <strong>ConﬁgMap</strong>提供了这么一个 <strong>向容器中注入配置信息的机制</strong>， <strong>ConﬁgMap 可以被用来保存单个属性，也 可以用来保存整个配置文件或者 JSON 二进制大对象</strong>  </p>
 </blockquote>
 <span id="more"></span>
 
 <h3 id="怎么创建ConfigMap"><a href="#怎么创建ConfigMap" class="headerlink" title="怎么创建ConfigMap:"></a>怎么创建ConfigMap:</h3><h4 id="指定目录创建"><a href="#指定目录创建" class="headerlink" title="指定目录创建"></a>指定目录创建</h4><p>比如 docs/user-guide/configmap/kubectl/ 目录下有两个文件，game.property和ui.property，里面数据如下</p>
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219586753.png" alt="1658219586753"></p>
-<img src="/2022/07/25/ConfigMap/1658219586753.png" class title="哈哈">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219586753.png" alt="1658219586753"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658219586753.png" class title="哈哈">
 
 <p>则我们可以使用如上命令创建名为game-config的 ConﬁgMap ，– from-file 指定在目录下的所有文件都会被用在 ConﬁgMap 里面创建一个键值对，键的名字就是文件名，值就 是文件的内容 </p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create configmap game-config --from-file=docs/user-guide/configmap/kubectl/</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219695675.png" alt="1658219695675"></p>
-<img src="/2022/07/25/ConfigMap/1658219695675.png" class title="哈哈哈">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219695675.png" alt="1658219695675"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658219695675.png" class title="哈哈哈">
 
 <h4 id="使用文件创建"><a href="#使用文件创建" class="headerlink" title="使用文件创建"></a>使用文件创建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create configmap game-config-2 --from-file=docs/user-guide/configmap/kubectl/game.properties </span><br><span class="line"></span><br><span class="line">//from-file 这个参数可以使用多次，你可以使用两次分别指定上个实例中的那两个配置文件，效果就跟指定整个 目录是一样的</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219834317.png" alt="1658219834317"></p>
-<img src="/2022/07/25/ConfigMap/1658219834317.png" class title="看看">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219834317.png" alt="1658219834317"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658219834317.png" class title="看看">
 
 <h4 id="使用字面创建"><a href="#使用字面创建" class="headerlink" title="使用字面创建"></a>使用字面创建</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ kubectl create configmap special-config --from-literal=special.how=very --from-literal=special.type=charm</span><br><span class="line">$ kubectl get configmaps special-config -o yaml</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219920146.png" alt="1658219920146"></p>
-<img src="/2022/07/25/ConfigMap/1658219920146.png" class title="恩基恩">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658219920146.png" alt="1658219920146"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658219920146.png" class title="恩基恩">
 
 <h3 id="怎么使用ConfigMap"><a href="#怎么使用ConfigMap" class="headerlink" title="怎么使用ConfigMap"></a>怎么使用ConfigMap</h3><h4 id="代替环境变量"><a href="#代替环境变量" class="headerlink" title="代替环境变量"></a>代替环境变量</h4><p>假设创建好的ConfigMap信息如下</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">special-config</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">special.how:</span> <span class="string">very</span></span><br><span class="line">  <span class="attr">special.type:</span> <span class="string">charm</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">env-config</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">log_level:</span> <span class="string">INFO</span></span><br></pre></td></tr></table></figure>
@@ -35,8 +35,8 @@
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dapi-test-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">      <span class="attr">command:</span> [ <span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;env&quot;</span> ]</span><br><span class="line">      <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SPECIAL_LEVEL_KEY</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">configMapKeyRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">special-config</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">special.how</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">SPECIAL_TYPE_KEY</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">configMapKeyRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">special-config</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">special.type</span></span><br><span class="line">      <span class="attr">envFrom:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">configMapRef:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">env-config</span></span><br><span class="line">  <span class="attr">restartPolicy:</span> <span class="string">Never</span></span><br></pre></td></tr></table></figure>
 
 <p>查看pod启动日志就会发现</p>
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658220226262.png" alt="1658220226262"></p>
-<img src="/2022/07/25/ConfigMap/1658220226262.png" class title="那你">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658220226262.png" alt="1658220226262"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658220226262.png" class title="那你">
 
 <h4 id="配置命令行参数"><a href="#配置命令行参数" class="headerlink" title="配置命令行参数"></a>配置命令行参数</h4><p>假设创建好的ConfigMap信息如下</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">special-config</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">special.how:</span> <span class="string">very</span></span><br><span class="line">  <span class="attr">special.type:</span> <span class="string">charm</span></span><br></pre></td></tr></table></figure>
@@ -51,24 +51,24 @@
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dapi-test-pod77</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">      <span class="attr">command:</span> [ <span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;sleep 600s&quot;</span> ]</span><br><span class="line">      <span class="attr">volumeMounts:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config-volume</span></span><br><span class="line">        <span class="attr">mountPath:</span> <span class="string">/etc/config</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config-volume</span></span><br><span class="line">      <span class="attr">configMap:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">special-config</span></span><br><span class="line">  <span class="attr">restartPolicy:</span> <span class="string">Never</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>查看卷中的内容，有文件名为special.how和special.type，文件里面的值就是value</p>
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658220456568.png" alt="1658220456568"></p>
-<img src="/2022/07/25/ConfigMap/1658220456568.png" class title="哎哎哎啊">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658220456568.png" alt="1658220456568"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658220456568.png" class title="哎哎哎啊">
 
 <h3 id="热更新"><a href="#热更新" class="headerlink" title="热更新"></a>热更新</h3><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">log-config</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">log_level:</span> <span class="string">INFO</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">my-nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">my-nginx</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config-volume</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/etc/config</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config-volume</span></span><br><span class="line">          <span class="attr">configMap:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">log-config</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>进入容器内部，可以看到/etc/config下面有名为log_level的文件</p>
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221065654.png" alt="1658221065654"></p>
-<img src="/2022/07/25/ConfigMap/1658221065654.png" class title="呜呜">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221065654.png" alt="1658221065654"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658221065654.png" class title="呜呜">
 
 <p>当我们修改ComfigMap时</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ kubectl edit configmap log-config</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221202553.png" alt="1658221202553"></p>
-<img src="/2022/07/25/ConfigMap/1658221202553.png" class title="呜呜呜与">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221202553.png" alt="1658221202553"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658221202553.png" class title="呜呜呜与">
 
 <p>重新进入容器，查看数据卷</p>
-<p><img src="/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221233950.png" alt="1658221233950"></p>
-<img src="/2022/07/25/ConfigMap/1658221233950.png" class title="嫩恩恩">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/ConfigMap/gitee\Blog\source_posts\ConfigMap\1658221233950.png" alt="1658221233950"></p>
+<img src="/blknjyty.github.io/2022/07/25/ConfigMap/1658221233950.png" class title="嫩恩恩">
 
 <p>此时是不是相关pod的自动更新的，可以</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ kubectl patch deployment my-nginx --patch &#x27;&#123;&quot;spec&quot;: &#123;&quot;template&quot;: &#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;: </span><br><span class="line">&#123;&quot;version/config&quot;: &quot;20190411&quot; &#125;&#125;&#125;&#125;&#125;&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -86,7 +86,7 @@
   </entry>
   <entry>
     <title>Pod</title>
-    <url>/2022/07/25/Pod/</url>
+    <url>/blknjyty.github.io/2022/07/25/Pod/</url>
     <content><![CDATA[<h4 id="Pod文件基础信息"><a href="#Pod文件基础信息" class="headerlink" title="Pod文件基础信息"></a>Pod文件基础信息</h4><blockquote>
 <p><strong>Pod 可以被理解成一群可以共享网络、存储和计算资源的容器化服务的集合</strong>, 是可以在 Kubernetes 中创建和管理的、最小的可部署的计算单元。</p>
 </blockquote>
@@ -97,29 +97,29 @@
 <p><a href="https://blog.csdn.net/heian_99/article/details/104167639">参考文章</a></p>
 <h4 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h4><h5 id="获取所有版本-apiversion-信息"><a href="#获取所有版本-apiversion-信息" class="headerlink" title="获取所有版本 apiversion 信息"></a>获取所有版本 apiversion 信息</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl api-versions</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142374026.png" alt="1658142374026"></p>
- <img src="/2022/07/25/Pod/1658142374026.png" class title="都能拿到">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142374026.png" alt="1658142374026"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Pod/1658142374026.png" class title="都能拿到">
 
 <p>获取资源的 apiVersion 版本信息 </p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl explain pod </span><br><span class="line">kubectl explain Ingress</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142464859.png" alt="1658142464859"></p>
-<img src="/2022/07/25/Pod/1658142464859.png" class title="是南宁市">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142464859.png" alt="1658142464859"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658142464859.png" class title="是南宁市">
 
 <h5 id="获取pod详细信息"><a href="#获取pod详细信息" class="headerlink" title="获取pod详细信息"></a>获取pod详细信息</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl describe pod myapp-pod</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200203205310698.png" alt="20200203205310698"></p>
-<img src="/2022/07/25/Pod/20200203205310698.png" class title="是男是女是">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200203205310698.png" alt="20200203205310698"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/20200203205310698.png" class title="是男是女是">
 
 <h5 id="查看Pod的日志"><a href="#查看Pod的日志" class="headerlink" title="查看Pod的日志"></a><strong>查看Pod的日志</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl log myapp-pod -c test</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142617705.png" alt="1658142617705"></p>
-<img src="/2022/07/25/Pod/1658142617705.png" class title="偶偶">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142617705.png" alt="1658142617705"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658142617705.png" class title="偶偶">
 
 <h5 id="删除pod"><a href="#删除pod" class="headerlink" title="删除pod"></a>删除pod</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl delete pod myapp-pod</span><br></pre></td></tr></table></figure>
 
-<h4 id="init容器"><a href="#init容器" class="headerlink" title="init容器"></a>init容器</h4><h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143161136.png" alt="1658143161136"></p>
-<img src="/2022/07/25/Pod/1658143161136.png" class title="噗噗">
+<h4 id="init容器"><a href="#init容器" class="headerlink" title="init容器"></a>init容器</h4><h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143161136.png" alt="1658143161136"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658143161136.png" class title="噗噗">
 
 <p> Pod 能够具有多个容器，应用运行在容器里面，但是它也可能有一个或多个先于应用容器启动的 Init容器。</p>
 <h5 id="作用是什么？"><a href="#作用是什么？" class="headerlink" title="作用是什么？"></a>作用是什么？</h5><blockquote>
@@ -132,9 +132,9 @@
 <h5 id="文件样式"><a href="#文件样式" class="headerlink" title="文件样式"></a>文件样式</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">myapp-pod</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">myapp</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">myapp-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;echo The app is running! &amp;&amp; sleep 3600&#x27;</span>]</span><br><span class="line">  <span class="attr">initContainers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">init-myservice</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;until nslookup myservice; do echo waiting for myservice; sleep 2; </span></span><br><span class="line"><span class="string">done;&#x27;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">init-mydb</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;until nslookup mydb; do echo waiting for mydb; sleep 2; done;&#x27;</span>]</span><br></pre></td></tr></table></figure>
 
 <p>创建pod，并且不断查看，就可以看到启动过程</p>
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143508793.png" alt="1658143508793"></p>
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143552268.png" alt="1658143552268"></p>
-<img src="/2022/07/25/Pod/1658143552268.png" class title="哦哦婆婆">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143508793.png" alt="1658143508793"></p>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143552268.png" alt="1658143552268"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658143552268.png" class title="哦哦婆婆">
 
 <h4 id="探针"><a href="#探针" class="headerlink" title="探针"></a>探针</h4><h5 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h5><p>诊断容器的一种方式，指示容器是否正在运行或者容器是否做好接收服务请求的准备</p>
 <h5 id="三种处理："><a href="#三种处理：" class="headerlink" title="三种处理："></a>三种处理：</h5><blockquote>
@@ -161,18 +161,18 @@
 </blockquote>
 <h5 id="就绪检测yaml"><a href="#就绪检测yaml" class="headerlink" title="就绪检测yaml"></a>就绪检测yaml</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">readiness-httpget-pod</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">readiness-httpget-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">    <span class="attr">readinessProbe:</span></span><br><span class="line">      <span class="comment">#对镜像wangyanglinux/myapp:v1生成的应用，访问80端口/index.html资源(应用中无此资源)</span></span><br><span class="line">      <span class="attr">httpGet:</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">path:</span> <span class="string">/index1.html</span></span><br><span class="line">      <span class="attr">initialDelaySeconds:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">periodSeconds:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144857352.png" alt="1658144857352"></p>
-<img src="/2022/07/25/Pod/1658144857352.png" class title="巍峨">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144857352.png" alt="1658144857352"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658144857352.png" class title="巍峨">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//查看pod详细描述</span><br><span class="line">kubectl describe pod readiness-httpget-pod</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200204122317758.png" alt="20200204122317758"></p>
-<img src="/2022/07/25/Pod/20200204122317758.png" class title="去问问">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200204122317758.png" alt="20200204122317758"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/20200204122317758.png" class title="去问问">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//查看Pod的日志【一直不断的探测】</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144965988.png" alt="1658144965988"></p>
-<img src="/2022/07/25/Pod/1658144965988.png" class title="偶然">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144965988.png" alt="1658144965988"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658144965988.png" class title="偶然">
 
 <p><strong>解决</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//进入容器</span><br><span class="line">kubectl exec  readiness-httpget-pod -it -- /bin/sh</span><br><span class="line">//进入目录</span><br><span class="line">cd /usr/share/nginx/html/</span><br><span class="line">//创建index1</span><br><span class="line">echo &quot;123&quot; &gt;&gt; index1.html</span><br><span class="line">//退出容器</span><br><span class="line">exit</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -182,13 +182,13 @@
 </blockquote>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">liveness-exec-pod</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">liveness-exec-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-c&quot;</span>,<span class="string">&quot;touch /tmp/live ; sleep 60; rm -rf /tmp/live; sleep</span></span><br><span class="line"><span class="string">3600&quot;</span>]</span><br><span class="line">    <span class="attr">livenessProbe:</span></span><br><span class="line">      <span class="attr">exec:</span></span><br><span class="line">        <span class="attr">command:</span> [<span class="string">&quot;test&quot;</span>,<span class="string">&quot;-e&quot;</span>,<span class="string">&quot;/tmp/live&quot;</span>]</span><br><span class="line">      <span class="attr">initialDelaySeconds:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">periodSeconds:</span> <span class="number">3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145618199.png" alt="1658145618199"></p>
-<img src="/2022/07/25/Pod/1658145618199.png" class title="跑一天">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145618199.png" alt="1658145618199"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658145618199.png" class title="跑一天">
 
 <h5 id="容器启动前和关闭前动作"><a href="#容器启动前和关闭前动作" class="headerlink" title="容器启动前和关闭前动作"></a>容器启动前和关闭前动作</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">lifecycle-demo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">lifecycle-demo-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">lifecycle:</span></span><br><span class="line">      <span class="attr">postStart:</span></span><br><span class="line">        <span class="attr">exec:</span></span><br><span class="line">          <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;echo Hello from the postStart handler &gt; </span></span><br><span class="line"><span class="string">/usr/share/message&quot;</span>]</span><br><span class="line">      <span class="attr">preStop:</span></span><br><span class="line">        <span class="attr">exec:</span></span><br><span class="line">          <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;echo Hello from the poststop handler &gt; </span></span><br><span class="line"><span class="string">/usr/share/message&quot;</span>]</span><br><span class="line"> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145870559.png" alt="1658145870559"></p>
-<img src="/2022/07/25/Pod/1658145870559.png" class title="不会高">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145870559.png" alt="1658145870559"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658145870559.png" class title="不会高">
 
 
 
@@ -204,7 +204,7 @@
   </entry>
   <entry>
     <title>Process</title>
-    <url>/2022/07/25/Process/</url>
+    <url>/blknjyty.github.io/2022/07/25/Process/</url>
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
 <p> 实际Java开发工作中可能会遇到调用操作系统命令的场景，比如查看下文件夹，执行下sh/exe文件等等，那么我们就要用到Process了 </p>
 </blockquote>
@@ -247,7 +247,7 @@
   </entry>
   <entry>
     <title>RS和Deployment</title>
-    <url>/2022/07/25/RS%E5%92%8CDeployment/</url>
+    <url>/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/</url>
     <content><![CDATA[<h3 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a><strong>ReplicaSet</strong></h3><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><blockquote>
 <p> 主要的作用就是用来确保容器应用的副本数始终保持在用户定义的副本数 。即如 果有容器异常退出，会自动创建新的Pod来替代；而如果异常多出来的容器也会自动回收</p>
 </blockquote>
@@ -258,13 +258,13 @@
 <p>创建rs后</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//查看pod和标签</span><br><span class="line">kubectl get pod  --show-labels</span><br><span class="line">//修改pod的标签</span><br><span class="line">kubectl label pod frontend-dtx7t tier=frontend1 --overwrite=True</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147537315.png" alt="1658147537315"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147537315.png" class title="图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147537315.png" alt="1658147537315"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658147537315.png" class title="图">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//删除rs</span><br><span class="line">kubectl delete rs --all</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147623117.png" alt="1658147623117"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658147623117.png" class title="图图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658147623117.png" alt="1658147623117"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658147623117.png" class title="图图">
 
 <h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><blockquote>
 <p> <strong>Deployment 的作用是管理和控制 Pod 和 ReplicaSet，管控它们运行在用户期望的状态中</strong>。 </p>
@@ -276,25 +276,25 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml --record</span><br></pre></td></tr></table></figure>
 
 <p><strong>查看pod和rs</strong></p>
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193426313.png" alt="1658193426313"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193426313.png" class title="图图图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193426313.png" alt="1658193426313"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658193426313.png" class title="图图图">
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//显示标签</span><br><span class="line">kubectl get pod --show-labels</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193468849.png" alt="1658193468849"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193468849.png" class title="图图图图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193468849.png" alt="1658193468849"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658193468849.png" class title="图图图图">
 
 <h4 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale deployment nginx-deployment --replicas 10</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193499915.png" alt="1658193499915"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193499915.png" class title="图图图图图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193499915.png" alt="1658193499915"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658193499915.png" class title="图图图图图">
 
 <h4 id="自动扩展"><a href="#自动扩展" class="headerlink" title="自动扩展"></a>自动扩展</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//如果集群支持 horizontal pod autoscaling 的话，还可以为Deployment设置自动扩展</span><br><span class="line">kubectl autoscale deployment nginx-deployment --min=10 --max=15 --cpu-percent=80</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h4 id="更新镜像"><a href="#更新镜像" class="headerlink" title="更新镜像"></a>更新镜像</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193624346.png" alt="1658193624346"></p>
- <img src="/2022/07/25/RS%E5%92%8CDeployment/1658193624346.png" class title="哈哈哈">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/gitee\Blog\source_posts\RS和Deployment\1658193624346.png" alt="1658193624346"></p>
+ <img src="/blknjyty.github.io/2022/07/25/RS%E5%92%8CDeployment/1658193624346.png" class title="哈哈哈">
 
 <h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl rollout undo deployment/nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -314,7 +314,7 @@
   </entry>
   <entry>
     <title>Secret</title>
-    <url>/2022/07/25/Secret/</url>
+    <url>/blknjyty.github.io/2022/07/25/Secret/</url>
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
 <p> <strong>Secret 解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者 Pod Spec 中。Secret 可以以 Volume 或者环境变量的方式使用</strong>  </p>
 </blockquote>
@@ -338,24 +338,24 @@
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mysecret</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">MWYyZDFlMmU2N2Rm</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">YWRtaW4=</span></span><br></pre></td></tr></table></figure>
 
 <p>查看secret</p>
-<p><img src="/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223121337.png" alt="1658223121337"></p>
- <img src="/2022/07/25/Secret/1658223121337.png" class title="去问问">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223121337.png" alt="1658223121337"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Secret/1658223121337.png" class title="去问问">
 
 <h4 id="使用Opaque-Secret"><a href="#使用Opaque-Secret" class="headerlink" title="使用Opaque Secret"></a>使用Opaque Secret</h4><ol>
 <li><strong>将 Secret 挂载到 Volume 中</strong> </li>
 </ol>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">seret-test</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">seret-test</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">secrets</span></span><br><span class="line">    <span class="attr">secret:</span></span><br><span class="line">      <span class="attr">secretName:</span> <span class="string">mysecret</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">secrets</span></span><br><span class="line">      <span class="attr">mountPath:</span> <span class="string">&quot;/etc/secrets&quot;</span></span><br><span class="line">      <span class="attr">readOnly:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223203299.png" alt="1658223203299"></p>
- <img src="/2022/07/25/Secret/1658223203299.png" class title="得分">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223203299.png" alt="1658223203299"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Secret/1658223203299.png" class title="得分">
 
 <ol start="2">
 <li><strong>将 Secret 导出到环境变量中</strong> </li>
 </ol>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">pod-deployment</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">pod-1</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">TEST_USER</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">secretKeyRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">mysecret</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">username</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">TEST_PASSWORD</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">secretKeyRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">mysecret</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">password</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223248252.png" alt="1658223248252"></p>
- <img src="/2022/07/25/Secret/1658223248252.png" class title="都很方便">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Secret/gitee\Blog\source_posts\Secret\1658223248252.png" alt="1658223248252"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Secret/1658223248252.png" class title="都很方便">
 
 <h3 id="kubernetes-io-dockerconﬁgjson"><a href="#kubernetes-io-dockerconﬁgjson" class="headerlink" title="kubernetes.io/dockerconﬁgjson"></a>kubernetes.io/dockerconﬁgjson</h3><p> 使用 Kuberctl 创建 docker registry 认证的 secret </p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ kubectl create secret docker-registry myregistrykey --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL</span><br><span class="line"></span><br><span class="line">secret &quot;myregistrykey&quot; created.</span><br></pre></td></tr></table></figure>
@@ -376,14 +376,14 @@
   </entry>
   <entry>
     <title>Service</title>
-    <url>/2022/07/25/Service/</url>
+    <url>/blknjyty.github.io/2022/07/25/Service/</url>
     <content><![CDATA[<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><blockquote>
 <p>Kubernetes Service  定义了这样一种抽象：一个 Pod  的逻辑分组，一种可以访问它们的策略 —— 通常称为微 服务。 这一组 Pod  能够被 Service  访问到，通常是通过 Label Selector</p>
 </blockquote>
 <span id="more"></span>
 
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658194586057.png" alt="1658194586057"></p>
- <img src="/2022/07/25/Service/1658194586057.png" class title="好人和和">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658194586057.png" alt="1658194586057"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658194586057.png" class title="好人和和">
 
 <h3 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h3><ul>
 <li>ClusterIp：默认类型，自动分配一个仅 Cluster 内部可以访问的虚拟 IP</li>
@@ -393,21 +393,21 @@
 </ul>
 <h4 id="ClusterIp"><a href="#ClusterIp" class="headerlink" title="ClusterIp"></a>ClusterIp</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">myapp</span></span><br><span class="line">    <span class="attr">release:</span> <span class="string">stabel</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196020216.png" alt="1658196020216"></p>
- <img src="/2022/07/25/Service/1658196020216.png" class title="哈合计">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196020216.png" alt="1658196020216"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658196020216.png" class title="哈合计">
 
 <h5 id="Headless-Service"><a href="#Headless-Service" class="headerlink" title="Headless Service"></a>Headless Service</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">myapp-headless</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">myapp</span></span><br><span class="line">  <span class="attr">clusterIP:</span> <span class="string">&quot;None&quot;</span></span><br><span class="line">  <span class="attr">ports:</span> </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196191010.png" alt="1658196191010"></p>
- <img src="/2022/07/25/Service/1658196191010.png" class title="讷讷哦">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196191010.png" alt="1658196191010"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658196191010.png" class title="讷讷哦">
 
 <h4 id="NodePort"><a href="#NodePort" class="headerlink" title="NodePort"></a>NodePort</h4><blockquote>
 <p>nodePort 的原理在于在 node上开了一个端口，将向该端口的流量导入到 kube-proxy，然后由 kube-proxy 进 一步到给对应的 pod 。</p>
 </blockquote>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">myapp</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">myapp</span></span><br><span class="line">    <span class="attr">release:</span> <span class="string">stabel</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196382994.png" alt="1658196382994"></p>
- <img src="/2022/07/25/Service/1658196382994.png" class title="平日要不">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658196382994.png" alt="1658196382994"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658196382994.png" class title="平日要不">
 
 <h4 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h4><blockquote>
 <p>loadBalancer 和 nodePort 其实是同一种方式。区别在于 loadBalancer 比 nodePort 多了一步，就是可以调用 cloud provider 去创建 LB 来向节点导流 </p>
@@ -423,15 +423,15 @@
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginx-test</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">host:</span> <span class="string">www.heian.com</span></span><br><span class="line">      <span class="attr">http:</span></span><br><span class="line">        <span class="attr">paths:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">          <span class="attr">backend:</span></span><br><span class="line">            <span class="attr">serviceName:</span> <span class="string">nginx-svc</span></span><br><span class="line">            <span class="attr">servicePort:</span> <span class="number">80</span><span class="string">集群</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>集群内部访问：</strong></p>
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658197990793.png" alt="1658197990793"></p>
- <img src="/2022/07/25/Service/1658197990793.png" class title="你看你看">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658197990793.png" alt="1658197990793"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658197990793.png" class title="你看你看">
 
 <p><strong>集群外部访问：</strong></p>
-<p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658198043604.png" alt="1658198043604"></p>
- <img src="/2022/07/25/Service/1658198043604.png" class title="发广告">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658198043604.png" alt="1658198043604"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658198043604.png" class title="发广告">
 
-<h4 id="实验1"><a href="#实验1" class="headerlink" title="实验1"></a>实验1</h4><p><img src="/2022/07/25/Service/gitee\Blog\source_posts\Service\1658198452126.png" alt="1658198452126"></p>
- <img src="/2022/07/25/Service/1658198452126.png" class title="温度场">
+<h4 id="实验1"><a href="#实验1" class="headerlink" title="实验1"></a>实验1</h4><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Service/gitee\Blog\source_posts\Service\1658198452126.png" alt="1658198452126"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Service/1658198452126.png" class title="温度场">
 
 <h5 id="yaml"><a href="#yaml" class="headerlink" title="yaml"></a>yaml</h5><p><strong>deployment1</strong></p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">deployment1</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">          <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">svc-1</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nginx</span></span><br></pre></td></tr></table></figure>
@@ -448,7 +448,7 @@
   </entry>
   <entry>
     <title>Volume</title>
-    <url>/2022/07/25/Volume/</url>
+    <url>/blknjyty.github.io/2022/07/25/Volume/</url>
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
 <p>容器磁盘上的文件的生命周期是短暂的，这就使得在容器中运行重要应用时会出现一些问题。首先，当容器崩溃 时，kubelet 会重启它，但是容器中的文件将丢失——容器以干净的状态（镜像最初的状态）重新启动。其次，在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 中的 Volume 抽象就很好的解决了 这些问题</p>
 </blockquote>
@@ -466,8 +466,8 @@
 </ul>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/cache</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">    <span class="attr">emptyDir:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658227996350.png" alt="1658227996350"></p>
- <img src="/2022/07/25/Volume/1658227996350.png" class title="得分">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658227996350.png" alt="1658227996350"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658227996350.png" class title="得分">
 
 <h4 id="hostPath"><a href="#hostPath" class="headerlink" title="hostPath"></a>hostPath</h4><blockquote>
 <p>简介： hostPath 卷将主机节点的文件系统中的文件或目录挂载到集群中 ，简而言之就是节点之间的共享</p>
@@ -479,14 +479,14 @@
 <li>允许 pod 指定给定的 hostPath 是否应该在 pod 运行之前存在，是否应该创建，以及它应该以什么形式存在</li>
 </ul>
 <p> 除了所需的 path 属性之外，用户还可以为 hostPath 卷指定 type </p>
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228122967.png" alt="1658228122967"></p>
- <img src="/2022/07/25/Volume/1658228122967.png" class title="搜索树">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228122967.png" alt="1658228122967"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658228122967.png" class title="搜索树">
 
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/test-pd</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">    <span class="attr">hostPath:</span></span><br><span class="line">      <span class="comment"># directory location on host</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/data</span></span><br><span class="line">      <span class="comment"># this field is optional</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">Directory</span></span><br></pre></td></tr></table></figure>
 
 <p>如下所示，master节点和node1节点均可见index.html</p>
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228144040.png" alt="1658228144040"></p>
- <img src="/2022/07/25/Volume/1658228144040.png" class title="爱是">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228144040.png" alt="1658228144040"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658228144040.png" class title="爱是">
 
 ]]></content>
       <categories>
@@ -498,7 +498,7 @@
   </entry>
   <entry>
     <title>docker部署how2j项目实操</title>
-    <url>/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/</url>
+    <url>/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/</url>
     <content><![CDATA[<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>本文档记录<a href="https://how2j.cn/k/deploy2linux/deploy2linux-autostart/1996.html">how2j的tmall项目</a>在本地虚拟机上使用docker生成镜像并推送到仓库的过程</p>
 <p>Linux:centos7，docker为20.10…版本。<strong>注意有个坑，linux内核版本过低(比如内核版本3…和docker20…就不行)、docker版本过高，部署完也无法访问，<a href="https://blog.csdn.net/weixin_43604021/article/details/125722883">解决办法</a></strong></p>
 <span id="more"></span>
@@ -596,8 +596,8 @@
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//下载到本地，通过ftp客户端上传到虚拟机的操作系统，然后再通过docker的cp命令复制到容器centos7中</span><br><span class="line">//将宿主机目录线下/home/wwwroot/ftptest/apache-tomcat-8.5.23.tar.gz复制到名为centos7的容器的/tmp目录下面</span><br><span class="line">docker cp /home/wwwroot/ftptest/apache-tomcat-8.5.23.tar.gz centos7:/tmp</span><br><span class="line">//进入容器，同上</span><br><span class="line">...</span><br><span class="line">//解压、移动</span><br><span class="line">tar xzf apache-tomcat-8.5.23.tar.gz</span><br><span class="line">mv apache-tomcat-8.5.23 /usr/local/tomcat8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657596789808.png" alt="1657596789808"></p>
-<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657596789808.png" class title="ftp客户端">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657596789808.png" alt="1657596789808"></p>
+<img src="/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657596789808.png" class title="ftp客户端">
 
 <ul>
 <li>验证一下</li>
@@ -614,8 +614,8 @@
 <p> 下载tmall.rar，<strong>解压后上传</strong>到虚拟机的操作系统中，才通过docker的cp转移到容器中。</p>
  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//步骤基本同上</span><br><span class="line">docker cp /home/wwwroot/ftptest/tmall centos7:/home/wwwroot/ftptest</span><br><span class="line">//最后的项目位置在/home/wwwroot/ftptest/tmall/web</span><br><span class="line">//配置tomcat</span><br><span class="line">vi /usr/local/tomcat7/conf/server.xml </span><br><span class="line">//然后在&lt;host下面增加一行</span><br><span class="line">&lt;Context path=&quot;/tmall&quot; docBase=&quot;/home/wwwroot/ftptest/tmall/web&quot; debug=&quot;0&quot; reloadable=&quot;false&quot; /&gt;</span><br><span class="line">//重启tomcat</span><br><span class="line">/usr/local/tomcat7/bin/shutdown.sh</span><br><span class="line">/usr/local/tomcat7/bin/startup.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p> <img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657597958254.png" alt="1657597958254"></p>
- <img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657597958254.png" class title="tomcat配置应用">
+<p> <img src="/blknjyty.github.io/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657597958254.png" alt="1657597958254"></p>
+ <img src="/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657597958254.png" class title="tomcat配置应用">
 
 <p> 下载tmall.sql，上传到虚拟机的操作系统中，才通过docker的cp转移到容器中。</p>
  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//Linux MySQL默认是大小写敏感的，但是模仿天猫在设计的时候是在windows上开发的，而windows上的Mysql默认是非大小写敏感的，所以JDBC代码有的表名是大写，有的是小写的，一旦运行起来就会因为大小写不一致导致无法识别表名。 为了解决这个矛盾，就需要把MySQL的大小写敏感修改为非敏感。解决办法如下：</span><br><span class="line">vi /etc/my.cnf</span><br><span class="line">//打开后在[mysqld]后添加添加</span><br><span class="line">lower_case_table_names=1</span><br><span class="line">//重启mysql</span><br><span class="line">systemctl restart mysqld.service</span><br><span class="line">//连接数据库</span><br><span class="line">mysql -uroot -padmin</span><br><span class="line">//创建数据库</span><br><span class="line">CREATE DATABASE tmall DEFAULT CHARACTER SET utf8;</span><br><span class="line">//查看</span><br><span class="line">show databases;</span><br><span class="line">//导入数据</span><br><span class="line">mysql -u root -padmin --default-character-set=utf8 tmall &lt; /home/wwwroot/ftptest/tmall.sql</span><br><span class="line">//重新登录验证</span><br><span class="line">mysql -uroot -padmin</span><br><span class="line">use tmall;</span><br><span class="line">show tables;</span><br><span class="line">select count(*) from product;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -625,13 +625,13 @@
 <h5 id="脚本自启动"><a href="#脚本自启动" class="headerlink" title="脚本自启动"></a>脚本自启动</h5><p> 有个文件叫做 rc.local, 把脚本放进去就可以了。<br>不过这个脚本在 centos7里被降级了，不能被执行，所以要执行如下语句使得其可以被执行先 </p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x /etc/rc.d/rc.local</span><br><span class="line">//然后修改 /etc/rc.d/rc.local, 放入 tomcat脚本即可</span><br><span class="line">vi /etc/rc.d/rc.local</span><br><span class="line">/usr/local/tomcat7/bin/startup.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598168031.png" alt="1657598168031"></p>
-<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598168031.png" class title="tomcat自启动">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598168031.png" alt="1657598168031"></p>
+<img src="/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598168031.png" class title="tomcat自启动">
 
 <h4 id="容器打包成镜像"><a href="#容器打包成镜像" class="headerlink" title="容器打包成镜像"></a>容器打包成镜像</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//容器打包成镜像</span><br><span class="line">docker commit -m=&quot;my tmall&quot; -a=&quot;yujin&quot; centos7 blknjyty/mytmall:v1</span><br><span class="line">//运行镜像</span><br><span class="line">docker run -dit --privileged -p80:80 -p8080:8080  --name mytmall blknjyty/mytmall:v1  /usr/sbin/init</span><br><span class="line">//本机访问</span><br><span class="line">http://虚拟机ip:8080/tmall/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598367247.png" alt="1657598367247"></p>
-<img src="/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598367247.png" class title="项目启动图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\docker部署how2j项目实操\1657598367247.png" alt="1657598367247"></p>
+<img src="/blknjyty.github.io/2022/07/12/docker%E9%83%A8%E7%BD%B2how2j%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%93%8D/1657598367247.png" class title="项目启动图">
 
 ]]></content>
       <categories>
@@ -642,8 +642,122 @@
       </tags>
   </entry>
   <entry>
+    <title>jooq使用</title>
+    <url>/blknjyty.github.io/2022/07/15/jooq%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="JOOQ简介"><a href="#JOOQ简介" class="headerlink" title="JOOQ简介"></a>JOOQ简介</h3><blockquote>
+<p><a href="https://jooq.org/">jOOQ</a>，是一个ORM框架，利用其生成的Java代码和流畅的API，可以快速构建有类型约束的安全的SQL语句 。 </p>
+</blockquote>
+<span id="more"></span>
+
+<blockquote>
+<p><strong>优点：</strong></p>
+<ol>
+<li><p>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。通过jOOQ提供的API，配合生成的Java代码，可以很方便的进行数据库操作 </p>
+</li>
+<li><p>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了SQL注入的风险 </p>
+</li>
+<li><p>jOOQ的代码生成策略是根据配置全量生成，任何对于数据库的改动，如果会影响到业务代码，在编译期间就会被发现，可以及时进行修复 </p>
+</li>
+</ol>
+</blockquote>
+<h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><blockquote>
+<p>所有的操作jooq都提供两种方式， 第一种是使用 DSLContext API 以类SQL的语法进行调用，第二种是利用 Record API 进行调用 。这里面只记录第一种，了解第二种请点击<a href="https://jooq.diamondfsd.com/learn/section-2-base-curd.html">这里</a></p>
+<p>了解：</p>
+<ul>
+<li><code>dslContext</code> 代表<code>DSLContext</code>实例</li>
+<li><code>S1_USER</code> 由jOOQ插件生成的表描述常量</li>
+<li><code>S1_USER.*</code> 由jOOQ插件生成的表内字段常量</li>
+</ul>
+<p>了解三个接口：</p>
+<ul>
+<li><code>org.jooq.Result</code> 结果集接口，此接口实现了List接口，可以当做一个集合来操作，是一个数据库查询结果集的包装类，除了集合的相关方法，该接口还提供了一些结果集转换，格式化，提取字段等方法。通常我们查询出来的结果都是此接口的实现类，掌握好此接口是jOOQ的基础接口，基本所有的SQL查询操作，都会碰到这个接口 </li>
+<li><code>org.jooq.Record </code> 此接口再使用关系型数据库时，主要用于定义数据库表记录，储存的内容是一条表记录的字段和值，每个值会储存对应字段的类型，可以通过通用的 <code>getValue(Field field)</code> 方法，取到对应字段的值，也可以将这个接口看做是一条记录的字段/值映射 </li>
+<li><code>org.jooq.DSLContext</code> jOOQ的核心接口之一，可以理解为一个SQL执行器，通过静态方法 <code>DSL.using</code>，可以获取一个 <code>DSLContext</code> 实例，此实例抽象了所有对于SQL的操作API，可以通过其提供的API方便的进行SQL操作  </li>
+</ul>
+</blockquote>
+<h4 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 类SQL语法 insertInto 方法第一个参数通常是表常量</span></span><br><span class="line">dslContext.insertInto(S1_USER, S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">        .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .values(<span class="string">&quot;username2&quot;</span>, <span class="string">&quot;demo-address2&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .execute();</span><br><span class="line"> <span class="comment">//批量插入</span></span><br><span class="line"> List&lt;S1UserRecord&gt; recordList = IntStream.range(<span class="number">0</span>, <span class="number">10</span>).mapToObj(i -&gt; &#123;</span><br><span class="line">    <span class="type">S1UserRecord</span> <span class="variable">s1UserRecord</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">    s1UserRecord.setUsername(<span class="string">&quot;usernameBatchInsert&quot;</span> + i);</span><br><span class="line">    s1UserRecord.setEmail(<span class="string">&quot;diamondfsd@gmail.com&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> s1UserRecord;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br><span class="line">dslContext.batchInsert(recordList).execute();</span><br><span class="line"><span class="comment">//插入后获取主键</span></span><br><span class="line"><span class="comment">//通过此方法插入数据，可以通过 returning API读取想要返回的数据，此语法支持返回多个值，通过fetchOne()方法可以取到一个Record对象</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">    .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">    .returning(S1_USER.ID)</span><br><span class="line">    .fetchOne().getId();</span><br><span class="line"><span class="comment">//插入时主键重复的处理办法</span></span><br><span class="line"><span class="comment">// 第一种 ：这里执行完，返回affecteRow影响行数为0，即不生效</span></span><br><span class="line"><span class="comment">// 生成的SQL: insert ignore into `learn-jooq`.`s1_user` (`id`, `username`) values (1, &#x27;username-1&#x27;)</span></span><br><span class="line"><span class="type">int</span> <span class="variable">affecteRow</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">    .values(<span class="number">1</span>, <span class="string">&quot;username-1&quot;</span>)</span><br><span class="line">    .onDuplicateKeyIgnore()</span><br><span class="line">    .execute();</span><br><span class="line"><span class="comment">// 第二种:更新主键所在列</span></span><br><span class="line"><span class="comment">//生成SQL: insert into `learn-jooq`.`s1_user` (`id`, `username`, `address`) values (1, &#x27;duplicateKey-update&#x27;, &#x27;hello world&#x27;) on duplicate key update `learn-jooq`.`s1_user`.`username` = &#x27;duplicateKey-update&#x27;, `learn-jooq`.`s1_user`.`address` = &#x27;update&#x27;</span></span><br><span class="line">dslContext.insertInto(S1_USER)</span><br><span class="line">    .set(S1_USER.ID, <span class="number">1</span>)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-insert&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">    .onDuplicateKeyUpdate()</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-update&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update&quot;</span>)</span><br><span class="line">    .execute();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.update(S1_USER)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;apiUsername-1&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update-address&quot;</span>)</span><br><span class="line">    .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">    .execute()</span><br><span class="line">    </span><br><span class="line"><span class="comment">//批量更新</span></span><br><span class="line">  <span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line">record1.setUsername(<span class="string">&quot;batchUsername-1&quot;</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">record2.setUsername(<span class="string">&quot;batchUsername-2&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;S1UserRecord&gt; userRecordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">userRecordList.add(record1);</span><br><span class="line">userRecordList.add(record2);</span><br><span class="line">dslContext.batchUpdate(userRecordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><blockquote>
+<p> 基本查询方法，默认查询指定表的所有字段，返回一个结果集的包装，通过<code>Result.into</code>方法，可以将结果集转换为任意指定类型集合，当然也可以通过 <code>Record.getValue</code> 方法取得任意字段值，值类型依赖于字段类型 </p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user`</span></span><br><span class="line">Result&lt;Record&gt; fetchResult = dslContext.select().from(S1_USER).fetch();</span><br><span class="line">List&lt;S1UserRecord&gt; result = fetch.into(S1UserRecord.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user` where `learn-jooq`.`s1_user`.`id` in (1, 2)</span></span><br><span class="line">Result&lt;Record&gt; fetchAll = dslContext.select().from(S1_USER)</span><br><span class="line">                .where(S1_USER.ID.in(<span class="number">1</span>, <span class="number">2</span>)).fetch();</span><br><span class="line">fetchAll.forEach(record -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">id</span> <span class="operator">=</span> record.getValue(S1_USER.ID);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> record.getValue(S1_USER.USERNAME);</span><br><span class="line">    <span class="type">String</span> <span class="variable">address</span> <span class="operator">=</span> record.getValue(S1_USER.ADDRESS);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">createTime</span> <span class="operator">=</span> record.getValue(S1_USER.CREATE_TIME);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">updateTime</span> <span class="operator">=</span> record.getValue(S1_USER.UPDATE_TIME);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>jooq也支持关联查询</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//UserMessagePojo为新建的Pojo类，用于存储查询结果，可以忽略具体内容</span></span><br><span class="line">Result&lt;Record3&lt;String, String, String&gt;&gt; record3Result =</span><br><span class="line">        dslContext.select(S1_USER.USERNAME,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_TITLE,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_CONTENT)</span><br><span class="line">        .from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .fetch();</span><br><span class="line">List&lt;UserMessagePojo&gt; userMessagePojoList = record3Result.into(UserMessagePojo.class)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Condition动态查询</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">query</span><span class="params">(String name,String age)</span> &#123;</span><br><span class="line">		Condition condition=DSL.trueCondition();<span class="comment">//真实条件</span></span><br><span class="line">		<span class="keyword">if</span>(name!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.NAME.eq(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(age!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.AGE.eq(Integer.parseInt(age)));</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Student&gt; list=context.select().from(Tables.STUDENT).where(condition).fetch().into(Student.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.delete(S1_USER).where(S1_USER.USERNAME.eq(<span class="string">&quot;demo1&quot;</span>)).execute();</span><br><span class="line"></span><br><span class="line"><span class="comment">//批量删除</span></span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">dslContext.batchDelete(record1, record2).execute();</span><br><span class="line"><span class="comment">// </span></span><br><span class="line">List&lt;S1UserRecord&gt; recordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">recordList.add(record1);</span><br><span class="line">recordList.add(record2);</span><br><span class="line">dslContext.batchDelete(recordList).execute();</span><br></pre></td></tr></table></figure>
+
+<h3 id="结果处理"><a href="#结果处理" class="headerlink" title="结果处理"></a>结果处理</h3><blockquote>
+<p>查询操作通常以fetch API 作为结束API，例如常用的有，所有的读取类方法都差不多，掌握一个就能很快的举一反三</p>
+<ul>
+<li>读取多条<ul>
+<li><code>fetch</code> 读取集合</li>
+<li><code>fetchSet</code> 读取并返回一个Set集合，常用于去重</li>
+<li><code>fetchArray</code> 读取并返回一个数组</li>
+</ul>
+</li>
+<li>读取单条<ul>
+<li><code>fetchOne</code> 读取单条记录，如果记录超过一条会报错</li>
+<li><code>fetchAny</code> 读取单条记录，如果有多条，会取第一条数据</li>
+<li><code>fetchSingle</code> 读取单条记录，如果记录为空或者记录超过一条会报错</li>
+</ul>
+</li>
+<li>读取并返回Map<ul>
+<li><code>fetchMap</code> 读取并返回一个Map</li>
+<li><code>fetchGroups</code> 读取并返回一个分组Map</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><ul>
+<li><p><code>fetch()</code><br>无参调用此方法，返回的是一个<code>Result</code>结果集对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result&lt;Record&gt; records = dslContext.select().from(S1_USER).fetch();</span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(RecordMapper mapper)</code><br><code>RecordMapper</code>接口的提供<code>map</code>方法，用于来返回数据。<code>map</code> 方法传入一个 <code>Record</code> 对象。可以使用lambda表达式将 <code>Record</code> 对象转换成一个指定类型的POJO</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;S1UserPojo&gt; userPojoList = dslContext.select()</span><br><span class="line">            .from(S1_USER)</span><br><span class="line">            .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">            .fetch(r -&gt; r.into(S1UserPojo.class));</span><br></pre></td></tr></table></figure>
+
+<p>多表查询，字段相同时，直接用into方法将结果集转换为POJO时，相同字段名称的方法会以最后一个字段值为准。这时候，我们可以现将结果集通过 <code>into(Table table)</code> 方法将结果集转换为指定表的<code>Record</code>对象，然后再<code>into</code>进指定的POJO类中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 多表关联查询，查询s2_user_message.id = 2的数据，直接into的结果getId()却是1</span></span><br><span class="line"><span class="comment">// 这是因为同时关联查询了s1_user表，该表的id字段值为1</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; r.into(S2UserMessage.class));</span><br><span class="line"><span class="comment">// userMessage.getId() == 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将结果集into进指定的表描述中，然后在into至指定的POJO类</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage2 = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; &#123;</span><br><span class="line">            <span class="type">S2UserMessage</span> <span class="variable">fetchUserMessage</span> <span class="operator">=</span> r.into(S2_USER_MESSAGE).into(S2UserMessage.class);</span><br><span class="line">            fetchUserMessage.setUsername(r.get(S1_USER.USERNAME));</span><br><span class="line">            <span class="keyword">return</span> fetchUserMessage;</span><br><span class="line">        &#125;);</span><br><span class="line"><span class="comment">// userMessage.getId() == 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(Field field)</code><br><code>Field</code>是一个接口，代码生成器生成的表字段常量例如 <code>S1_USER.ID</code>, 都实现了 <code>Field</code> 接口，这个重载可以直接取出指定表字段，会自动根据传入的字段推测其类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; id = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(S1_USER.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(String fieldName, Class type)</code><br>可以直接通过字段名称字符串获取指定字段值，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(<span class="string">&quot;id&quot;</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetch(int fieldIndex, Class type)</code><br>可以通过查询字段下标顺序进行查询指定字段，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select(S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">        .from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>)).fetch(<span class="number">0</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetch-1"><a href="#fetch-1" class="headerlink" title="fetch"></a>fetch</h4><p>此方法可以将结果集处理为一个Map格式，此方法有很多重载，这里介绍几个常用的，注意，此方法作为key的字段必须确定是在当前结果集中是唯一的，如果出现重复key，此方法会抛出异常</p>
+<ul>
+<li><p><code>fetchMap(Field field, Class type)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, S1UserPojo&gt; idUserPojoMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1UserPojo.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchMap(Feild field, Field field)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, String&gt; idUserNameMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1_USER.USERNAME);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="fetchgroup"><a href="#fetchgroup" class="headerlink" title="fetchgroup"></a>fetchgroup</h4><p>此方法可以将结果集处理为一个Map格式，和<code>fetchMap</code>类似，只不过这里的值为一个指定类型的集合，通常在处理一对多数据时会用到</p>
+<ul>
+<li><p><code>fetchGroups(Field field, Class type)</code><br>以表字段值为Key，返回一个<code>K:List</code> 的Map对象</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;S2UserMessage&gt;&gt; userIdUserMessageMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2UserMessage.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p><code>fetchGroups(Field keyField, Field valueField)</code></p>
+</li>
+<li><p>以表字段值为Key，返回一个K:List<V>的Map对象</V></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;Integer&gt;&gt; userIdUserMessageIdMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2_USER_MESSAGE.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><a href="https://jooq.diamondfsd.com/learn/section-1-how-to-start.html">参考JOOQ中文文档教程</a></p>
+<p><a href="https://blog.csdn.net/qq_39940674/article/details/93383177">更多用法参考</a></p>
+]]></content>
+      <categories>
+        <category>技术栈</category>
+      </categories>
+      <tags>
+        <tag>jooq</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>gradle</title>
-    <url>/2022/07/07/gradle/</url>
+    <url>/blknjyty.github.io/2022/07/07/gradle/</url>
     <content><![CDATA[<h2 id="Groovy简介"><a href="#Groovy简介" class="headerlink" title="Groovy简介"></a>Groovy简介</h2><p>整理自github仓库：<a href="https://github.com/kwf2030/gradle-tutorial">https://github.com/kwf2030/gradle-tutorial</a></p>
 <p>为加强记忆和后续学习特此整理下来</p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><blockquote>
@@ -871,122 +985,8 @@
       </tags>
   </entry>
   <entry>
-    <title>jooq使用</title>
-    <url>/2022/07/15/jooq%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="JOOQ简介"><a href="#JOOQ简介" class="headerlink" title="JOOQ简介"></a>JOOQ简介</h3><blockquote>
-<p><a href="https://jooq.org/">jOOQ</a>，是一个ORM框架，利用其生成的Java代码和流畅的API，可以快速构建有类型约束的安全的SQL语句 。 </p>
-</blockquote>
-<span id="more"></span>
-
-<blockquote>
-<p><strong>优点：</strong></p>
-<ol>
-<li><p>jOOQ的核心优势是可以将数据库表结构映射为Java类，包含表的基本描述和所有表字段。通过jOOQ提供的API，配合生成的Java代码，可以很方便的进行数据库操作 </p>
-</li>
-<li><p>生成的Java代码字段类型是根据数据库映射成的Java类型，在进行设置和查询操作时，因为是Java代码，都会有强类型校验，所以对于数据的输入，是天然安全的，极大的减少了SQL注入的风险 </p>
-</li>
-<li><p>jOOQ的代码生成策略是根据配置全量生成，任何对于数据库的改动，如果会影响到业务代码，在编译期间就会被发现，可以及时进行修复 </p>
-</li>
-</ol>
-</blockquote>
-<h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><blockquote>
-<p>所有的操作jooq都提供两种方式， 第一种是使用 DSLContext API 以类SQL的语法进行调用，第二种是利用 Record API 进行调用 。这里面只记录第一种，了解第二种请点击<a href="https://jooq.diamondfsd.com/learn/section-2-base-curd.html">这里</a></p>
-<p>了解：</p>
-<ul>
-<li><code>dslContext</code> 代表<code>DSLContext</code>实例</li>
-<li><code>S1_USER</code> 由jOOQ插件生成的表描述常量</li>
-<li><code>S1_USER.*</code> 由jOOQ插件生成的表内字段常量</li>
-</ul>
-<p>了解三个接口：</p>
-<ul>
-<li><code>org.jooq.Result</code> 结果集接口，此接口实现了List接口，可以当做一个集合来操作，是一个数据库查询结果集的包装类，除了集合的相关方法，该接口还提供了一些结果集转换，格式化，提取字段等方法。通常我们查询出来的结果都是此接口的实现类，掌握好此接口是jOOQ的基础接口，基本所有的SQL查询操作，都会碰到这个接口 </li>
-<li><code>org.jooq.Record </code> 此接口再使用关系型数据库时，主要用于定义数据库表记录，储存的内容是一条表记录的字段和值，每个值会储存对应字段的类型，可以通过通用的 <code>getValue(Field field)</code> 方法，取到对应字段的值，也可以将这个接口看做是一条记录的字段/值映射 </li>
-<li><code>org.jooq.DSLContext</code> jOOQ的核心接口之一，可以理解为一个SQL执行器，通过静态方法 <code>DSL.using</code>，可以获取一个 <code>DSLContext</code> 实例，此实例抽象了所有对于SQL的操作API，可以通过其提供的API方便的进行SQL操作  </li>
-</ul>
-</blockquote>
-<h4 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 类SQL语法 insertInto 方法第一个参数通常是表常量</span></span><br><span class="line">dslContext.insertInto(S1_USER, S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">        .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .values(<span class="string">&quot;username2&quot;</span>, <span class="string">&quot;demo-address2&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">        .execute();</span><br><span class="line"> <span class="comment">//批量插入</span></span><br><span class="line"> List&lt;S1UserRecord&gt; recordList = IntStream.range(<span class="number">0</span>, <span class="number">10</span>).mapToObj(i -&gt; &#123;</span><br><span class="line">    <span class="type">S1UserRecord</span> <span class="variable">s1UserRecord</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">    s1UserRecord.setUsername(<span class="string">&quot;usernameBatchInsert&quot;</span> + i);</span><br><span class="line">    s1UserRecord.setEmail(<span class="string">&quot;diamondfsd@gmail.com&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> s1UserRecord;</span><br><span class="line">&#125;).collect(Collectors.toList());</span><br><span class="line">dslContext.batchInsert(recordList).execute();</span><br><span class="line"><span class="comment">//插入后获取主键</span></span><br><span class="line"><span class="comment">//通过此方法插入数据，可以通过 returning API读取想要返回的数据，此语法支持返回多个值，通过fetchOne()方法可以取到一个Record对象</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.USERNAME, S1_USER.ADDRESS, S1_USER.EMAIL)</span><br><span class="line">    .values(<span class="string">&quot;username1&quot;</span>, <span class="string">&quot;demo-address1&quot;</span>, <span class="string">&quot;diamondfsd@gmail.com&quot;</span>)</span><br><span class="line">    .returning(S1_USER.ID)</span><br><span class="line">    .fetchOne().getId();</span><br><span class="line"><span class="comment">//插入时主键重复的处理办法</span></span><br><span class="line"><span class="comment">// 第一种 ：这里执行完，返回affecteRow影响行数为0，即不生效</span></span><br><span class="line"><span class="comment">// 生成的SQL: insert ignore into `learn-jooq`.`s1_user` (`id`, `username`) values (1, &#x27;username-1&#x27;)</span></span><br><span class="line"><span class="type">int</span> <span class="variable">affecteRow</span> <span class="operator">=</span> dslContext.insertInto(S1_USER,</span><br><span class="line">    S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">    .values(<span class="number">1</span>, <span class="string">&quot;username-1&quot;</span>)</span><br><span class="line">    .onDuplicateKeyIgnore()</span><br><span class="line">    .execute();</span><br><span class="line"><span class="comment">// 第二种:更新主键所在列</span></span><br><span class="line"><span class="comment">//生成SQL: insert into `learn-jooq`.`s1_user` (`id`, `username`, `address`) values (1, &#x27;duplicateKey-update&#x27;, &#x27;hello world&#x27;) on duplicate key update `learn-jooq`.`s1_user`.`username` = &#x27;duplicateKey-update&#x27;, `learn-jooq`.`s1_user`.`address` = &#x27;update&#x27;</span></span><br><span class="line">dslContext.insertInto(S1_USER)</span><br><span class="line">    .set(S1_USER.ID, <span class="number">1</span>)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-insert&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">    .onDuplicateKeyUpdate()</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;duplicateKey-update&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update&quot;</span>)</span><br><span class="line">    .execute();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="update"><a href="#update" class="headerlink" title="update"></a>update</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.update(S1_USER)</span><br><span class="line">    .set(S1_USER.USERNAME, <span class="string">&quot;apiUsername-1&quot;</span>)</span><br><span class="line">    .set(S1_USER.ADDRESS, <span class="string">&quot;update-address&quot;</span>)</span><br><span class="line">    .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">    .execute()</span><br><span class="line">    </span><br><span class="line"><span class="comment">//批量更新</span></span><br><span class="line">  <span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line">record1.setUsername(<span class="string">&quot;batchUsername-1&quot;</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">record2.setUsername(<span class="string">&quot;batchUsername-2&quot;</span>);</span><br><span class="line"></span><br><span class="line">List&lt;S1UserRecord&gt; userRecordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">userRecordList.add(record1);</span><br><span class="line">userRecordList.add(record2);</span><br><span class="line">dslContext.batchUpdate(userRecordList).execute();</span><br></pre></td></tr></table></figure>
-
-<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><blockquote>
-<p> 基本查询方法，默认查询指定表的所有字段，返回一个结果集的包装，通过<code>Result.into</code>方法，可以将结果集转换为任意指定类型集合，当然也可以通过 <code>Record.getValue</code> 方法取得任意字段值，值类型依赖于字段类型 </p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user`</span></span><br><span class="line">Result&lt;Record&gt; fetchResult = dslContext.select().from(S1_USER).fetch();</span><br><span class="line">List&lt;S1UserRecord&gt; result = fetch.into(S1UserRecord.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// select `learn-jooq`.`s1_user`.`id`, `learn-jooq`.`s1_user`.`username`, `learn-jooq`.`s1_user`.`email`, `learn-jooq`.`s1_user`.`address`, `learn-jooq`.`s1_user`.`create_time`, `learn-jooq`.`s1_user`.`update_time` from `learn-jooq`.`s1_user` where `learn-jooq`.`s1_user`.`id` in (1, 2)</span></span><br><span class="line">Result&lt;Record&gt; fetchAll = dslContext.select().from(S1_USER)</span><br><span class="line">                .where(S1_USER.ID.in(<span class="number">1</span>, <span class="number">2</span>)).fetch();</span><br><span class="line">fetchAll.forEach(record -&gt; &#123;</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">id</span> <span class="operator">=</span> record.getValue(S1_USER.ID);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> record.getValue(S1_USER.USERNAME);</span><br><span class="line">    <span class="type">String</span> <span class="variable">address</span> <span class="operator">=</span> record.getValue(S1_USER.ADDRESS);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">createTime</span> <span class="operator">=</span> record.getValue(S1_USER.CREATE_TIME);</span><br><span class="line">    <span class="type">Timestamp</span> <span class="variable">updateTime</span> <span class="operator">=</span> record.getValue(S1_USER.UPDATE_TIME);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>jooq也支持关联查询</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//UserMessagePojo为新建的Pojo类，用于存储查询结果，可以忽略具体内容</span></span><br><span class="line">Result&lt;Record3&lt;String, String, String&gt;&gt; record3Result =</span><br><span class="line">        dslContext.select(S1_USER.USERNAME,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_TITLE,</span><br><span class="line">        S2_USER_MESSAGE.MESSAGE_CONTENT)</span><br><span class="line">        .from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .fetch();</span><br><span class="line">List&lt;UserMessagePojo&gt; userMessagePojoList = record3Result.into(UserMessagePojo.class)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Condition动态查询</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">query</span><span class="params">(String name,String age)</span> &#123;</span><br><span class="line">		Condition condition=DSL.trueCondition();<span class="comment">//真实条件</span></span><br><span class="line">		<span class="keyword">if</span>(name!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.NAME.eq(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(age!=<span class="literal">null</span>) &#123;</span><br><span class="line">			condition=condition.and(Tables.STUDENT.AGE.eq(Integer.parseInt(age)));</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Student&gt; list=context.select().from(Tables.STUDENT).where(condition).fetch().into(Student.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">dslContext.delete(S1_USER).where(S1_USER.USERNAME.eq(<span class="string">&quot;demo1&quot;</span>)).execute();</span><br><span class="line"></span><br><span class="line"><span class="comment">//批量删除</span></span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record1.setId(<span class="number">1</span>);</span><br><span class="line"><span class="type">S1UserRecord</span> <span class="variable">record2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">S1UserRecord</span>();</span><br><span class="line">record2.setId(<span class="number">2</span>);</span><br><span class="line">dslContext.batchDelete(record1, record2).execute();</span><br><span class="line"><span class="comment">// </span></span><br><span class="line">List&lt;S1UserRecord&gt; recordList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">recordList.add(record1);</span><br><span class="line">recordList.add(record2);</span><br><span class="line">dslContext.batchDelete(recordList).execute();</span><br></pre></td></tr></table></figure>
-
-<h3 id="结果处理"><a href="#结果处理" class="headerlink" title="结果处理"></a>结果处理</h3><blockquote>
-<p>查询操作通常以fetch API 作为结束API，例如常用的有，所有的读取类方法都差不多，掌握一个就能很快的举一反三</p>
-<ul>
-<li>读取多条<ul>
-<li><code>fetch</code> 读取集合</li>
-<li><code>fetchSet</code> 读取并返回一个Set集合，常用于去重</li>
-<li><code>fetchArray</code> 读取并返回一个数组</li>
-</ul>
-</li>
-<li>读取单条<ul>
-<li><code>fetchOne</code> 读取单条记录，如果记录超过一条会报错</li>
-<li><code>fetchAny</code> 读取单条记录，如果有多条，会取第一条数据</li>
-<li><code>fetchSingle</code> 读取单条记录，如果记录为空或者记录超过一条会报错</li>
-</ul>
-</li>
-<li>读取并返回Map<ul>
-<li><code>fetchMap</code> 读取并返回一个Map</li>
-<li><code>fetchGroups</code> 读取并返回一个分组Map</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<h4 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h4><ul>
-<li><p><code>fetch()</code><br>无参调用此方法，返回的是一个<code>Result</code>结果集对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Result&lt;Record&gt; records = dslContext.select().from(S1_USER).fetch();</span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(RecordMapper mapper)</code><br><code>RecordMapper</code>接口的提供<code>map</code>方法，用于来返回数据。<code>map</code> 方法传入一个 <code>Record</code> 对象。可以使用lambda表达式将 <code>Record</code> 对象转换成一个指定类型的POJO</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;S1UserPojo&gt; userPojoList = dslContext.select()</span><br><span class="line">            .from(S1_USER)</span><br><span class="line">            .where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">            .fetch(r -&gt; r.into(S1UserPojo.class));</span><br></pre></td></tr></table></figure>
-
-<p>多表查询，字段相同时，直接用into方法将结果集转换为POJO时，相同字段名称的方法会以最后一个字段值为准。这时候，我们可以现将结果集通过 <code>into(Table table)</code> 方法将结果集转换为指定表的<code>Record</code>对象，然后再<code>into</code>进指定的POJO类中</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 多表关联查询，查询s2_user_message.id = 2的数据，直接into的结果getId()却是1</span></span><br><span class="line"><span class="comment">// 这是因为同时关联查询了s1_user表，该表的id字段值为1</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; r.into(S2UserMessage.class));</span><br><span class="line"><span class="comment">// userMessage.getId() == 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 将结果集into进指定的表描述中，然后在into至指定的POJO类</span></span><br><span class="line">List&lt;S2UserMessage&gt; userMessage2 = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">        .leftJoin(S1_USER).on(S1_USER.ID.eq(S2_USER_MESSAGE.USER_ID))</span><br><span class="line">        .where(S2_USER_MESSAGE.ID.eq(<span class="number">2</span>))</span><br><span class="line">        .fetch(r -&gt; &#123;</span><br><span class="line">            <span class="type">S2UserMessage</span> <span class="variable">fetchUserMessage</span> <span class="operator">=</span> r.into(S2_USER_MESSAGE).into(S2UserMessage.class);</span><br><span class="line">            fetchUserMessage.setUsername(r.get(S1_USER.USERNAME));</span><br><span class="line">            <span class="keyword">return</span> fetchUserMessage;</span><br><span class="line">        &#125;);</span><br><span class="line"><span class="comment">// userMessage.getId() == 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(Field field)</code><br><code>Field</code>是一个接口，代码生成器生成的表字段常量例如 <code>S1_USER.ID</code>, 都实现了 <code>Field</code> 接口，这个重载可以直接取出指定表字段，会自动根据传入的字段推测其类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; id = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(S1_USER.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(String fieldName, Class type)</code><br>可以直接通过字段名称字符串获取指定字段值，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select().from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>))</span><br><span class="line">        .fetch(<span class="string">&quot;id&quot;</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetch(int fieldIndex, Class type)</code><br>可以通过查询字段下标顺序进行查询指定字段，可以通过第二个参数指定返回值，如果不指定，返回Object</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; idList = dslContext.select(S1_USER.ID, S1_USER.USERNAME)</span><br><span class="line">        .from(S1_USER).where(S1_USER.ID.eq(<span class="number">1</span>)).fetch(<span class="number">0</span>, Integer.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="fetch-1"><a href="#fetch-1" class="headerlink" title="fetch"></a>fetch</h4><p>此方法可以将结果集处理为一个Map格式，此方法有很多重载，这里介绍几个常用的，注意，此方法作为key的字段必须确定是在当前结果集中是唯一的，如果出现重复key，此方法会抛出异常</p>
-<ul>
-<li><p><code>fetchMap(Field field, Class type)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, S1UserPojo&gt; idUserPojoMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1UserPojo.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetchMap(Feild field, Field field)</code><br>以表字段值为key，返回一个 <code>K:V</code> 的Map对象</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, String&gt; idUserNameMap = dslContext.select().from(S1_USER)</span><br><span class="line">                .fetchMap(S1_USER.ID, S1_USER.USERNAME);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="fetchgroup"><a href="#fetchgroup" class="headerlink" title="fetchgroup"></a>fetchgroup</h4><p>此方法可以将结果集处理为一个Map格式，和<code>fetchMap</code>类似，只不过这里的值为一个指定类型的集合，通常在处理一对多数据时会用到</p>
-<ul>
-<li><p><code>fetchGroups(Field field, Class type)</code><br>以表字段值为Key，返回一个<code>K:List</code> 的Map对象</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;S2UserMessage&gt;&gt; userIdUserMessageMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2UserMessage.class);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p><code>fetchGroups(Field keyField, Field valueField)</code></p>
-</li>
-<li><p>以表字段值为Key，返回一个K:List<V>的Map对象</V></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;Integer, List&lt;Integer&gt;&gt; userIdUserMessageIdMap = dslContext.select().from(S2_USER_MESSAGE)</span><br><span class="line">                .fetchGroups(S2_USER_MESSAGE.USER_ID, S2_USER_MESSAGE.ID);</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><a href="https://jooq.diamondfsd.com/learn/section-1-how-to-start.html">参考JOOQ中文文档教程</a></p>
-<p><a href="https://blog.csdn.net/qq_39940674/article/details/93383177">更多用法参考</a></p>
-]]></content>
-      <categories>
-        <category>技术栈</category>
-      </categories>
-      <tags>
-        <tag>jooq</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>k8s</title>
-    <url>/2022/07/05/k8s/</url>
+    <url>/blknjyty.github.io/2022/07/05/k8s/</url>
     <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是-Kubernetes"><a href="#1-1-什么是-Kubernetes" class="headerlink" title="1.1 什么是 Kubernetes"></a>1.1 什么是 <strong>Kubernetes</strong></h4> <span id="more"></span> 
 
 <blockquote>
@@ -1028,8 +1028,8 @@
 <h4 id="1-5-Etcd"><a href="#1-5-Etcd" class="headerlink" title="1.5 Etcd"></a>1.5 Etcd</h4><blockquote>
 <p>Etcd是Kubernetes提供默认的键值存储系统，保存所有集群数据，使用时需要为Etcd数据提供备份计划 </p>
 </blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1657022314159.png" alt="1657022314159"></p>
-<img src="/2022/07/05/k8s/1657022314159.png" class title="Kubernetes网络架构图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1657022314159.png" alt="1657022314159"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/1657022314159.png" class title="Kubernetes网络架构图">
 
 <h4 id="1-6-对象"><a href="#1-6-对象" class="headerlink" title="1.6 对象"></a>1.6 对象</h4><h5 id="1-6-1-Pod"><a href="#1-6-1-Pod" class="headerlink" title="1.6.1 Pod"></a>1.6.1 Pod</h5><blockquote>
 <p>集群调度的最小单元，Pod 是一组容器（当然也可以只有一个）。容器本身就是一个小盒子了，Pod 相当于在容器上又包了一层小盒子。所以Pod里的容器有如下特点：</p>
@@ -1040,8 +1040,8 @@
 </ul>
 </blockquote>
 <p>通俗解释： 再打个形象的比喻，在同一个 Pod 里的几个 Docker 服务/程序，好像被部署在同一台机器上，可以通过 localhost 互相访问，并且可以共用 Pod 里的存储资源 </p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136737531.png" alt="1658136737531"></p>
-<img src="/2022/07/05/k8s/1658136737531.png" class title="pod">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136737531.png" alt="1658136737531"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/1658136737531.png" class title="pod">
 
 <h5 id="1-6-2-Service"><a href="#1-6-2-Service" class="headerlink" title="1.6.2 Service"></a>1.6.2 Service</h5><blockquote>
 <p>即服务发现，不管Deployment的Pod有多少个，不管它是更新、销毁还是重建，Service总是能发现并维护好它的ip列表。</p>
@@ -1068,11 +1068,11 @@
 <p> ReplicaSet 实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本，所以我们通常不需要直接使用 ReplicaSet。  因此，它通常用来保证给定数量的、完全相同的 Pod 的可用性。 </p>
 </blockquote>
 <p>通俗解释： ReplicaSet 的作用就是管理和控制 Pod，管控他们好好干活。但是，ReplicaSet 受控于 Deployment。形象来说，<strong>ReplicaSet 就是总包工头手下的小包工头</strong>。 </p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136910839.png" alt="1658136910839"></p>
-<img src="/2022/07/05/k8s/1658136910839.png" class title="rs">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\1658136910839.png" alt="1658136910839"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/1658136910839.png" class title="rs">
 
-<h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
-<img src="/2022/07/05/k8s/20210111140539700.png" class title="k8s架构图">
+<h3 id="2-项目部署"><a href="#2-项目部署" class="headerlink" title="2.项目部署"></a>2.项目部署</h3><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111140539700.png" alt="20210111140539700"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/20210111140539700.png" class title="k8s架构图">
 
 <blockquote>
 <ul>
@@ -1085,8 +1085,8 @@
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># pod的最基础的yaml文件最少需要以下的几个参数</span><br><span class="line">apiVersion: v1 # API版本号，注意：具有多个，不同的对象可能会使用不同API</span><br><span class="line">kind: Pod  # 对象类型，pod</span><br><span class="line">metadata:  # 元数据</span><br><span class="line">name: string # POD名称</span><br><span class="line">namespace: string # 所属的命名空间</span><br><span class="line">spec: # specification of the resource content(资源内容的规范)</span><br><span class="line">containers: # 容器列表</span><br><span class="line">      - name: string # 容器名称</span><br><span class="line">image: string # 容器镜像</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
-<img src="/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011113290971.png" alt="2021011113290971"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/2021011113290971.png" class title="deployment配置文件">
 
 <ul>
 <li><p>创建Deployment对象</p>
@@ -1094,8 +1094,8 @@
 <li><p>创建了Deployment对象再查看pod</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl get pods</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
-<p>​      <img src="/2022/07/05/k8s/20210111143610186.png" class title="一个pod图"></p>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111143610186.png" alt="20210111143610186"></p>
+<p>​      <img src="/blknjyty.github.io/2022/07/05/k8s/20210111143610186.png" class title="一个pod图"></p>
 <p>​         x修改 spec.replicas为3之后再查看，就有三个pod。</p>
 <ul>
 <li><p>查看pod启动日志</p>
@@ -1106,16 +1106,16 @@
 <li><p>使集群对外部提供服务，创建service关联，对外暴露ip提供服务</p>
 <blockquote>
 <p>运行pod ip是docker网桥的IP地址段进行分配的，通常是一个虚拟的二层网络，外部网络并没有办法访问，并且，pod ip是随时会变的，不是固定的，k8s引入了Service的概念，通过Service管理这些pod，Service创建后的Service IP是固定的。但是Service IP(Cluster IP)是一个虚拟的IP,由Kubernetes管理和分配P地址，外部网络无法访问。k8s有三种方式暴露Service给外部网络访问。</p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111163501631.png" alt="20210111163501631"></p>
-<img src="/2022/07/05/k8s/20210111163501631.png" class title="pod的ip"></blockquote>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111163501631.png" alt="20210111163501631"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/20210111163501631.png" class title="pod的ip"></blockquote>
 </li>
 </ul>
 </blockquote>
 <h3 id="3-Serivce暴露ip方式"><a href="#3-Serivce暴露ip方式" class="headerlink" title="3.Serivce暴露ip方式"></a>3.Serivce暴露ip方式</h3><h4 id="3-1-NodePort"><a href="#3-1-NodePort" class="headerlink" title="3.1 NodePort"></a>3.1 NodePort</h4><blockquote>
 <p> 在k8s上可以给Service设置成NodePort类型，这样的话可以让Kubernetes在其所有节点上开放一个端口给外部访问（所有节点上都使用相同的端口号）， 并将传入的连接转发给作为Service服务对象的pod。这样我们的pod就可以被外部请求访问到 </p>
 </blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111203759964.png" alt="20210111203759964"></p>
-<img src="/2022/07/05/k8s/20210111203759964.png" class title="NodePort方式">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111203759964.png" alt="20210111203759964"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/20210111203759964.png" class title="NodePort方式">
 
 <ul>
 <li><p>创建serivice的yaml文件</p>
@@ -1124,16 +1124,16 @@
 <p>参数：</p>
 <p>1.countgame 为指定的service对象名称<br>2.- -port 是指service暴露在cluster ip上的端口，通过<cluster ip>:port 访问集群内部service的入口<br>3.- -target-port指 对应pod容器里面监听的端口<br>4.- -type=NodePort ， <nodeIP>:nodePort 是提供给集群外部客户访问service的入口<br>5.–dry-run表示测试不在k8s运行（不会具体执行该命令）<br>6.-o yaml 生成yaml格式<br>7.最后面的 “&gt; deploy.yaml” 表示将生成yaml内容输出到deploy.yaml文件</nodeIP></cluster></p>
 <p><strong>配置文件内容基本如下：</strong></p>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011117261340-1657085291453.png" alt="2021011117261340"></p>
-<img src="/2022/07/05/k8s/2021011117261340-1657085291453.png" class title="service配置文件内容"></li>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011117261340-1657085291453.png" alt="2021011117261340"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/2021011117261340-1657085291453.png" class title="service配置文件内容"></li>
 <li><p>创建Service对象</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#创建service</span><br><span class="line">kubectl apply -f svc.yaml</span><br><span class="line">#查看service</span><br><span class="line">kubectl get svc</span><br><span class="line">#查看service关联的pod</span><br><span class="line">kubectl describe svc coutgame</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111172704176.png" alt="20210111172704176"></p>
-<img src="/2022/07/05/k8s/20210111172704176.png" class title="创建并查看">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111172704176.png" alt="20210111172704176"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/20210111172704176.png" class title="创建并查看">
 
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111200610224.png" alt="20210111200610224"></p>
-<img src="/2022/07/05/k8s/20210111200610224.png" class title="查看"></li>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\20210111200610224.png" alt="20210111200610224"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/20210111200610224.png" class title="查看"></li>
 <li><p> 可以看到service名称为countgame的service的对外端口为11413，会把通过这个端口访问的请求转发到service对象关联的pod对象的8082端口上 。访问192.168.137.110：11413/countgame/user/toGame可以访问项目</p>
 </li>
 <li><p><strong>缺点： 服务一旦多起来，NodePort 在每个节点上开启的端口会及其庞大，而且难以维护，所以生产环境不建议这么使用</strong> </p>
@@ -1146,8 +1146,8 @@
 <p>Ingress 是对集群中服务的外部访问进行管理的 API 对象，典型的访问方式是 HTTP。</p>
 <p>Ingress 可以提供负载均衡、SSL 终结和基于名称的虚拟托管。</p>
 </blockquote>
-<p><img src="/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
-<img src="/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/05/k8s/gitee\Blog\source_posts\k8s\2021011121501187.png" alt="2021011121501187"></p>
+<img src="/blknjyty.github.io/2022/07/05/k8s/2021011121501187.png" class title="LoadBalane">
 
 <p>参考：<a href="https://blog.csdn.net/qq_21187515/article/details/112359593?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-112359593-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文1</a></p>
 <p><a href="https://blog.csdn.net/TM6zNf87MDG7Bo/article/details/79621510?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165700886516782425182493%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165700886516782425182493&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-79621510-null-null.142%5Ev30%5Epc_search_v2,185%5Ev2%5Econtrol&utm_term=k8s&spm=1018.2226.3001.4187">博文2</a></p>
@@ -1162,13 +1162,13 @@
   </entry>
   <entry>
     <title>k8s实操</title>
-    <url>/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
+    <url>/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/</url>
     <content><![CDATA[<h3 id="布置集群参考文章"><a href="#布置集群参考文章" class="headerlink" title="布置集群参考文章"></a><a href="https://blog.csdn.net/heian_99/article/details/103933928">布置集群参考文章</a></h3><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><span id="more"></span>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//创建名为nginx-deployment 的nginx应用</span><br><span class="line">kubectl run nginx-deployment --image=wangyanglinux/myapp:v1  --port=80 --replicas=1</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class title="那你呢">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658138094097.png" alt="1658138094097"></p>
+ <img src="/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658138094097.png" class title="那你呢">
 
 <h4 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//</span><br><span class="line">kubectl get pod </span><br><span class="line">//</span><br><span class="line">kubectl get pod -o wode</span><br><span class="line">//</span><br><span class="line">kubectl get deployment</span><br></pre></td></tr></table></figure>
 
@@ -1176,23 +1176,23 @@
 
 <h4 id="副本集扩容"><a href="#副本集扩容" class="headerlink" title="副本集扩容"></a>副本集扩容</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale --replicas=3 deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
- <img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class title="你那你看">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141626141.png" alt="1658141626141"></p>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141641101.png" alt="1658141641101"></p>
+ <img src="/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141641101.png" class title="你那你看">
 
 <h4 id="修改pod端口"><a href="#修改pod端口" class="headerlink" title="修改pod端口"></a>修改pod端口</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//80修改为30003</span><br><span class="line">kubectl expose deployment nginx-deployment --port=30003 --target-port=80</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class title="让你男人">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141731008.png" alt="1658141731008"></p>
+<img src="/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141731008.png" class title="让你男人">
 
 <p>修改Service类型</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl edit svc nginx-deployment</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class title="斯诺克嫩">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141810139.png" alt="1658141810139"></p>
+<img src="/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class title="斯诺克嫩">
 
-<p><img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
-<img src="/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class title="说少了">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/gitee\Blog\source_posts\k8s实操\1658141824674.png" alt="1658141824674"></p>
+<img src="/blknjyty.github.io/2022/07/25/k8s%E5%AE%9E%E6%93%8D/1658141810139.png" class title="说少了">
 
 
 
@@ -1206,13 +1206,13 @@
   </entry>
   <entry>
     <title>maven</title>
-    <url>/2022/07/06/maven/</url>
+    <url>/blknjyty.github.io/2022/07/06/maven/</url>
     <content><![CDATA[<h5 id="解决问题："><a href="#解决问题：" class="headerlink" title="解决问题："></a>解决问题：</h5><blockquote>
 <p>1.jar包依赖2.jar依赖传递3.jar版本冲突4.项目生命周期</p>
 </blockquote>
 <span id="more"></span>
 
-<h5 id="文件解析："><a href="#文件解析：" class="headerlink" title="文件解析："></a>文件解析：</h5><p><img src="/2022/07/06/maven/gitee\TechnologyStack\images\1625198265(1).jpg" alt="1625198265(D:\gitee\Blog\source\_posts\maven\1625198265(1).jpg)"><img src="/2022/07/06/maven/1625198265(1).jpg" class title="maven目录"></p>
+<h5 id="文件解析："><a href="#文件解析：" class="headerlink" title="文件解析："></a>文件解析：</h5><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/06/maven/gitee\TechnologyStack\images\1625198265(1).jpg" alt="1625198265(D:\gitee\Blog\source\_posts\maven\1625198265(1).jpg)"><img src="/blknjyty.github.io/2022/07/06/maven/1625198265(1).jpg" class title="maven目录"></p>
 <h5 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h5><p>1.找mvn可执行文件—bin下面的运行脚本</p>
 <p>2.找配置文件 conf/setting.xml ,优先找目录优先级：~/.m2 &gt; M2_HOME/conf</p>
 <p>3.本地仓库寻找插件clean，没有则去远程仓库下载</p>
@@ -1249,7 +1249,7 @@
   </entry>
   <entry>
     <title>springEL</title>
-    <url>/2022/07/25/springEL/</url>
+    <url>/blknjyty.github.io/2022/07/25/springEL/</url>
     <content><![CDATA[<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>参考文档：<a href="https://blog.csdn.net/u012045045/article/details/85338962">https://blog.csdn.net/u012045045/article/details/85338962</a></p>
 <span id="more"></span>
 
@@ -1326,7 +1326,7 @@
   </entry>
   <entry>
     <title>个人博客创建教程</title>
-    <url>/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
+    <url>/blknjyty.github.io/2022/04/15/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%88%9B%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<p><a href="https://zhuanlan.zhihu.com/p/102592286">参考文章链接</a></p>
 <h3 id="1-新建github-安装Git并且绑定账号"><a href="#1-新建github-安装Git并且绑定账号" class="headerlink" title="1.新建github,安装Git并且绑定账号"></a>1.新建github,安装Git并且绑定账号</h3><h3 id="2-安装nodejs"><a href="#2-安装nodejs" class="headerlink" title="2.安装nodejs"></a>2.安装nodejs</h3><ul>
 <li><p>安装完成后，用 node -v 和 npm -v 命令检查</p>
@@ -1417,7 +1417,7 @@
   </entry>
   <entry>
     <title>枚举类</title>
-    <url>/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/</url>
+    <url>/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/</url>
     <content><![CDATA[<h1 id="什么是枚举类"><a href="#什么是枚举类" class="headerlink" title="什么是枚举类"></a>什么是枚举类</h1><blockquote>
 <p>​    实例（也叫对象）有限且固定不变的类，在Java里被称为<a href="https://so.csdn.net/so/search?q=%E6%9E%9A%E4%B8%BE&spm=1001.2101.3001.7020">枚举</a>类。</p>
 <p>  例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示：</p>
@@ -1447,8 +1447,8 @@
 <h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="枚举类的方法"><a href="#枚举类的方法" class="headerlink" title="枚举类的方法"></a>枚举类的方法</h2><blockquote>
 <p> Weekday可以调用的方法和参数。发现它有两个方法：value()和valueOf()。还有我们刚刚定义的七个变量。 </p>
 </blockquote>
-<p><img src="/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee\Blog\source_posts\枚举类\20170213132500481.png" alt="20170213132500481"></p>
-<img src="/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png" class title="哈哈">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee\Blog\source_posts\枚举类\20170213132500481.png" alt="20170213132500481"></p>
+<img src="/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png" class title="哈哈">
 
 <h2 id="枚举类变量的方法"><a href="#枚举类变量的方法" class="headerlink" title="枚举类变量的方法"></a>枚举类变量的方法</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Weekday</span> &#123;</span><br><span class="line">    SUN,MON,TUS,WED,THU,FRI,SAT</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test3</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//它的作用是传来一个字符串，然后将它转变为对应的枚举变量。前提是你传的字符串和定义枚举变量的字符串一抹一样，区分大小写。如果你传了一个不存在的字符串，那么会抛出异常。</span></span><br><span class="line">        System.out.println(Weekday.valueOf(<span class="string">&quot;mon&quot;</span>.toUpperCase()));</span><br><span class="line">        <span class="comment">//MON</span></span><br><span class="line">		<span class="comment">//这个方法会返回包括所有枚举变量的数组。在该例中，返回的就是包含了七个星期的Weekday[]。可以方便的用来做循环。</span></span><br><span class="line">        <span class="keyword">for</span> (Weekday w : Weekday.values())&#123;</span><br><span class="line">            <span class="comment">//默认请款下，枚举类会给所有的枚举变量一个默认的次序，该次序从0开始，类似于数组的下标。而.ordinal()方法就是获取这个次序（或者说下标）</span></span><br><span class="line">            System.out.println(w + <span class="string">&quot;.ordinal()  ====&gt;&quot;</span> +w.ordinal());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//SUN.ordinal()  ====&gt;0</span></span><br><span class="line">        <span class="comment">//MON.ordinal()  ====&gt;1</span></span><br><span class="line">        <span class="comment">//TUS.ordinal()  ====&gt;2</span></span><br><span class="line">        <span class="comment">//WED.ordinal()  ====&gt;3</span></span><br><span class="line">        <span class="comment">//THU.ordinal()  ====&gt;4</span></span><br><span class="line">        <span class="comment">//FRI.ordinal()  ====&gt;5</span></span><br><span class="line">        <span class="comment">//SAT.ordinal()  ====&gt;6</span></span><br><span class="line">		</span><br><span class="line">        <span class="comment">//该方法用来比较两个枚举变量的”大小”，实际上比较的是两个枚举变量的次序，返回两个次序相减后的结果，如果为负数，就证明变量1”小于”变量2 （变量1.compareTo(变量2)，返回【变量1.ordinal() - 变量2.ordinal()】）</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.FRI) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.FRI));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.MON) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.MON));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.SUM) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.SUN));</span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.FRI) ===&gt; -4</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.MON) ===&gt; 0</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.SUM) ===&gt; 1</span></span><br><span class="line">		</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//它和toString()方法的返回值一样</span></span><br><span class="line">        <span class="comment">//唯一的区别是，你可以重写toString方法。name变量就是枚举变量的字符串形式。</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.name() ====&gt; &quot;</span> + Weekday.MON.name());</span><br><span class="line">        <span class="comment">//Weekday.MON.name() ====&gt; MON</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1489,7 +1489,7 @@
   </entry>
   <entry>
     <title>Docker</title>
-    <url>/2022/07/01/Docker/</url>
+    <url>/blknjyty.github.io/2022/07/01/Docker/</url>
     <content><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1-1-什么是Docker"><a href="#1-1-什么是Docker" class="headerlink" title="1.1 什么是Docker"></a>1.1 什么是Docker</h4><blockquote>
 <p>Docker是开源的应用容器引擎，或者说是一种容器标准。<strong>开发者可以使用其将自身的应用、依赖包、开发环境等打包到一个轻量级、可移植的容器中。</strong> 打包之后可以发布到Linux等系统上，具有开销小、启动快等优点。</p>
 </blockquote>
@@ -1500,11 +1500,11 @@
 <li>自动化测试和持续集成、发布</li>
 <li> 在服务型环境中部署和调整数据库或其他的后台应用 </li>
 </ul>
-<h4 id="1-3-Docker和虚拟机的区别"><a href="#1-3-Docker和虚拟机的区别" class="headerlink" title="1.3 Docker和虚拟机的区别"></a>1.3 Docker和虚拟机的区别</h4><p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656937545326.png" alt="1656937545326"></p>
-<img src="/2022/07/01/Docker/1656937545326.png" class title="虚拟机结构图">
+<h4 id="1-3-Docker和虚拟机的区别"><a href="#1-3-Docker和虚拟机的区别" class="headerlink" title="1.3 Docker和虚拟机的区别"></a>1.3 Docker和虚拟机的区别</h4><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656937545326.png" alt="1656937545326"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656937545326.png" class title="虚拟机结构图">
 
-<p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656937564921.png" alt="1656937564921"></p>
-<img src="/2022/07/01/Docker/1656937564921.png" class title="Docker结构图">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656937564921.png" alt="1656937564921"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656937564921.png" class title="Docker结构图">
 
 <blockquote>
 <p>从上图可以看出，虚拟机和Docker的底层都是基础硬件设施，倒数第二层虚拟机是管理系统(进行资源的隔离、分配等)、而Docker的倒数第二层是操作系统。**这就是最主要的区别，Docker是虚拟OS(复用OS)，而虚拟机是虚拟硬件(复用硬件)**。</p>
@@ -1514,8 +1514,8 @@
 <li>由于其少了虚拟机管理的两层，故其创建开销小、速度快，使得应用程序和基础架构分开，达到快速迭代和交付软件的目的。简而言之，**1.<strong>快速一致的交付应用程序</strong>2.**使项目可移植性更高，更轻量级 **</li>
 </ul>
 </blockquote>
-<h4 id="1-4-Docker的组成"><a href="#1-4-Docker的组成" class="headerlink" title="1.4 Docker的组成"></a>1.4 Docker的组成</h4><p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1384642-20191227100415937-2126100108.png" alt="1384642-20191227100415937-2126100108"></p>
-<img src="/2022/07/01/Docker/1384642-20191227100415937-2126100108.png" class title="Docker的构成">
+<h4 id="1-4-Docker的组成"><a href="#1-4-Docker的组成" class="headerlink" title="1.4 Docker的组成"></a>1.4 Docker的组成</h4><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1384642-20191227100415937-2126100108.png" alt="1384642-20191227100415937-2126100108"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1384642-20191227100415937-2126100108.png" class title="Docker的构成">
 
 <blockquote>
 <p>上图囊括了Docker的基本常用操作，同时也可以看出Docker的组成部分：镜像(images)、容器(Containers)、客户端、主机、Docker仓库。</p>
@@ -1573,8 +1573,8 @@
 </blockquote>
 <h4 id="3-1-查看镜像-本地主机上的镜像"><a href="#3-1-查看镜像-本地主机上的镜像" class="headerlink" title="3.1 查看镜像(本地主机上的镜像)"></a>3.1 查看镜像(本地主机上的镜像)</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656985651701.png" alt="1656985651701"></p>
-<img src="/2022/07/01/Docker/1656985651701.png" class title="Docker查看镜像">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656985651701.png" alt="1656985651701"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656985651701.png" class title="Docker查看镜像">
 
 <ul>
 <li><strong>REPOSITORY：</strong>表示镜像的仓库源</li>
@@ -1678,8 +1678,8 @@
 <li>**-P:**将容器内部使用的网络端口随机映射到我们使用的主机上。</li>
 </ul>
 <p>此时 使用 <strong>docker ps</strong> 来查看我们正在运行的容器： </p>
-<p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656989652436.png" alt="1656989652436"></p>
-<img src="/2022/07/01/Docker/1656989652436.png" class title="运行容器">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656989652436.png" alt="1656989652436"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656989652436.png" class title="运行容器">
 
 <p>可以看到， Docker 开放了 5000 端口（默认 Python Flask 端口）映射到主机端口 32769 上。 </p>
 <p>访问192.168.239.130:32769即可访问到web应用。</p>
@@ -1695,13 +1695,13 @@
 <p> <strong>-f:</strong> 让 <strong>docker logs</strong> 像使用 <strong>tail -f</strong> 一样来输出容器内部的标准输出。 </p>
 <h4 id="4-9-查看容器内部进程"><a href="#4-9-查看容器内部进程" class="headerlink" title="4.9 查看容器内部进程"></a>4.9 查看容器内部进程</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker top 容器名或者id</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656990335923.png" alt="1656990335923"></p>
-<img src="/2022/07/01/Docker/1656990335923.png" class title="运行容器">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656990335923.png" alt="1656990335923"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656990335923.png" class title="运行容器">
 
 <h4 id="4-10-查看某个容器底层信息"><a href="#4-10-查看某个容器底层信息" class="headerlink" title="4.10 查看某个容器底层信息"></a>4.10 查看某个容器底层信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker inspect 容器名或者id</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656990480994.png" alt="1656990480994"></p>
-<img src="/2022/07/01/Docker/1656990335923.png" class title="运行容器">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/01/Docker/gitee\Blog\source_posts\Docker\1656990480994.png" alt="1656990480994"></p>
+<img src="/blknjyty.github.io/2022/07/01/Docker/1656990335923.png" class title="运行容器">
 
 <h4 id="4-11-容器互联"><a href="#4-11-容器互联" class="headerlink" title="4.11 容器互联"></a>4.11 容器互联</h4><p>运行容器并且新建test-net网络，</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ docker run -itd --name test1 --network test-net ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
@@ -1818,7 +1818,7 @@
   </entry>
   <entry>
     <title>React入门游戏</title>
-    <url>/2022/07/08/React%E5%85%A5%E9%97%A8%E6%B8%B8%E6%88%8F/</url>
+    <url>/blknjyty.github.io/2022/07/08/React%E5%85%A5%E9%97%A8%E6%B8%B8%E6%88%8F/</url>
     <content><![CDATA[<p><a href="https://react.docschina.org/tutorial/tutorial.html#picking-a-key">官网的入门教程小游戏</a></p>
 <p><code> 游戏规则，“三子棋”</code></p>
 <h3 id="整体设计"><a href="#整体设计" class="headerlink" title="整体设计"></a>整体设计</h3><span id="more"></span>
@@ -1874,7 +1874,7 @@
   </entry>
   <entry>
     <title>jdbc的使用</title>
-    <url>/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <url>/blknjyty.github.io/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="入门例子"><a href="#入门例子" class="headerlink" title="入门例子"></a>入门例子</h2><p>以maven项目为例，需要引入SpringDataJdbc依赖，数据库驱动依赖，配置数据源。</p>
 <span id="more"></span>
 
@@ -2069,7 +2069,7 @@
 </tbody></table>
 <blockquote>
 <p>补充：值对象、实体和聚合根。</p>
-<p><img src="/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/gitee\Blog\source_posts\SpringDataJdbc的使用\1658388181671.png" alt="1658388181671"></p>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/15/SpringDataJdbc%E7%9A%84%E4%BD%BF%E7%94%A8/gitee\Blog\source_posts\SpringDataJdbc的使用\1658388181671.png" alt="1658388181671"></p>
 <p><strong>实体</strong>具有ID，<a href="https://so.csdn.net/so/search?q=%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F&spm=1001.2101.3001.7020">生命周期</a>，状态用值对象描述状态，实体通过ID进行区分是这个实体还是那个实体 。</p>
 <p><strong>聚合根</strong>是实体，聚合根的ID全局唯一，聚合根下面的实体的ID在聚合根内唯一即可； </p>
 <p><strong>值对象</strong>无生命周期，本质是一个值，通过两个值对象的值是否相同来区分是都是同一个值对象 </p>
@@ -2092,7 +2092,7 @@
   </entry>
   <entry>
     <title>stream</title>
-    <url>/2022/04/01/stream/</url>
+    <url>/blknjyty.github.io/2022/04/01/stream/</url>
     <content><![CDATA[<h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>Stream（流）是一个来自数据源的元素队列并支持聚合操作</p>
 <ul>
 <li>元素是特定类型的对象，形成一个队列。 Java中的Stream并不会存储元素，而是按需计算。</li>
@@ -2101,8 +2101,8 @@
 </ul>
  <span id="more"></span> 
 
-<h4 id="接口继承关系图："><a href="#接口继承关系图：" class="headerlink" title="接口继承关系图："></a>接口继承关系图：</h4><p><img src="/stream%5C1623152105(1).jpg" alt="流接口图"></p>
-<img src="/2022/04/01/stream/1623152105(1).jpg" class title="stream接口图">
+<h4 id="接口继承关系图："><a href="#接口继承关系图：" class="headerlink" title="接口继承关系图："></a>接口继承关系图：</h4><p><img src="/blknjyty.github.io/stream%5C1623152105(1).jpg" alt="流接口图"></p>
+<img src="/blknjyty.github.io/2022/04/01/stream/1623152105(1).jpg" class title="stream接口图">
 
 <p>图中4种<em>stream</em>接口继承自<code>BaseStream</code>，其中<code>IntStream, LongStream, DoubleStream</code>对应三种基本类型（<code>int, long, double</code>，注意不是包装类型），<code>Stream</code>对应所有剩余类型的<em>stream</em>视图。为不同数据类型设置不同<em>stream</em>接口，可以1.提高性能，2.增加特定接口函数。</p>
 <h4 id="和collections的比较"><a href="#和collections的比较" class="headerlink" title="和collections的比较"></a>和collections的比较</h4><ul>
@@ -2272,7 +2272,7 @@
   </entry>
   <entry>
     <title>React基础</title>
-    <url>/2022/07/25/React/</url>
+    <url>/blknjyty.github.io/2022/07/25/React/</url>
     <content><![CDATA[<h1 id="脚手架"><a href="#脚手架" class="headerlink" title="脚手架"></a>脚手架</h1><h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
 <p>用于构建用户界面的JavaScript库</p>
 <p>1.发送请求获取数据</p>
@@ -2294,19 +2294,19 @@
 <p>2.React native可以进行使用React语法进行移动端开发。</p>
 <p>3.使用虚拟<strong>DOM技术+Diffing算法</strong>，尽量减少与真是DOM的交互。</p>
 </blockquote>
-<h3 id="案例讲解"><a href="#案例讲解" class="headerlink" title="案例讲解"></a>案例讲解</h3><p><img src="/2022/07/25/React/gitee\Blog\source_posts\React\1659093092214.png" alt="1659093092214"></p>
- <img src="/2022/07/25/React/1659093092214.png" class title="都能拿到">
+<h3 id="案例讲解"><a href="#案例讲解" class="headerlink" title="案例讲解"></a>案例讲解</h3><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React/gitee\Blog\source_posts\React\1659093092214.png" alt="1659093092214"></p>
+ <img src="/blknjyty.github.io/2022/07/25/React/1659093092214.png" class title="都能拿到">
 
 <blockquote>
 <p>如果，新增一些人，就会重新遍历，把以前的DOM全部替换掉。</p>
-<p><img src="/2022/07/25/React/gitee\Blog\source_posts\React\1659320571185.png" alt="1659320571185"></p>
- <img src="/2022/07/25/React/1659320571185.png" class title="都能到">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React/gitee\Blog\source_posts\React\1659320571185.png" alt="1659320571185"></p>
+ <img src="/blknjyty.github.io/2022/07/25/React/1659320571185.png" class title="都能到">
 
 <p><strong>React的做法：</strong></p>
 <p>第二次加入数据之后，会先进行虚拟DOM比较，发现前两个一样的，直接用前面生成的DOM加上新增数据的真实DOM展示就可以了。</p>
 <p>我们编码时基本只需要操作react的虚拟DOM相关数据, react会转换为真实DOM变化而更新界。</p>
-<p><img src="/2022/07/25/React/gitee\Blog\source_posts\React\1659320645957.png" alt="1659320645957"></p>
-<img src="/2022/07/25/React/1659320645957.png" class title="都能表示到">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React/gitee\Blog\source_posts\React\1659320645957.png" alt="1659320645957"></p>
+<img src="/blknjyty.github.io/2022/07/25/React/1659320645957.png" class title="都能表示到">
 </blockquote>
 <h1 id="入门案例"><a href="#入门案例" class="headerlink" title="入门案例"></a>入门案例</h1><h2 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h2><blockquote>
 <p>此案例讲解了jsx的基本概念和使用，以及基本React页面的基本结构</p>
@@ -2525,8 +2525,8 @@
 </li>
 </ol>
 </blockquote>
-<h3 id="旧的生命周期"><a href="#旧的生命周期" class="headerlink" title="旧的生命周期"></a>旧的生命周期</h3><p><img src="/2022/07/25/React/gitee\Blog\source_posts\React\图片1.png" alt="图片1"></p>
-<img src="/2022/07/25/React/%E5%9B%BE%E7%89%871.png" class title="是南的宁市">
+<h3 id="旧的生命周期"><a href="#旧的生命周期" class="headerlink" title="旧的生命周期"></a>旧的生命周期</h3><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React/gitee\Blog\source_posts\React\图片1.png" alt="图片1"></p>
+<img src="/blknjyty.github.io/2022/07/25/React/%E5%9B%BE%E7%89%871.png" class title="是南的宁市">
 
 <blockquote>
 <p><strong>初始化阶段</strong>:由ReactDOM.render()触发—初次渲染</p>
@@ -2572,8 +2572,8 @@
 </blockquote>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/babel&quot;</span>&gt;</span><br><span class="line">		<span class="comment">/* </span></span><br><span class="line"><span class="comment">				1. 初始化阶段: 由ReactDOM.render()触发---初次渲染</span></span><br><span class="line"><span class="comment">									1.	constructor()</span></span><br><span class="line"><span class="comment">									2.	componentWillMount()</span></span><br><span class="line"><span class="comment">									3.	render()</span></span><br><span class="line"><span class="comment">									4.	componentDidMount() =====&gt; 常用</span></span><br><span class="line"><span class="comment">													一般在这个钩子中做一些初始化的事，例如：开启定时器、发送网络请求、订阅消息</span></span><br><span class="line"><span class="comment">				2. 更新阶段: 由组件内部this.setSate()或父组件render触发</span></span><br><span class="line"><span class="comment">									1.	shouldComponentUpdate()</span></span><br><span class="line"><span class="comment">									2.	componentWillUpdate()</span></span><br><span class="line"><span class="comment">									3.	render() =====&gt; 必须使用的一个</span></span><br><span class="line"><span class="comment">									4.	componentDidUpdate()</span></span><br><span class="line"><span class="comment">				3. 卸载组件: 由ReactDOM.unmountComponentAtNode()触发</span></span><br><span class="line"><span class="comment">									1.	componentWillUnmount()  =====&gt; 常用</span></span><br><span class="line"><span class="comment">													一般在这个钩子中做一些收尾的事，例如：关闭定时器、取消订阅消息</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line">		<span class="comment">//创建组件</span></span><br><span class="line">		<span class="keyword">class</span> <span class="title class_">Count</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&#123;</span><br><span class="line">			<span class="comment">//构造器</span></span><br><span class="line">			<span class="title function_">constructor</span>(<span class="params">props</span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---constructor&#x27;</span>);</span><br><span class="line">				<span class="variable language_">super</span>(props)</span><br><span class="line">				<span class="comment">//初始化状态</span></span><br><span class="line">				<span class="variable language_">this</span>.<span class="property">state</span> = &#123;<span class="attr">count</span>:<span class="number">0</span>&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//加1按钮的回调</span></span><br><span class="line">			add = <span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="comment">//获取原状态</span></span><br><span class="line">				<span class="keyword">const</span> &#123;count&#125; = <span class="variable language_">this</span>.<span class="property">state</span></span><br><span class="line">				<span class="comment">//更新状态</span></span><br><span class="line">				<span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;<span class="attr">count</span>:count+<span class="number">1</span>&#125;)</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//卸载组件按钮的回调</span></span><br><span class="line">			death = <span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="title class_">ReactDOM</span>.<span class="title function_">unmountComponentAtNode</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test&#x27;</span>))</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//强制更新按钮的回调</span></span><br><span class="line">			force = <span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="variable language_">this</span>.<span class="title function_">forceUpdate</span>()</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件将要挂载的钩子</span></span><br><span class="line">			<span class="title function_">componentWillMount</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---componentWillMount&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件挂载完毕的钩子</span></span><br><span class="line">			<span class="title function_">componentDidMount</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---componentDidMount&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件将要卸载的钩子</span></span><br><span class="line">			<span class="title function_">componentWillUnmount</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---componentWillUnmount&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//控制组件更新的“阀门”</span></span><br><span class="line">			<span class="title function_">shouldComponentUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---shouldComponentUpdate&#x27;</span>);</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件将要更新的钩子</span></span><br><span class="line">			<span class="title function_">componentWillUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---componentWillUpdate&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件更新完毕的钩子</span></span><br><span class="line">			<span class="title function_">componentDidUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---componentDidUpdate&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Count---render&#x27;</span>);</span><br><span class="line">				<span class="keyword">const</span> &#123;count&#125; = <span class="variable language_">this</span>.<span class="property">state</span></span><br><span class="line">				<span class="keyword">return</span>(</span><br><span class="line">					<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">h2</span>&gt;</span>当前求和为：&#123;count&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.add&#125;</span>&gt;</span>点我+1<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.death&#125;</span>&gt;</span>卸载组件<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.force&#125;</span>&gt;</span>不更改任何状态中的数据，强制更新一下<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">				)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//父组件A</span></span><br><span class="line">		<span class="keyword">class</span> <span class="title class_">A</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&#123;</span><br><span class="line">			<span class="comment">//初始化状态</span></span><br><span class="line">			state = &#123;<span class="attr">carName</span>:<span class="string">&#x27;奔驰&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">			changeCar = <span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;<span class="attr">carName</span>:<span class="string">&#x27;奥拓&#x27;</span>&#125;)</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="keyword">return</span>(</span><br><span class="line">					<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">div</span>&gt;</span>我是A组件<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.changeCar&#125;</span>&gt;</span>换车<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">						<span class="tag">&lt;<span class="name">B</span> <span class="attr">carName</span>=<span class="string">&#123;this.state.carName&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">				)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//子组件B</span></span><br><span class="line">		<span class="keyword">class</span> <span class="title class_">B</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&#123;</span><br><span class="line">			<span class="comment">//组件将要接收新的props的钩子--第一次传递的props不算</span></span><br><span class="line">			<span class="title function_">componentWillReceiveProps</span>(<span class="params">props</span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B---componentWillReceiveProps&#x27;</span>,props);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//控制组件更新的“阀门”</span></span><br><span class="line">			<span class="title function_">shouldComponentUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B---shouldComponentUpdate&#x27;</span>);</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件将要更新的钩子</span></span><br><span class="line">			<span class="title function_">componentWillUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B---componentWillUpdate&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//组件更新完毕的钩子</span></span><br><span class="line">			<span class="title function_">componentDidUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B---componentDidUpdate&#x27;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">				<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B---render&#x27;</span>);</span><br><span class="line">				<span class="keyword">return</span>(</span><br><span class="line">					<span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>我是B组件，接收到的车是:&#123;this.props.carName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">				)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//渲染组件</span></span><br><span class="line">		<span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Count</span>/&gt;</span></span>,<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test&#x27;</span>))</span><br><span class="line">	&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
-<h3 id="新的生命周期"><a href="#新的生命周期" class="headerlink" title="新的生命周期"></a>新的生命周期</h3><p><img src="/2022/07/25/React/gitee\Blog\source_posts\React\图片2.png" alt="图片2"></p>
-<img src="/2022/07/25/React/%E5%9B%BE%E7%89%872.png" class title="是南宁存储市">
+<h3 id="新的生命周期"><a href="#新的生命周期" class="headerlink" title="新的生命周期"></a>新的生命周期</h3><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React/gitee\Blog\source_posts\React\图片2.png" alt="图片2"></p>
+<img src="/blknjyty.github.io/2022/07/25/React/%E5%9B%BE%E7%89%872.png" class title="是南宁存储市">
 
 <blockquote>
 <p>新的生命周期废弃了三个：componentWillUnmount、componentWillUpdate和componentWillReceiveProps</p>
@@ -2666,13 +2666,13 @@
   </entry>
   <entry>
     <title>React脚手架下编码</title>
-    <url>/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/</url>
+    <url>/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/</url>
     <content><![CDATA[<h1 id="脚手架"><a href="#脚手架" class="headerlink" title="脚手架"></a>脚手架</h1><span id="more"></span>
 
 <blockquote>
 <p>前言，拿到项目直接npm install 会报错</p>
-<p><img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\1659670327052.png" alt="1659670327052"></p>
-<img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/1659670327052.png" class title="是市">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\1659670327052.png" alt="1659670327052"></p>
+<img src="/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/1659670327052.png" class title="是市">
 </blockquote>
 <p>这是因为之前有缓存，直接</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm cache clear --force</span><br></pre></td></tr></table></figure>
@@ -3099,8 +3099,8 @@
 </li>
 </ol>
 </blockquote>
-<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><p><img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\图片1.png" alt="图片1"></p>
-<img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/%E5%9B%BE%E7%89%871.png" class title="是南宁的吧市">
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\图片1.png" alt="图片1"></p>
+<img src="/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/%E5%9B%BE%E7%89%871.png" class title="是南宁的吧市">
 
 <h3 id="action"><a href="#action" class="headerlink" title="action"></a>action</h3><p>==就是把我们的行为包装成一个对象。自己写也可以。其也可以是个函数(异步action)==</p>
 <blockquote>
@@ -3212,8 +3212,8 @@
 
 <p>执行定时函数</p>
 </blockquote>
-<h1 id="React-redux"><a href="#React-redux" class="headerlink" title="React-redux"></a>React-redux</h1><p><img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\react-redux模型图.png" alt="react-redux模型图"></p>
-<img src="/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/react-redux%E6%A8%A1%E5%9E%8B%E5%9B%BE.png" class title="是南宁吧市">
+<h1 id="React-redux"><a href="#React-redux" class="headerlink" title="React-redux"></a>React-redux</h1><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/gitee\Blog\source_posts\React脚手架下编码\react-redux模型图.png" alt="react-redux模型图"></p>
+<img src="/blknjyty.github.io/2022/07/25/React%E8%84%9A%E6%89%8B%E6%9E%B6%E4%B8%8B%E7%BC%96%E7%A0%81/react-redux%E6%A8%A1%E5%9E%8B%E5%9B%BE.png" class title="是南宁吧市">
 
 <h3 id="改写计算器"><a href="#改写计算器" class="headerlink" title="改写计算器"></a>改写计算器</h3><blockquote>
 <pre><code>(1).明确两个概念：

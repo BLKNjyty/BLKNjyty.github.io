@@ -5,59 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blknjyty.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blknjyty.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blknjyty.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blknjyty.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/blknjyty.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blknjyty.github.io/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"blknjity.gitee.io","root":"/blknjyty.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Pod文件基础信息 Pod 可以被理解成一群可以共享网络、存储和计算资源的容器化服务的集合, 是可以在 Kubernetes 中创建和管理的、最小的可部署的计算单元。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pod">
-<meta property="og:url" content="http://example.com/2022/07/25/Pod/index.html">
+<meta property="og:url" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
 <meta property="og:description" content="Pod文件基础信息 Pod 可以被理解成一群可以共享网络、存储和计算资源的容器化服务的集合, 是可以在 Kubernetes 中创建和管理的、最小的可部署的计算单元。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142374026.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658142374026.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142464859.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658142464859.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/20200203205310698.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/20200203205310698.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142617705.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658142617705.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143161136.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658143161136.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143508793.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143552268.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658143552268.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658144857352.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658144857352.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/20200204122317758.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/20200204122317758.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658144965988.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658144965988.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658145618199.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658145618199.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658145870559.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Pod/1658145870559.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142374026.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658142374026.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142464859.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658142464859.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/20200203205310698.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/20200203205310698.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142617705.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658142617705.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143161136.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658143161136.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143508793.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658143552268.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658143552268.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658144857352.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658144857352.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/20200204122317758.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/20200204122317758.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658144965988.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658144965988.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658145618199.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658145618199.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658145870559.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/1658145870559.png">
 <meta property="article:published_time" content="2022-07-25T03:41:33.000Z">
 <meta property="article:modified_time" content="2022-08-09T06:28:31.266Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142374026.png">
+<meta name="twitter:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee/Blog/source_posts/Pod/1658142374026.png">
 
-<link rel="canonical" href="http://example.com/2022/07/25/Pod/">
+<link rel="canonical" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/">
 
 
 <script id="page-configurations">
@@ -119,7 +119,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/blknjyty.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">BLKNjyty的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -140,27 +140,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blknjyty.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+    <a href="/blknjyty.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blknjyty.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blknjyty.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blknjyty.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -218,10 +218,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/25/Pod/">
+    <link itemprop="mainEntityOfPage" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Pod/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/blknjyty.github.io/images/avatar.gif">
       <meta itemprop="name" content="jy">
       <meta itemprop="description" content="为了我和小田的美好生活而努力">
     </span>
@@ -249,7 +249,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
+                  <a href="/blknjyty.github.io/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
                 </span>
             </span>
 
@@ -281,29 +281,29 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/heian_99/article/details/104167639">参考文章</a></p>
 <h4 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h4><h5 id="获取所有版本-apiversion-信息"><a href="#获取所有版本-apiversion-信息" class="headerlink" title="获取所有版本 apiversion 信息"></a>获取所有版本 apiversion 信息</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl api-versions</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142374026.png" alt="1658142374026"></p>
- <img src="/2022/07/25/Pod/1658142374026.png" class title="都能拿到">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142374026.png" alt="1658142374026"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Pod/1658142374026.png" class title="都能拿到">
 
 <p>获取资源的 apiVersion 版本信息 </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl explain pod </span><br><span class="line">kubectl explain Ingress</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142464859.png" alt="1658142464859"></p>
-<img src="/2022/07/25/Pod/1658142464859.png" class title="是南宁市">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142464859.png" alt="1658142464859"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658142464859.png" class title="是南宁市">
 
 <h5 id="获取pod详细信息"><a href="#获取pod详细信息" class="headerlink" title="获取pod详细信息"></a>获取pod详细信息</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod myapp-pod</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200203205310698.png" alt="20200203205310698"></p>
-<img src="/2022/07/25/Pod/20200203205310698.png" class title="是男是女是">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200203205310698.png" alt="20200203205310698"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/20200203205310698.png" class title="是男是女是">
 
 <h5 id="查看Pod的日志"><a href="#查看Pod的日志" class="headerlink" title="查看Pod的日志"></a><strong>查看Pod的日志</strong></h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl log myapp-pod -c test</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142617705.png" alt="1658142617705"></p>
-<img src="/2022/07/25/Pod/1658142617705.png" class title="偶偶">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658142617705.png" alt="1658142617705"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658142617705.png" class title="偶偶">
 
 <h5 id="删除pod"><a href="#删除pod" class="headerlink" title="删除pod"></a>删除pod</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod myapp-pod</span><br></pre></td></tr></table></figure>
 
-<h4 id="init容器"><a href="#init容器" class="headerlink" title="init容器"></a>init容器</h4><h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143161136.png" alt="1658143161136"></p>
-<img src="/2022/07/25/Pod/1658143161136.png" class title="噗噗">
+<h4 id="init容器"><a href="#init容器" class="headerlink" title="init容器"></a>init容器</h4><h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143161136.png" alt="1658143161136"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658143161136.png" class title="噗噗">
 
 <p> Pod 能够具有多个容器，应用运行在容器里面，但是它也可能有一个或多个先于应用容器启动的 Init容器。</p>
 <h5 id="作用是什么？"><a href="#作用是什么？" class="headerlink" title="作用是什么？"></a>作用是什么？</h5><blockquote>
@@ -316,9 +316,9 @@
 <h5 id="文件样式"><a href="#文件样式" class="headerlink" title="文件样式"></a>文件样式</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">myapp-pod</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">myapp</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">myapp-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;echo The app is running! &amp;&amp; sleep 3600&#x27;</span>]</span><br><span class="line">  <span class="attr">initContainers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">init-myservice</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;until nslookup myservice; do echo waiting for myservice; sleep 2; </span></span><br><span class="line"><span class="string">done;&#x27;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">init-mydb</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&#x27;sh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;until nslookup mydb; do echo waiting for mydb; sleep 2; done;&#x27;</span>]</span><br></pre></td></tr></table></figure>
 
 <p>创建pod，并且不断查看，就可以看到启动过程</p>
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143508793.png" alt="1658143508793"></p>
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143552268.png" alt="1658143552268"></p>
-<img src="/2022/07/25/Pod/1658143552268.png" class title="哦哦婆婆">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143508793.png" alt="1658143508793"></p>
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658143552268.png" alt="1658143552268"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658143552268.png" class title="哦哦婆婆">
 
 <h4 id="探针"><a href="#探针" class="headerlink" title="探针"></a>探针</h4><h5 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h5><p>诊断容器的一种方式，指示容器是否正在运行或者容器是否做好接收服务请求的准备</p>
 <h5 id="三种处理："><a href="#三种处理：" class="headerlink" title="三种处理："></a>三种处理：</h5><blockquote>
@@ -345,18 +345,18 @@
 </blockquote>
 <h5 id="就绪检测yaml"><a href="#就绪检测yaml" class="headerlink" title="就绪检测yaml"></a>就绪检测yaml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">readiness-httpget-pod</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">readiness-httpget-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">    <span class="attr">readinessProbe:</span></span><br><span class="line">      <span class="comment">#对镜像wangyanglinux/myapp:v1生成的应用，访问80端口/index.html资源(应用中无此资源)</span></span><br><span class="line">      <span class="attr">httpGet:</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">path:</span> <span class="string">/index1.html</span></span><br><span class="line">      <span class="attr">initialDelaySeconds:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">periodSeconds:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144857352.png" alt="1658144857352"></p>
-<img src="/2022/07/25/Pod/1658144857352.png" class title="巍峨">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144857352.png" alt="1658144857352"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658144857352.png" class title="巍峨">
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//查看pod详细描述</span><br><span class="line">kubectl describe pod readiness-httpget-pod</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200204122317758.png" alt="20200204122317758"></p>
-<img src="/2022/07/25/Pod/20200204122317758.png" class title="去问问">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\20200204122317758.png" alt="20200204122317758"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/20200204122317758.png" class title="去问问">
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//查看Pod的日志【一直不断的探测】</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144965988.png" alt="1658144965988"></p>
-<img src="/2022/07/25/Pod/1658144965988.png" class title="偶然">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658144965988.png" alt="1658144965988"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658144965988.png" class title="偶然">
 
 <p><strong>解决</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//进入容器</span><br><span class="line">kubectl exec  readiness-httpget-pod -it -- /bin/sh</span><br><span class="line">//进入目录</span><br><span class="line">cd /usr/share/nginx/html/</span><br><span class="line">//创建index1</span><br><span class="line">echo &quot;123&quot; &gt;&gt; index1.html</span><br><span class="line">//退出容器</span><br><span class="line">exit</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -366,13 +366,13 @@
 </blockquote>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">liveness-exec-pod</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">liveness-exec-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">    <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-c&quot;</span>,<span class="string">&quot;touch /tmp/live ; sleep 60; rm -rf /tmp/live; sleep</span></span><br><span class="line"><span class="string">3600&quot;</span>]</span><br><span class="line">    <span class="attr">livenessProbe:</span></span><br><span class="line">      <span class="attr">exec:</span></span><br><span class="line">        <span class="attr">command:</span> [<span class="string">&quot;test&quot;</span>,<span class="string">&quot;-e&quot;</span>,<span class="string">&quot;/tmp/live&quot;</span>]</span><br><span class="line">      <span class="attr">initialDelaySeconds:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">periodSeconds:</span> <span class="number">3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145618199.png" alt="1658145618199"></p>
-<img src="/2022/07/25/Pod/1658145618199.png" class title="跑一天">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145618199.png" alt="1658145618199"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658145618199.png" class title="跑一天">
 
 <h5 id="容器启动前和关闭前动作"><a href="#容器启动前和关闭前动作" class="headerlink" title="容器启动前和关闭前动作"></a>容器启动前和关闭前动作</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">lifecycle-demo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">lifecycle-demo-container</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">lifecycle:</span></span><br><span class="line">      <span class="attr">postStart:</span></span><br><span class="line">        <span class="attr">exec:</span></span><br><span class="line">          <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;echo Hello from the postStart handler &gt; </span></span><br><span class="line"><span class="string">/usr/share/message&quot;</span>]</span><br><span class="line">      <span class="attr">preStop:</span></span><br><span class="line">        <span class="attr">exec:</span></span><br><span class="line">          <span class="attr">command:</span> [<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;echo Hello from the poststop handler &gt; </span></span><br><span class="line"><span class="string">/usr/share/message&quot;</span>]</span><br><span class="line"> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145870559.png" alt="1658145870559"></p>
-<img src="/2022/07/25/Pod/1658145870559.png" class title="不会高">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Pod/gitee\Blog\source_posts\Pod\1658145870559.png" alt="1658145870559"></p>
+<img src="/blknjyty.github.io/2022/07/25/Pod/1658145870559.png" class title="不会高">
 
 
 
@@ -387,7 +387,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/k8s/" rel="tag"># k8s</a>
+              <a href="/blknjyty.github.io/tags/k8s/" rel="tag"># k8s</a>
           </div>
 
         
@@ -396,11 +396,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/07/25/Process/" rel="prev" title="Process">
+    <a href="/blknjyty.github.io/2022/07/25/Process/" rel="prev" title="Process">
       <i class="fa fa-chevron-left"></i> Process
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/07/25/ConfigMap/" rel="next" title="ConfigMap">
+    <a href="/blknjyty.github.io/2022/07/25/ConfigMap/" rel="next" title="ConfigMap">
       ConfigMap <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -473,20 +473,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+          <a href="/blknjyty.github.io/archives/">
         
           <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
+            <a href="/blknjyty.github.io/categories/">
           
         <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
+            <a href="/blknjyty.github.io/tags/">
           
         <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
@@ -587,30 +587,30 @@ $(document).ready(function() {
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blknjyty.github.io/lib/anime.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="/blknjyty.github.io/js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="/blknjyty.github.io/js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="/blknjyty.github.io/js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="/blknjyty.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blknjyty.github.io/js/local-search.js"></script>
 
 
 

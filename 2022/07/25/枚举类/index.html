@@ -5,38 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blknjyty.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blknjyty.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blknjyty.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blknjyty.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/blknjyty.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blknjyty.github.io/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"blknjity.gitee.io","root":"/blknjyty.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="什么是枚举类 ​    实例（也叫对象）有限且固定不变的类，在Java里被称为枚举类。   例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示： 123public enum SeasonEnum&amp;#123;    SPRING,SUMMER,FALL,WINTER;&amp;#125;     枚举类是一种特殊的类，它一样可以有自己的成员变量、方法，可以实现一个或">
 <meta property="og:type" content="article">
 <meta property="og:title" content="枚举类">
-<meta property="og:url" content="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/index.html">
+<meta property="og:url" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
 <meta property="og:description" content="什么是枚举类 ​    实例（也叫对象）有限且固定不变的类，在Java里被称为枚举类。   例如，季节类，它只有4个实例（春、夏、秋、冬），并且这4个实例不会改变。可以用枚举类来表示： 123public enum SeasonEnum&amp;#123;    SPRING,SUMMER,FALL,WINTER;&amp;#125;     枚举类是一种特殊的类，它一样可以有自己的成员变量、方法，可以实现一个或">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
-<meta property="og:image" content="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png">
 <meta property="article:published_time" content="2022-07-25T03:41:33.000Z">
 <meta property="article:modified_time" content="2022-08-29T14:06:51.167Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="java基础">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
+<meta name="twitter:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee/Blog/source_posts/枚举类/20170213132500481.png">
 
-<link rel="canonical" href="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
+<link rel="canonical" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
 
 
 <script id="page-configurations">
@@ -98,7 +98,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/blknjyty.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">BLKNjyty的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -119,27 +119,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blknjyty.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+    <a href="/blknjyty.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blknjyty.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blknjyty.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blknjyty.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -197,10 +197,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
+    <link itemprop="mainEntityOfPage" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/blknjyty.github.io/images/avatar.gif">
       <meta itemprop="name" content="jy">
       <meta itemprop="description" content="为了我和小田的美好生活而努力">
     </span>
@@ -228,7 +228,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a>
+                  <a href="/blknjyty.github.io/categories/java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a>
                 </span>
             </span>
 
@@ -279,8 +279,8 @@
 <h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="枚举类的方法"><a href="#枚举类的方法" class="headerlink" title="枚举类的方法"></a>枚举类的方法</h2><blockquote>
 <p> Weekday可以调用的方法和参数。发现它有两个方法：value()和valueOf()。还有我们刚刚定义的七个变量。 </p>
 </blockquote>
-<p><img src="/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee\Blog\source_posts\枚举类\20170213132500481.png" alt="20170213132500481"></p>
-<img src="/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png" class title="哈哈">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/gitee\Blog\source_posts\枚举类\20170213132500481.png" alt="20170213132500481"></p>
+<img src="/blknjyty.github.io/2022/07/25/%E6%9E%9A%E4%B8%BE%E7%B1%BB/20170213132500481.png" class title="哈哈">
 
 <h2 id="枚举类变量的方法"><a href="#枚举类变量的方法" class="headerlink" title="枚举类变量的方法"></a>枚举类变量的方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Weekday</span> &#123;</span><br><span class="line">    SUN,MON,TUS,WED,THU,FRI,SAT</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test3</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//它的作用是传来一个字符串，然后将它转变为对应的枚举变量。前提是你传的字符串和定义枚举变量的字符串一抹一样，区分大小写。如果你传了一个不存在的字符串，那么会抛出异常。</span></span><br><span class="line">        System.out.println(Weekday.valueOf(<span class="string">&quot;mon&quot;</span>.toUpperCase()));</span><br><span class="line">        <span class="comment">//MON</span></span><br><span class="line">		<span class="comment">//这个方法会返回包括所有枚举变量的数组。在该例中，返回的就是包含了七个星期的Weekday[]。可以方便的用来做循环。</span></span><br><span class="line">        <span class="keyword">for</span> (Weekday w : Weekday.values())&#123;</span><br><span class="line">            <span class="comment">//默认请款下，枚举类会给所有的枚举变量一个默认的次序，该次序从0开始，类似于数组的下标。而.ordinal()方法就是获取这个次序（或者说下标）</span></span><br><span class="line">            System.out.println(w + <span class="string">&quot;.ordinal()  ====&gt;&quot;</span> +w.ordinal());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//SUN.ordinal()  ====&gt;0</span></span><br><span class="line">        <span class="comment">//MON.ordinal()  ====&gt;1</span></span><br><span class="line">        <span class="comment">//TUS.ordinal()  ====&gt;2</span></span><br><span class="line">        <span class="comment">//WED.ordinal()  ====&gt;3</span></span><br><span class="line">        <span class="comment">//THU.ordinal()  ====&gt;4</span></span><br><span class="line">        <span class="comment">//FRI.ordinal()  ====&gt;5</span></span><br><span class="line">        <span class="comment">//SAT.ordinal()  ====&gt;6</span></span><br><span class="line">		</span><br><span class="line">        <span class="comment">//该方法用来比较两个枚举变量的”大小”，实际上比较的是两个枚举变量的次序，返回两个次序相减后的结果，如果为负数，就证明变量1”小于”变量2 （变量1.compareTo(变量2)，返回【变量1.ordinal() - 变量2.ordinal()】）</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.FRI) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.FRI));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.MON) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.MON));</span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.compareTo(Weekday.SUM) ===&gt; &quot;</span> + Weekday.MON.compareTo(Weekday.SUN));</span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.FRI) ===&gt; -4</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.MON) ===&gt; 0</span></span><br><span class="line">        <span class="comment">//Weekday.MON.compareTo(Weekday.SUM) ===&gt; 1</span></span><br><span class="line">		</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//它和toString()方法的返回值一样</span></span><br><span class="line">        <span class="comment">//唯一的区别是，你可以重写toString方法。name变量就是枚举变量的字符串形式。</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Weekday.MON.name() ====&gt; &quot;</span> + Weekday.MON.name());</span><br><span class="line">        <span class="comment">//Weekday.MON.name() ====&gt; MON</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -320,7 +320,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag"># java基础</a>
+              <a href="/blknjyty.github.io/tags/java%E5%9F%BA%E7%A1%80/" rel="tag"># java基础</a>
           </div>
 
         
@@ -329,11 +329,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/07/25/React/" rel="prev" title="React基础">
+    <a href="/blknjyty.github.io/2022/07/25/React/" rel="prev" title="React基础">
       <i class="fa fa-chevron-left"></i> React基础
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/07/25/Process/" rel="next" title="Process">
+    <a href="/blknjyty.github.io/2022/07/25/Process/" rel="next" title="Process">
       Process <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -406,20 +406,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+          <a href="/blknjyty.github.io/archives/">
         
           <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
+            <a href="/blknjyty.github.io/categories/">
           
         <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
+            <a href="/blknjyty.github.io/tags/">
           
         <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
@@ -520,30 +520,30 @@ $(document).ready(function() {
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blknjyty.github.io/lib/anime.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="/blknjyty.github.io/js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="/blknjyty.github.io/js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="/blknjyty.github.io/js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="/blknjyty.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blknjyty.github.io/js/local-search.js"></script>
 
 
 

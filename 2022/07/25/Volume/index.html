@@ -5,42 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blknjyty.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blknjyty.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blknjyty.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blknjyty.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/blknjyty.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blknjyty.github.io/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"blknjity.gitee.io","root":"/blknjyty.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="作用 容器磁盘上的文件的生命周期是短暂的，这就使得在容器中运行重要应用时会出现一些问题。首先，当容器崩溃 时，kubelet 会重启它，但是容器中的文件将丢失——容器以干净的状态（镜像最初的状态）重新启动。其次，在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 中的 Volume 抽象就很好的解决了 这些问题">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Volume">
-<meta property="og:url" content="http://example.com/2022/07/25/Volume/index.html">
+<meta property="og:url" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/index.html">
 <meta property="og:site_name" content="BLKNjyty的博客">
 <meta property="og:description" content="作用 容器磁盘上的文件的生命周期是短暂的，这就使得在容器中运行重要应用时会出现一些问题。首先，当容器崩溃 时，kubelet 会重启它，但是容器中的文件将丢失——容器以干净的状态（镜像最初的状态）重新启动。其次，在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 中的 Volume 抽象就很好的解决了 这些问题">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658227996350.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/1658227996350.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658228122967.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/1658228122967.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658228144040.png">
-<meta property="og:image" content="http://example.com/2022/07/25/Volume/1658228144040.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658227996350.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/1658227996350.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658228122967.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/1658228122967.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658228144040.png">
+<meta property="og:image" content="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/1658228144040.png">
 <meta property="article:published_time" content="2022-07-25T03:43:19.000Z">
 <meta property="article:modified_time" content="2022-08-09T06:30:50.421Z">
 <meta property="article:author" content="jy">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658227996350.png">
+<meta name="twitter:image" content="http://blknjity.gitee.io/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee/Blog/source_posts/Volume/1658227996350.png">
 
-<link rel="canonical" href="http://example.com/2022/07/25/Volume/">
+<link rel="canonical" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/">
 
 
 <script id="page-configurations">
@@ -102,7 +102,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/blknjyty.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">BLKNjyty的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -123,27 +123,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blknjyty.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+    <a href="/blknjyty.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blknjyty.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blknjyty.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blknjyty.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -201,10 +201,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/25/Volume/">
+    <link itemprop="mainEntityOfPage" href="http://blknjity.gitee.io/blknjyty.github.io/2022/07/25/Volume/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/blknjyty.github.io/images/avatar.gif">
       <meta itemprop="name" content="jy">
       <meta itemprop="description" content="为了我和小田的美好生活而努力">
     </span>
@@ -232,7 +232,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
+                  <a href="/blknjyty.github.io/categories/%E6%8A%80%E6%9C%AF%E6%A0%88/" itemprop="url" rel="index"><span itemprop="name">技术栈</span></a>
                 </span>
             </span>
 
@@ -271,8 +271,8 @@
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/cache</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">cache-volume</span></span><br><span class="line">    <span class="attr">emptyDir:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658227996350.png" alt="1658227996350"></p>
- <img src="/2022/07/25/Volume/1658227996350.png" class title="得分">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658227996350.png" alt="1658227996350"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658227996350.png" class title="得分">
 
 <h4 id="hostPath"><a href="#hostPath" class="headerlink" title="hostPath"></a>hostPath</h4><blockquote>
 <p>简介： hostPath 卷将主机节点的文件系统中的文件或目录挂载到集群中 ，简而言之就是节点之间的共享</p>
@@ -284,14 +284,14 @@
 <li>允许 pod 指定给定的 hostPath 是否应该在 pod 运行之前存在，是否应该创建，以及它应该以什么形式存在</li>
 </ul>
 <p> 除了所需的 path 属性之外，用户还可以为 hostPath 卷指定 type </p>
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228122967.png" alt="1658228122967"></p>
- <img src="/2022/07/25/Volume/1658228122967.png" class title="搜索树">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228122967.png" alt="1658228122967"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658228122967.png" class title="搜索树">
 
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">image:</span> <span class="string">wangyanglinux/myapp:v1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">test-container</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">mountPath:</span> <span class="string">/test-pd</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-volume</span></span><br><span class="line">    <span class="attr">hostPath:</span></span><br><span class="line">      <span class="comment"># directory location on host</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/data</span></span><br><span class="line">      <span class="comment"># this field is optional</span></span><br><span class="line">      <span class="attr">type:</span> <span class="string">Directory</span></span><br></pre></td></tr></table></figure>
 
 <p>如下所示，master节点和node1节点均可见index.html</p>
-<p><img src="/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228144040.png" alt="1658228144040"></p>
- <img src="/2022/07/25/Volume/1658228144040.png" class title="爱是">
+<p><img src="/blknjyty.github.io/blknjyty.github.io/2022/07/25/Volume/gitee\Blog\source_posts\Volume\1658228144040.png" alt="1658228144040"></p>
+ <img src="/blknjyty.github.io/2022/07/25/Volume/1658228144040.png" class title="爱是">
 
 
     </div>
@@ -302,7 +302,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/k8s/" rel="tag"># k8s</a>
+              <a href="/blknjyty.github.io/tags/k8s/" rel="tag"># k8s</a>
           </div>
 
         
@@ -311,11 +311,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/07/25/Secret/" rel="prev" title="Secret">
+    <a href="/blknjyty.github.io/2022/07/25/Secret/" rel="prev" title="Secret">
       <i class="fa fa-chevron-left"></i> Secret
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/07/25/Service/" rel="next" title="Service">
+    <a href="/blknjyty.github.io/2022/07/25/Service/" rel="next" title="Service">
       Service <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -388,20 +388,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+          <a href="/blknjyty.github.io/archives/">
         
           <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
+            <a href="/blknjyty.github.io/categories/">
           
         <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
+            <a href="/blknjyty.github.io/tags/">
           
         <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
@@ -502,30 +502,30 @@ $(document).ready(function() {
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blknjyty.github.io/lib/anime.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blknjyty.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="/blknjyty.github.io/js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="/blknjyty.github.io/js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="/blknjyty.github.io/js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="/blknjyty.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blknjyty.github.io/js/local-search.js"></script>
 
 
 
